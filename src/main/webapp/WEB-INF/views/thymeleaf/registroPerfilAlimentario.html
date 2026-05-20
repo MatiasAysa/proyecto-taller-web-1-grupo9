@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de perfil alimentario</title>
+</head>
+
+<body>
+
+    <main>
+        <form action="" method="post">
+
+            <h1>Registro de perfil alimentario</h1>
+
+            <h3>Datos personales</h3>
+            <div class="form-group">
+                <label for="peso">Peso (kg)</label>
+                <input type="number" id="peso" name="peso" required>
+
+                <label for="altura">Altura (cm)</label>
+                <input type="number" id="altura" name="altura" required>
+
+                <label for="edad">Edad</label>
+                <input type="number" id="edad" name="edad" required>
+
+                <h3>Sexo</h3>
+                <input type="radio" name="sexo" id="sexoM" value="M">
+                <label for="sexoM">Masculino</label>
+
+                <input type="radio" name="sexo" id="sexoF" value="F">
+                <label for="sexoF">Femenino</label>
+
+                <input type="radio" name="sexo" id="otro" value="O" required>
+                <label for="otro">Otro</label>
+            </div>
+
+            <div class="form-group">
+                <h3>Actividad física</h3>
+                <label for="actividadFisica"></label>
+                <select name="actividadFisica" id="actividadFisica">
+                    <option value="sedentaria">Sedentaria</option>
+                    <option value="pocoActiva">Poco Activa</option>
+                    <option value="moderadamenteActiva" selected>Moderadamente Activa</option>
+                    <option value="muyActiva">Muy Activa</option>
+                    <option value="extremadamenteActiva">Extremadamente Activa</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <!-- por defecto es ninguna -->
+                <h3>Restricciones alimentarias</h3>
+                <label for="restriccionesAlimentarias"></label>
+                <select name="restriccionesAlimentarias" id="restriccionesAlimentarias">
+                    <option value="celiaco">Celiaco</option>
+                    <option value="diabetico">Diabetico</option>
+                    <option value="hipertenso">Hipertenso</option>
+                    <option value="intoleranciaLactosa">Intolerancia Lactosa</option>
+                    <option value="vegetarian">Vegetariano</option>
+                    <option value="vegan">Vegano</option>
+                    <option value="ninguna" selected>Ninguna</option>
+                    <option value="otra">Otra</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <h3>Preferencias alimentarias</h3>
+                <input type="checkbox" id="dulce" name="preferenciasAlimentarias" value="dulce">
+                <label for="dulce">Dulce</label>
+                <input type="checkbox" id="salado" name="preferenciasAlimentarias" value="salado">
+                <label for="salado">Salado</label>
+                <input type="checkbox" id="picante" name="preferenciasAlimentarias" value="picante">
+                <label for="picante">Picante</label>
+                <input type="checkbox" id="amargo" name="preferenciasAlimentarias" value="amargo">
+                <label for="amargo">Amargo</label>
+                <input type="checkbox" id="agrio" name="preferenciasAlimentarias" value="agrio">
+                <label for="agrio">Agrio</label>
+            </div>
+
+            <div class="form-group">
+                <h3>Objetivo</h3>
+                <input type="radio" name="objetivo" id="mantenerPeso" value="mantenerPeso" required>
+                <label for="mantenerPeso">Mantener Peso</label>
+                <input type="radio" name="objetivo" id="perderPeso" value="perderPeso">
+                <label for="perderPeso">Perder Peso</label>
+                <input type="radio" name="objetivo" id="ganarPeso" value="ganarPeso">
+                <label for="ganarPeso">Ganar Peso</label>
+            </div>
+
+            <button type="submit">Guardar</button>
+
+        </form>
+    </main>
+
+</body>
+
+</html>
