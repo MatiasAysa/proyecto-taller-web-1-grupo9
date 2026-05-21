@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -10,41 +10,44 @@
 <body>
 
     <main>
-        <form action="" method="post">
+        <div th:if="${error != null}">
+            <p th:text="${error}"></p>
+            <hr>
+        </div>
+
+        <form action="" method="post" th:action="@{/Registro-perfil-alimentario}" th:object="${perfilAlimentario}">
 
             <h1>Registro de perfil alimentario</h1>
 
             <h3>Datos personales</h3>
             <div class="form-group">
                 <label for="peso">Peso (kg)</label>
-                <input type="number" id="peso" name="peso" required>
+                <input type="number" id="peso" name="peso" required th:field="*{peso}">
 
                 <label for="altura">Altura (cm)</label>
-                <input type="number" id="altura" name="altura" required>
+                <input type="number" id="altura" name="altura" required th:field="*{altura}">
 
                 <label for="edad">Edad</label>
-                <input type="number" id="edad" name="edad" required>
+                <input type="number" id="edad" name="edad" required th:field="*{edad}">
 
                 <h3>Sexo</h3>
-                <input type="radio" name="sexo" id="sexoM" value="M">
+                <input type="radio" name="sexo" id="sexoM" value="M" th:field="*{sexo}">
                 <label for="sexoM">Masculino</label>
 
-                <input type="radio" name="sexo" id="sexoF" value="F">
+                <input type="radio" name="sexo" id="sexoF" value="F" th:field="*{sexo}">
                 <label for="sexoF">Femenino</label>
 
-                <input type="radio" name="sexo" id="otro" value="O" required>
+                <input type="radio" name="sexo" id="otro" value="O" required th:field="*{sexo}">
                 <label for="otro">Otro</label>
             </div>
 
             <div class="form-group">
                 <h3>Actividad física</h3>
                 <label for="actividadFisica"></label>
-                <select name="actividadFisica" id="actividadFisica">
-                    <option value="sedentaria">Sedentaria</option>
-                    <option value="pocoActiva">Poco Activa</option>
-                    <option value="moderadamenteActiva" selected>Moderadamente Activa</option>
-                    <option value="muyActiva">Muy Activa</option>
-                    <option value="extremadamenteActiva">Extremadamente Activa</option>
+                <select name="actividadFisica" id="actividadFisica" th:field="*{actividadFisica}">
+                    <option value="SEDENTARIA">Sedentaria</option>
+                    <option value="MODERADA" selected>Moderada</option>
+                    <option value="ACTIVA">Activa</option>
                 </select>
             </div>
 
@@ -52,40 +55,27 @@
                 <!-- por defecto es ninguna -->
                 <h3>Restricciones alimentarias</h3>
                 <label for="restriccionesAlimentarias"></label>
-                <select name="restriccionesAlimentarias" id="restriccionesAlimentarias">
-                    <option value="celiaco">Celiaco</option>
-                    <option value="diabetico">Diabetico</option>
-                    <option value="hipertenso">Hipertenso</option>
-                    <option value="intoleranciaLactosa">Intolerancia Lactosa</option>
-                    <option value="vegetarian">Vegetariano</option>
-                    <option value="vegan">Vegano</option>
-                    <option value="ninguna" selected>Ninguna</option>
-                    <option value="otra">Otra</option>
+                <select name="restriccionesAlimentarias" id="restriccionesAlimentarias"
+                    th:field="*{restriccionesAlimentarias}">
+                    <option value="CELIACO">Celiaco</option>
+                    <option value="DIABETICO">Diabetico</option>
+                    <option value="HIPERTENSO">Hipertenso</option>
+                    <option value="INTOLERANCIA_LACTOSA">Intolerancia Lactosa</option>
+                    <option value="VEGETARIANO">Vegetariano</option>
+                    <option value="VEGANO">Vegano</option>
+                    <option value="NINGUNO" selected>Ninguna</option>
+                    <option value="OTRA">Otra</option>
                 </select>
-            </div>
-
-
-            <div class="form-group">
-                <h3>Preferencias alimentarias</h3>
-                <input type="checkbox" id="dulce" name="preferenciasAlimentarias" value="dulce">
-                <label for="dulce">Dulce</label>
-                <input type="checkbox" id="salado" name="preferenciasAlimentarias" value="salado">
-                <label for="salado">Salado</label>
-                <input type="checkbox" id="picante" name="preferenciasAlimentarias" value="picante">
-                <label for="picante">Picante</label>
-                <input type="checkbox" id="amargo" name="preferenciasAlimentarias" value="amargo">
-                <label for="amargo">Amargo</label>
-                <input type="checkbox" id="agrio" name="preferenciasAlimentarias" value="agrio">
-                <label for="agrio">Agrio</label>
             </div>
 
             <div class="form-group">
                 <h3>Objetivo</h3>
-                <input type="radio" name="objetivo" id="mantenerPeso" value="mantenerPeso" required>
+                <input type="radio" name="objetivo" id="mantenerPeso" value="MANTENER_PESO" required
+                    th:field="*{objetivo}">
                 <label for="mantenerPeso">Mantener Peso</label>
-                <input type="radio" name="objetivo" id="perderPeso" value="perderPeso">
+                <input type="radio" name="objetivo" id="perderPeso" value="PERDER_PESO" th:field="*{objetivo}">
                 <label for="perderPeso">Perder Peso</label>
-                <input type="radio" name="objetivo" id="ganarPeso" value="ganarPeso">
+                <input type="radio" name="objetivo" id="ganarPeso" value="GANAR_PESO" th:field="*{objetivo}">
                 <label for="ganarPeso">Ganar Peso</label>
             </div>
 

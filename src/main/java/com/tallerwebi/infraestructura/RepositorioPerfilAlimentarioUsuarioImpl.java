@@ -1,0 +1,29 @@
+package com.tallerwebi.infraestructura;
+
+import com.tallerwebi.dominio.PerfilAlimentarioUsuario;
+import com.tallerwebi.dominio.RepositorioPerfilAlimentarioUsuario;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository("repositorioPerfilAlimentario")
+public class RepositorioPerfilAlimentarioUsuarioImpl
+  implements RepositorioPerfilAlimentarioUsuario {
+
+  private final SessionFactory sessionFactory;
+
+  @Autowired
+  public RepositorioPerfilAlimentarioUsuarioImpl(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
+
+  @Override
+  public void guardar(PerfilAlimentarioUsuario perfilAlimentario) {
+    this.sessionFactory.getCurrentSession().save(perfilAlimentario);
+  }
+
+  @Override
+  public PerfilAlimentarioUsuario buscarPorId(Long id) {
+    return this.sessionFactory.getCurrentSession().get(PerfilAlimentarioUsuario.class, id);
+  }
+}
