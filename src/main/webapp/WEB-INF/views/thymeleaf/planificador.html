@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Planificador Inteligente de Comidas</title>
+    <link rel="stylesheet" th:href="@{/css/planificador.css}"/>
+</head>
+<body>
+<div class="contenedor-principal">
+    <header class="encabezado">
+        <h1>Generador de Menú Económico Inteligente</h1>
+        <p>Optimizando tu nutrición en base a tu presupuesto real.</p>
+    </header>
+    <div th:if="${error}" class="alerta-error">
+        <p th:text="${error}"></p>
+    </div>
+    <div class="panel-accion" th:if="${planGenerado == null}">
+        <p>Presioná el botón para calcular tu distribución semanal óptima basada en tus restricciones y dinero disponible.</p>
+        <form th:action="@{/generar-plan}" method="POST">
+            <input type="hidden" name="usuarioId" value="1"/>
+            <button type="submit" class="btn-principal">Calcular Menú Semanal</button>
+        </form>
+    </div>
+    <div th:if="${planGenerado != null}" class="resultado-plan">
+        <div th:if="${advertencias}" class="bloque-advertencias">
+            <h3>⚠️ Advertencias del Sistema</h3>
+            <ul>
+                <li th:each="adv : ${advertencias}" th:text="${adv}"></li>
+            </ul>
+        </div>
+
+        <div class="resumen-costo">
+            <h3>Costo Total Estimado del Plan: <span th:text="${'$' + planGenerado.costoTotalPlan}"></span></h3>
+        </div>
+        <div class="grilla-menu">
+            <div class="tarjeta-dia">
+                <h4>Menú Diario Sugerido</h4>
+                <div class="comida"><strong>Desayuno:</strong> Avena con frutas económicas</div>
+                <div class="comida"><strong>Almuerzo:</strong> Guiso de lentejas y vegetales de estación</div>
+                <div class="comida"><strong>Merienda:</strong> Infusión con pan integral tostado</div>
+                <div class="comida"><strong>Cena:</strong> Tortilla de espinaca y arroz reutilizado</div>
+            </div>
+        </div>
+
+        <a th:href="@{/planificador}" class="btn-secundario">Volver a calcular</a>
+    </div>
+</div>
+</body>
+</html>
