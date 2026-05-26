@@ -9,12 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPerfilAlimentario {
 
   private final RepositorioPerfilAlimentarioUsuario repositorioPerfil;
+  private final RepositorioUsuario repositorioUsuario;
+
   @Autowired
-  public ServicioRegistroPerfilAlimentarioImpl(RepositorioPerfilAlimentarioUsuario repositorioPerfil) {
+  public ServicioRegistroPerfilAlimentarioImpl(
+    RepositorioPerfilAlimentarioUsuario repositorioPerfil,
+    RepositorioUsuario repositorioUsuario
+  ) {
     this.repositorioPerfil = repositorioPerfil;
+    this.repositorioUsuario = repositorioUsuario;
   }
 
-  private  <E extends Enum<E>> Boolean valorValido(Class<E> enumClase, String textoUsuario) {
+  private <E extends Enum<E>> Boolean valorValido(Class<E> enumClase, String textoUsuario) {
     if (textoUsuario == null) return false;
     E[] valoresPosibles = enumClase.getEnumConstants();
     for (E valor : valoresPosibles) {
@@ -25,25 +31,30 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     return false;
   }
 
-
   private Boolean validarPeso(Double peso) {
-      return peso != null && peso > 0 && peso < 635;
+    return peso != null && peso > 0 && peso < 635;
   }
+
   private Boolean validarAltura(Double altura) {
-      return altura != null && altura > 0 && altura < 272;
+    return altura != null && altura > 0 && altura < 272;
   }
+
   private Boolean validarEdad(Integer edad) {
-    return edad != null && edad > 0 && edad < 120;
+    return edad != null && edad > 0 && edad < 100;
   }
+
   private Boolean validarSexo(String sexo) {
     return valorValido(Sexo.class, sexo);
   }
+
   private Boolean validarActividadFisica(String actividadFisica) {
     return valorValido(AcividadFisica.class, actividadFisica);
   }
+
   private Boolean validarRestriccionesAlimentarias(String restriccionesAlimentarias) {
     return valorValido(RestriccionAlimentaria.class, restriccionesAlimentarias);
   }
+
   private Boolean validarObjetivo(String objetivo) {
     return valorValido(Objetivo.class, objetivo);
   }
@@ -66,9 +77,12 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
 
   // guardo los datos en la base de datos
   @Override
-  public Boolean guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO) {
+  public Boolean guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email) {
+    Usuario usuario = repositorioUsuario.buscar(email);
+    if (usuario == null) return false;
+
     if (validarPerfilAlimentario(perfilAlimentarioDTO)) {
-      PerfilAlimentarioUsuario entidad = new PerfilAlimentarioUsuario(
+      PerfilAlimentarioUsuario nuevoPerfil = new PerfilAlimentarioUsuario(
         perfilAlimentarioDTO.getPeso(),
         perfilAlimentarioDTO.getAltura(),
         perfilAlimentarioDTO.getEdad(),
@@ -77,7 +91,9 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
         perfilAlimentarioDTO.getRestriccionesAlimentarias(),
         perfilAlimentarioDTO.getObjetivo()
       );
-      repositorioPerfil.guardar(entidad);
+      repositorioPerfil.guardar(nuevoPerfil);
+      usuario.setPerfilAlimentario(nuevoPerfil);
+
       return true;
     }
     return false;

@@ -12,6 +12,24 @@ public class PerfilAlimentarioDTO {
 
   public PerfilAlimentarioDTO() {}
 
+  public PerfilAlimentarioDTO(
+    Double peso,
+    Double altura,
+    Integer edad,
+    String sexo,
+    String actividadFisica,
+    String restriccionesAlimentarias,
+    String objetivo
+  ) {
+    this.peso = peso;
+    this.altura = altura;
+    this.edad = edad;
+    this.sexo = sexo;
+    this.actividadFisica = actividadFisica;
+    this.restriccionesAlimentarias = restriccionesAlimentarias;
+    this.objetivo = objetivo;
+  }
+
   // Escribirlos en una sola línea rompe la similitud de estructura con la Entidad
   public Integer getEdad() {
     return edad;

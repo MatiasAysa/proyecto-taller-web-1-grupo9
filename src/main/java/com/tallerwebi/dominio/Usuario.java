@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Usuario {
@@ -16,6 +13,12 @@ public class Usuario {
   private String password;
   private String rol;
   private Boolean activo = false;
+
+  //Sincroniza las acciones del Usuario en su Perfil (Guardar/Borrar)
+  // y elimina automáticamente el Perfil viejo de la base de datos si deja de estar asociado al Usuario.
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "perfil_alimentario_id")
+  private PerfilAlimentarioUsuario perfilAlimentario;
 
   public Long getId() {
     return id;
@@ -59,5 +62,13 @@ public class Usuario {
 
   public void activar() {
     activo = true;
+  }
+
+  public PerfilAlimentarioUsuario getPerfilAlimentario() {
+    return perfilAlimentario;
+  }
+
+  public void setPerfilAlimentario(PerfilAlimentarioUsuario perfilAlimentario) {
+    this.perfilAlimentario = perfilAlimentario;
   }
 }

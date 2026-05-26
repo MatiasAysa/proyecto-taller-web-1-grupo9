@@ -21,9 +21,4 @@ public class RepositorioPerfilAlimentarioUsuarioImpl
   public void guardar(PerfilAlimentarioUsuario perfilAlimentario) {
     this.sessionFactory.getCurrentSession().save(perfilAlimentario);
   }
-
-  @Override
-  public PerfilAlimentarioUsuario buscarPorId(Long id) {
-    return this.sessionFactory.getCurrentSession().get(PerfilAlimentarioUsuario.class, id);
-  }
 }

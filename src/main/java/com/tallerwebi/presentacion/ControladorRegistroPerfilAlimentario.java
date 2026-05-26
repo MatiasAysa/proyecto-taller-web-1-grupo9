@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.PerfilAlimentarioDTO;
 import com.tallerwebi.dominio.ServicioRegistroPerfilAlimentario;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,7 +24,10 @@ public class ControladorRegistroPerfilAlimentario {
   }
 
   @GetMapping("/Registro-perfil-alimentario")
-  public ModelAndView mostrarFormulario() {
+  public ModelAndView mostrarFormulario(HttpSession session) {
+    if (session.getAttribute("usuarioLogueadoEmail") == null) {
+      return new ModelAndView("redirect:/login");
+    }
     ModelMap modelo = new ModelMap();
     modelo.put("perfilAlimentario", new PerfilAlimentarioDTO());
     return new ModelAndView("registroPerfilAlimentario", modelo);
@@ -31,12 +35,17 @@ public class ControladorRegistroPerfilAlimentario {
 
   @PostMapping("/Registro-perfil-alimentario")
   public ModelAndView procesarFormulario(
-    @ModelAttribute("perfilAlimentario") PerfilAlimentarioDTO perfilAlimentarioDTO
+    @ModelAttribute("perfilAlimentario") PerfilAlimentarioDTO perfilAlimentarioDTO,
+    HttpSession session
   ) {
-    ModelMap modelo = new ModelMap();
-    if (servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilAlimentarioDTO)) {
-      return new ModelAndView("redirect:/", modelo);
+    String email = session.getAttribute("usuarioLogueadoEmail").toString();
+    if (email == null) {
+      return new ModelAndView("redirect:/login");
     }
+    if (servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilAlimentarioDTO, email)) {
+      return new ModelAndView("redirect:/");
+    }
+    ModelMap modelo = new ModelMap();
     modelo.put(
       "error",
       "Los datos ingresados son invalidos o estan fuera de rango. Por favor, verifiquelos."
