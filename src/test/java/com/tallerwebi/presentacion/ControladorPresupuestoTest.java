@@ -2,7 +2,12 @@ package com.tallerwebi.presentacion;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
+import com.tallerwebi.dominio.ServicioPresupuesto;
+import com.tallerwebi.dominio.ServicioPresupuestoImpl;
+import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,7 +17,10 @@ public class ControladorPresupuestoTest {
   private final float monto = 100000;
   private final int intervalo = 7;
   private final LocalDate fecha = LocalDate.now();
-  private ControladorPresupuesto controladorPresupuesto = new ControladorPresupuesto();
+  private ServicioPresupuesto servicioPresupuesto = mock(ServicioPresupuestoImpl.class);
+  private ControladorPresupuesto controladorPresupuesto = new ControladorPresupuesto(
+    servicioPresupuesto
+  );
   private String mensaje;
 
   @Test
@@ -41,6 +49,10 @@ public class ControladorPresupuestoTest {
   @Test
   public void siIngresoFechaEIntervaloYNoIngresoMontoElPresupuestoFalla() {
     givenUsuarioExiste();
+    doThrow(PresupuestoNoPositivoException.class)
+      .when(servicioPresupuesto)
+      .crearPresupuesto(0, intervalo, fecha);
+
     ModelAndView mav = whenIngresoMontoEIntervalo(new DatosPresupuesto(0, intervalo, fecha));
     mensaje = controladorPresupuesto.getMENSAJE_MONTO_OBLIGATORIO();
     thenNoSeCreaElPresupuesto(mav, mensaje);

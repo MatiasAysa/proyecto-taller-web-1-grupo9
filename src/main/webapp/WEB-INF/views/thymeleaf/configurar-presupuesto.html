@@ -26,7 +26,7 @@
             <div th:if="${mensaje}" class="alert alert-danger mb-3" role="alert" th:text="${mensaje}">
             </div>
             <!-- Tu formulario intacto (con agregados mínimos de layout Bootstrap) -->
-            <form action="#" th:action="@{/validar-presupuesto}" method="post" th:object="${datosPresupuesto}">
+            <form action="#" th:action="@{/mi-presupuesto}" method="post" th:object="${datosPresupuesto}">
 
                 <div class="mb-3">
                     <label for="monto" class="form-label">Monto de dinero ($):</label>

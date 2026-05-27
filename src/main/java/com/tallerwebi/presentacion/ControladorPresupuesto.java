@@ -1,5 +1,8 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.ServicioPresupuesto;
+import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,8 +17,12 @@ public class ControladorPresupuesto {
   private static final String MENSAJE_INTERVALO_OBLIGATORIO = "El intervalo es obligatorio";
   private static final String MENSAJE_FECHA_OBLIGATORIA = "La fecha es obligatoria";
   private static final String MENSAJE_MONTO_OBLIGATORIO = "El monto es obligatorio";
-  private ModelMap model;
-  private String view;
+  private ServicioPresupuesto servicioPresupuesto;
+
+  @Autowired
+  public ControladorPresupuesto(ServicioPresupuesto servicioPresupuesto) {
+    this.servicioPresupuesto = servicioPresupuesto;
+  }
 
   @RequestMapping("/configurar-presupuesto")
   public ModelAndView irAConfigurarPresupuesto() {
@@ -24,12 +31,11 @@ public class ControladorPresupuesto {
     return new ModelAndView("configurar-presupuesto", modelo);
   }
 
-  @RequestMapping(path = "/validar-presupuesto", method = RequestMethod.POST)
+  @RequestMapping(path = "/mi-presupuesto", method = RequestMethod.POST)
   public ModelAndView validarPresupuesto(
     @ModelAttribute("datosPresupuesto") DatosPresupuesto datosPresupuesto
   ) {
-    model = new ModelMap();
-    view = "mi-presupuesto";
+    ModelMap model = new ModelMap();
     model.put("mensaje", MENSAJE_PRESUPUESTO_EXITOSO);
 
     if (datosPresupuesto.getIntervalo() == 0) {
@@ -38,14 +44,20 @@ public class ControladorPresupuesto {
     if (datosPresupuesto.getFecha() == null) {
       return fallarPresupuesto(MENSAJE_FECHA_OBLIGATORIA);
     }
-    if (datosPresupuesto.getMonto() == 0) {
+    try {
+      servicioPresupuesto.crearPresupuesto(
+        datosPresupuesto.getMonto(),
+        datosPresupuesto.getIntervalo(),
+        datosPresupuesto.getFecha()
+      );
+    } catch (PresupuestoNoPositivoException e) {
       return fallarPresupuesto(MENSAJE_MONTO_OBLIGATORIO);
     }
-    return new ModelAndView(view, model);
+    return new ModelAndView("mi-presupuesto", model);
   }
 
   private ModelAndView fallarPresupuesto(String mensaje) {
-    model = new ModelMap();
+    ModelMap model = new ModelMap();
     model.put("mensaje", mensaje);
     return new ModelAndView("configurar-presupuesto", model);
   }

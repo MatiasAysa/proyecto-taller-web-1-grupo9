@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,10 +15,12 @@ public class Presupuesto {
 
   private float monto;
   private float intervalo;
+  private LocalDate fecha;
 
-  public Presupuesto(float monto, float intervalo) {
+  public Presupuesto(float monto, float intervalo, LocalDate fecha) {
     this.monto = monto;
     this.intervalo = intervalo;
+    this.fecha = fecha;
   }
 
   public Long getId() {
