@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +11,17 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
 
   private final RepositorioPerfilAlimentarioUsuario repositorioPerfil;
   private final RepositorioUsuario repositorioUsuario;
+  private final RepositorioRestriccionAlimentaria repositorioRestriccionAlimentaria;
 
   @Autowired
   public ServicioRegistroPerfilAlimentarioImpl(
     RepositorioPerfilAlimentarioUsuario repositorioPerfil,
-    RepositorioUsuario repositorioUsuario
+    RepositorioUsuario repositorioUsuario,
+    RepositorioRestriccionAlimentaria repositorioRestriccionAlimentaria
   ) {
     this.repositorioPerfil = repositorioPerfil;
     this.repositorioUsuario = repositorioUsuario;
+    this.repositorioRestriccionAlimentaria = repositorioRestriccionAlimentaria;
   }
 
   private <E extends Enum<E>> Boolean valorValido(Class<E> enumClase, String textoUsuario) {
@@ -51,8 +55,12 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     return valorValido(AcividadFisica.class, actividadFisica);
   }
 
-  private Boolean validarRestriccionesAlimentarias(String restriccionesAlimentarias) {
-    return valorValido(RestriccionAlimentaria.class, restriccionesAlimentarias);
+  private Boolean validarRestriccionesAlimentarias(Set<String> restriccionesAlimentarias) {
+    if (restriccionesAlimentarias == null) return false;
+    for (String restriccion : restriccionesAlimentarias) {
+      if (!valorValido(RestriccionAlimentariaTipo.class, restriccion)) return false;
+    }
+    return true;
   }
 
   private Boolean validarObjetivo(String objetivo) {
@@ -79,23 +87,91 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
   @Override
   public Boolean guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email) {
     Usuario usuario = repositorioUsuario.buscar(email);
-    if (usuario == null) return false;
 
-    if (validarPerfilAlimentario(perfilAlimentarioDTO)) {
-      PerfilAlimentarioUsuario nuevoPerfil = new PerfilAlimentarioUsuario(
-        perfilAlimentarioDTO.getPeso(),
-        perfilAlimentarioDTO.getAltura(),
-        perfilAlimentarioDTO.getEdad(),
-        perfilAlimentarioDTO.getSexo(),
-        perfilAlimentarioDTO.getActividadFisica(),
-        perfilAlimentarioDTO.getRestriccionesAlimentarias(),
-        perfilAlimentarioDTO.getObjetivo()
+    if (validarPerfilAlimentario(perfilAlimentarioDTO) && usuario != null) {
+      if (usuario.getPerfilAlimentario() != null) {
+        return actualizarPerfilAlimentario(
+          usuario.getPerfilAlimentario(),
+          perfilAlimentarioDTO
+        );
+      }
+      PerfilAlimentarioUsuario nuevoPerfil = crearPerfilAlimentarioUsuarioDesdeDTO(
+        perfilAlimentarioDTO
       );
+      // primero se crea un perfil sin restricciones para relacionarlo
       repositorioPerfil.guardar(nuevoPerfil);
       usuario.setPerfilAlimentario(nuevoPerfil);
+
+      // despues con las restricciones se crea un perfil de restricciones y se
+      // relaciona con el perfil
+      Set<String> restriccionesAlimentarias = perfilAlimentarioDTO.getRestriccionesAlimentarias();
+      // guardar cada restriccion en la base de datos
+      for (String restriccion : restriccionesAlimentarias) {
+        RestriccionAlimentaria restriccionAlimentaria = new RestriccionAlimentaria();
+        restriccionAlimentaria.setNombre(restriccion);
+        restriccionAlimentaria.setPerfil(nuevoPerfil);
+        repositorioRestriccionAlimentaria.guardar(restriccionAlimentaria);
+      }
+      if (restriccionesAlimentarias.isEmpty()) {
+        RestriccionAlimentaria restriccionAlimentaria = new RestriccionAlimentaria();
+        restriccionAlimentaria.setNombre(RestriccionAlimentariaTipo.NINGUNO.name());
+        restriccionAlimentaria.setPerfil(nuevoPerfil);
+        repositorioRestriccionAlimentaria.guardar(restriccionAlimentaria);
+      }
 
       return true;
     }
     return false;
+  }
+
+  // @Override
+  public Boolean actualizarPerfilAlimentario(
+    PerfilAlimentarioUsuario pefiAlimentarioUsuario,
+    PerfilAlimentarioDTO perfilAlimentarioDTO
+  ) {
+    pefiAlimentarioUsuario.setPeso(perfilAlimentarioDTO.getPeso());
+    pefiAlimentarioUsuario.setAltura(perfilAlimentarioDTO.getAltura());
+    pefiAlimentarioUsuario.setEdad(perfilAlimentarioDTO.getEdad());
+    pefiAlimentarioUsuario.setSexo(perfilAlimentarioDTO.getSexo());
+    pefiAlimentarioUsuario.setActividadFisica(perfilAlimentarioDTO.getActividadFisica());
+    pefiAlimentarioUsuario.setObjetivo(perfilAlimentarioDTO.getObjetivo());
+
+    Set<String> nuevaRestriccionesAlimentarias =
+      perfilAlimentarioDTO.getRestriccionesAlimentarias();
+    if (nuevaRestriccionesAlimentarias.isEmpty()) {
+      pefiAlimentarioUsuario.getRestriccionesAlimentarias().clear();
+      pefiAlimentarioUsuario
+        .getRestriccionesAlimentarias()
+        .add(
+          new RestriccionAlimentaria(
+            pefiAlimentarioUsuario,
+            RestriccionAlimentariaTipo.NINGUNO.name()
+          )
+        );
+      return true;
+    }
+
+    pefiAlimentarioUsuario.getRestriccionesAlimentarias().clear();
+
+    for (String nombreNuevaRestriccion : nuevaRestriccionesAlimentarias) {
+      pefiAlimentarioUsuario
+        .getRestriccionesAlimentarias()
+        .add(new RestriccionAlimentaria(pefiAlimentarioUsuario, nombreNuevaRestriccion));
+    }
+
+    return true;
+  }
+
+  public PerfilAlimentarioUsuario crearPerfilAlimentarioUsuarioDesdeDTO(
+    PerfilAlimentarioDTO perfilAlimentarioDTO
+  ) {
+    PerfilAlimentarioUsuario nuevoPerfil = new PerfilAlimentarioUsuario();
+    nuevoPerfil.setPeso(perfilAlimentarioDTO.getPeso());
+    nuevoPerfil.setAltura(perfilAlimentarioDTO.getAltura());
+    nuevoPerfil.setEdad(perfilAlimentarioDTO.getEdad());
+    nuevoPerfil.setSexo(perfilAlimentarioDTO.getSexo());
+    nuevoPerfil.setActividadFisica(perfilAlimentarioDTO.getActividadFisica());
+    nuevoPerfil.setObjetivo(perfilAlimentarioDTO.getObjetivo());
+    return nuevoPerfil;
   }
 }

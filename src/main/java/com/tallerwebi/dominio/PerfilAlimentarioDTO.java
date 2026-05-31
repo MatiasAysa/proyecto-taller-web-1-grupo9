@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import java.util.Set;
+
 public class PerfilAlimentarioDTO {
 
   private Double peso;
@@ -7,7 +9,7 @@ public class PerfilAlimentarioDTO {
   private Integer edad;
   private String sexo;
   private String actividadFisica;
-  private String restriccionesAlimentarias;
+  private Set<String> restriccionesAlimentarias;
   private String objetivo;
 
   public PerfilAlimentarioDTO() {}
@@ -18,7 +20,7 @@ public class PerfilAlimentarioDTO {
     Integer edad,
     String sexo,
     String actividadFisica,
-    String restriccionesAlimentarias,
+    Set<String> restriccionesAlimentarias,
     String objetivo
   ) {
     this.peso = peso;
@@ -79,11 +81,11 @@ public class PerfilAlimentarioDTO {
     this.actividadFisica = actividadFisica;
   }
 
-  public String getRestriccionesAlimentarias() {
+  public Set<String> getRestriccionesAlimentarias() {
     return restriccionesAlimentarias;
   }
 
-  public void setRestriccionesAlimentarias(String restriccionesAlimentarias) {
+  public void setRestriccionesAlimentarias(Set<String> restriccionesAlimentarias) {
     this.restriccionesAlimentarias = restriccionesAlimentarias;
   }
 }

@@ -1,9 +1,12 @@
 package com.tallerwebi.dominio;
 
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class PerfilAlimentarioUsuario {
@@ -17,7 +20,10 @@ public class PerfilAlimentarioUsuario {
   private Integer edad;
   private String sexo;
   private String actividadFisica;
-  private String restriccionesAlimentarias;
+
+  @OneToMany(mappedBy = "perfil", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<RestriccionAlimentaria> restriccionesAlimentarias;
+
   private String objetivo;
 
   public PerfilAlimentarioUsuario() {}
@@ -28,7 +34,6 @@ public class PerfilAlimentarioUsuario {
     Integer edad,
     String sexo,
     String actividadFisica,
-    String restriccionesAlimentarias,
     String objetivo
   ) {
     this.peso = peso;
@@ -36,7 +41,6 @@ public class PerfilAlimentarioUsuario {
     this.edad = edad;
     this.sexo = sexo;
     this.actividadFisica = actividadFisica;
-    this.restriccionesAlimentarias = restriccionesAlimentarias;
     this.objetivo = objetivo;
   }
 
@@ -80,19 +84,19 @@ public class PerfilAlimentarioUsuario {
     this.actividadFisica = actividadFisica;
   }
 
-  public String getRestriccionesAlimentarias() {
-    return restriccionesAlimentarias;
-  }
-
-  public void setRestriccionesAlimentarias(String restriccionesAlimentarias) {
-    this.restriccionesAlimentarias = restriccionesAlimentarias;
-  }
-
   public String getObjetivo() {
     return objetivo;
   }
 
   public void setObjetivo(String objetivo) {
     this.objetivo = objetivo;
+  }
+
+  public Set<RestriccionAlimentaria> getRestriccionesAlimentarias() {
+    return restriccionesAlimentarias;
+  }
+
+  public void setRestriccionesAlimentarias(Set<RestriccionAlimentaria> restriccionesAlimentarias) {
+    this.restriccionesAlimentarias = restriccionesAlimentarias;
   }
 }

@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,15 +15,18 @@ class ServicioRegistroPerfilAlimentarioTest {
   private RepositorioPerfilAlimentarioUsuario repositorioPerfilAlimentarioUsuarioMock;
   private RepositorioUsuario repositorioUsuario;
   private ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentario;
+  private RepositorioRestriccionAlimentaria repositorioRestriccionAlimentaria;
 
   @BeforeEach
   void setUp() {
     this.repositorioPerfilAlimentarioUsuarioMock = mock(RepositorioPerfilAlimentarioUsuario.class);
     this.repositorioUsuario = mock(RepositorioUsuario.class);
+    this.repositorioRestriccionAlimentaria = mock(RepositorioRestriccionAlimentaria.class);
     this.servicioRegistroPerfilAlimentario =
       new ServicioRegistroPerfilAlimentarioImpl(
         repositorioPerfilAlimentarioUsuarioMock,
-        repositorioUsuario
+        repositorioUsuario,
+        repositorioRestriccionAlimentaria
       );
   }
 
@@ -35,7 +40,7 @@ class ServicioRegistroPerfilAlimentarioTest {
     when(repositorioUsuario.buscar(usuario.getEmail())).thenReturn(usuario);
 
     // When
-    Boolean resultado = whenGuardarPerfilAlimentario(perfilDTO, usuario.getEmail());
+    boolean resultado = whenGuardarPerfilAlimentario(perfilDTO, usuario.getEmail());
 
     // Then
     verify(repositorioPerfilAlimentarioUsuarioMock)
@@ -46,7 +51,7 @@ class ServicioRegistroPerfilAlimentarioTest {
     verify(repositorioPerfilAlimentarioUsuarioMock, times(1)).guardar(perfilEntidadCapturado);
   }
 
-  private Boolean whenGuardarPerfilAlimentario(PerfilAlimentarioDTO perfilDTO, String email) {
+  boolean whenGuardarPerfilAlimentario(PerfilAlimentarioDTO perfilDTO, String email) {
     return servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilDTO, email);
   }
 
@@ -56,7 +61,7 @@ class ServicioRegistroPerfilAlimentarioTest {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
 
     // When
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
 
     // Then
     thenElResultadoEsTrue(resultado);
@@ -66,7 +71,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnPesoNegativoCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setPeso(-100.0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -74,7 +79,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnPesoCeroCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setPeso(0.0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -82,7 +87,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnPesoMayorOIgualA635CuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setPeso(635.0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -90,7 +95,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnaAlturaNegativaCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setAltura(-100.0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -98,7 +103,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnaAlturaCeroCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setAltura(0.0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -106,7 +111,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnaAlturaMayorOIgualA272CuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setAltura(272.0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -114,7 +119,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnaEdadNegativaCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setEdad(-1);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -122,7 +127,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnaEdadCeroCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setEdad(0);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -130,7 +135,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnaEdadMayorOIgualA100CuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setEdad(100);
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -138,23 +143,16 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnSexoInvalidoCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setSexo("x");
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
-  @Test
-  void dadoQueIngresoUnaRestriccionAlimentariaInvalidaCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setRestriccionesAlimentarias("x");
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
 
   @Test
   void dadoQueIngresoUnaActividadFisicaInvalidaCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setActividadFisica("x");
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -162,7 +160,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   void dadoQueIngresoUnObjetivoInvalidoCuandoSeValidaObtengoFalse() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
     perfil.setObjetivo("x");
-    Boolean resultado = whenValidarPerfilAlimentario(perfil);
+    boolean resultado = whenValidarPerfilAlimentario(perfil);
     thenElResultadoEsFalse(resultado);
   }
 
@@ -172,18 +170,20 @@ class ServicioRegistroPerfilAlimentarioTest {
     Integer edad = 20;
     String sexo = Sexo.M.name();
     String actividadFisica = AcividadFisica.ACTIVA.name();
-    String restriccionesAlimentarias = RestriccionAlimentaria.CELIACO.name();
+    Set<String> restriccionesAlimentarias = new HashSet<>();
+    restriccionesAlimentarias.add(RestriccionAlimentariaTipo.CELIACO.name());
+    restriccionesAlimentarias.add(RestriccionAlimentariaTipo.DIABETICO.name());
     String objetivo = Objetivo.GANAR_PESO.name();
-    PerfilAlimentarioDTO perfil = new PerfilAlimentarioDTO(
-      peso,
-      altura,
-      edad,
-      sexo,
-      actividadFisica,
-      restriccionesAlimentarias,
-      objetivo
+
+    return new PerfilAlimentarioDTO(
+            peso,
+            altura,
+            edad,
+            sexo,
+            actividadFisica,
+            restriccionesAlimentarias,
+            objetivo
     );
-    return perfil;
   }
 
   public Usuario givenUsuarioExiste() {

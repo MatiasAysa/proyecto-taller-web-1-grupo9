@@ -54,8 +54,9 @@
             <div class="form-group">
                 <!-- por defecto es ninguna -->
                 <h3>Restricciones alimentarias</h3>
+                <p>Seleccione si tiene alguna restriccion alimentaria, puede seleccionar mas de una.</p>
                 <label for="restriccionesAlimentarias"></label>
-                <select name="restriccionesAlimentarias" id="restriccionesAlimentarias"
+                <select name="restriccionesAlimentarias" id="restriccionesAlimentarias" multiple
                     th:field="*{restriccionesAlimentarias}">
                     <option value="CELIACO">Celiaco</option>
                     <option value="DIABETICO">Diabetico</option>
