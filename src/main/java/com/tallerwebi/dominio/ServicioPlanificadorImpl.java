@@ -68,6 +68,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
         : costoTotalCalculado
     );
     plan.setAdvertencias(advertencias);
+    plan.setAlimentosAsignados(alimentosAptos);
 
     return plan;
   }
