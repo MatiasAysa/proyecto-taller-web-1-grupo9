@@ -115,4 +115,8 @@ public class Usuario {
   public void setObjetivo(String objetivo) {
     this.objetivo = objetivo;
   }
+
+  public void setContieneLactosa(Boolean contieneLactosa) {
+    this.esIntoleranteLactosa = !contieneLactosa;
+  }
 }
