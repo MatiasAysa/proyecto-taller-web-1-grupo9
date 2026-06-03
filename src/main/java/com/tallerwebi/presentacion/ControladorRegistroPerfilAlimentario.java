@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.PerfilAlimentarioDTO;
 import com.tallerwebi.dominio.ServicioRegistroPerfilAlimentario;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import com.tallerwebi.dominio.excepcion.perfilException.ActividadFisicaInvalidaException;
 import com.tallerwebi.dominio.excepcion.perfilException.AlturaInvalidaException;
 import com.tallerwebi.dominio.excepcion.perfilException.EdadInvalidaException;
@@ -62,7 +63,7 @@ public class ControladorRegistroPerfilAlimentario {
     try {
       servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilAlimentarioDTO, email);
       return new ModelAndView(HOME, modelo);
-    } catch (UsuarioExistente exeption) {
+    } catch (UsuarioInexistenteException exeption) {
       modelo.put(ATT_ERROR, "Error: Usuario inexistente");
       modelo.put(ATT_PERFIL_ALIMENTARIO, perfilAlimentarioDTO);
     } catch (Exception exception) {

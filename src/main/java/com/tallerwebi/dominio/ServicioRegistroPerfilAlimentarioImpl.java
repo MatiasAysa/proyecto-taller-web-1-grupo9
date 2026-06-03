@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import com.tallerwebi.dominio.excepcion.perfilException.ActividadFisicaInvalidaException;
 import com.tallerwebi.dominio.excepcion.perfilException.AlturaInvalidaException;
 import com.tallerwebi.dominio.excepcion.perfilException.EdadInvalidaException;
@@ -100,10 +100,10 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     validarObjetivo(perfilAlimentarioDTO.getObjetivo());
   }
 
-  public Usuario obtenerUsuarioLogueado(String email) throws UsuarioInexistenteException  {
+  public Usuario obtenerUsuarioLogueado(String email) throws UsuarioInexistenteException {
     Usuario usuario = repositorioUsuario.buscar(email);
     if (usuario == null) {
-      throw new UsuarioInexistenteException();
+      throw new UsuarioInexistenteException("");
     }
     return usuario;
   }
@@ -111,7 +111,7 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
   // guardo los datos en la base de datos
   @Override
   public void guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email)
-    throws UsuarioExistente {
+    throws UsuarioInexistenteException {
     Usuario usuario = obtenerUsuarioLogueado(email);
     validarPerfilAlimentario(perfilAlimentarioDTO);
 

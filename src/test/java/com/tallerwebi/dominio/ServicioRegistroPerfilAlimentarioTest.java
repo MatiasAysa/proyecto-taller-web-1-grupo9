@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import com.tallerwebi.dominio.excepcion.perfilException.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +36,7 @@ class ServicioRegistroPerfilAlimentarioTest {
 
   @Test
   void dadoQueTodosLosDatosSonValidosYQueElUsuarioExisteCuandoSeGuardaEntoncesPersisteEnElRepositorio()
-    throws UsuarioExistente {
+    throws UsuarioInexistenteException {
     // Given
     PerfilAlimentarioDTO perfilDTO = givenPerfilConDatosValidos();
     Usuario usuario = givenUsuarioExiste();
