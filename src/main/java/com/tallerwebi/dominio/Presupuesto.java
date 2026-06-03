@@ -14,14 +14,8 @@ public class Presupuesto {
   private Long id;
 
   private float monto;
-  private float intervalo;
+  private int intervalo;
   private LocalDate fecha;
-
-  public Presupuesto(float monto, float intervalo, LocalDate fecha) {
-    this.monto = monto;
-    this.intervalo = intervalo;
-    this.fecha = fecha;
-  }
 
   public Long getId() {
     return id;
@@ -43,7 +37,11 @@ public class Presupuesto {
     return intervalo;
   }
 
-  public void setIntervalo(float intervalo) {
+  public void setIntervalo(int intervalo) {
     this.intervalo = intervalo;
   }
+
+  public LocalDate getFecha() {return fecha;}
+
+  public void setFecha(LocalDate fecha) {this.fecha = fecha;}
 }
