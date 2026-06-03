@@ -55,8 +55,7 @@ public class ServicioPlanificadorTest {
   private Alimento crearAlimento(String nombre, Double precio, String tipo, Boolean esVegetariano) {
     Alimento alimento = new Alimento();
     alimento.setNombre(nombre);
-    alimento.setPrecioEstimado(precio);
-    alimento.setTipoComida(tipo);
+    alimento.setPrecioPorKg(precio);
     alimento.setEsVegetariano(esVegetariano);
     return alimento;
   }

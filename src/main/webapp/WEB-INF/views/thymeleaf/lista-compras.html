@@ -10,7 +10,7 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     <!-- custom style -->
-    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/css/lista-compras.css}">
 
 </head>
 
@@ -19,15 +19,49 @@
     <a class="navbar-brand" href="#">UNLAM</a>
 </nav>
 
-<main>
-    <div>
-        <ul>
-            <li th:each="alimento : ${alimentos}" th:text="${alimento.nombre}">
-            </li>
-        </ul>
-    </div>
+<main class="container mt-5">
 
+    <h1 class="titulo-principal">
+        Comidas Generadas
+    </h1>
+
+    <div class="contenedor-comidas">
+        <div class="card-comida" th:each="comida : ${comidas}">
+            <h2 th:text="${comida.nombre}"></h2>
+            <ul>
+                <li th:each="item : ${comida.items}">
+                    <span th:text="${item.alimento.nombre}"></span>
+                    <span th:text="${item.cantidadEnGramos}"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </main>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

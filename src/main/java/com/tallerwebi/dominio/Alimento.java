@@ -13,11 +13,18 @@ public class Alimento {
   private Long id;
 
   private String nombre;
-  private Double precioEstimado;
-  private String tipoComida;
+  private Double precioPorKg;
   private Boolean esVegetariano;
   private Boolean esCeliaco;
   private Boolean contieneLactosa = false;
+
+  public Double getPrecioPorKg() {
+    return precioPorKg;
+  }
+
+  public void setPrecioPorKg(Double precioPorKg) {
+    this.precioPorKg = precioPorKg;
+  }
 
   public Long getId() {
     return id;
@@ -33,22 +40,6 @@ public class Alimento {
 
   public void setNombre(String nombre) {
     this.nombre = nombre;
-  }
-
-  public Double getPrecioEstimado() {
-    return precioEstimado;
-  }
-
-  public void setPrecioEstimated(Double precioEstimado) {
-    this.precioEstimado = precioEstimado;
-  }
-
-  public String getTipoComida() {
-    return tipoComida;
-  }
-
-  public void setTipoComida(String tipoComida) {
-    this.tipoComida = tipoComida;
   }
 
   public Boolean getEsVegetariano() {
@@ -74,9 +65,4 @@ public class Alimento {
   public void setContieneLactosa(Boolean contieneLactosa) {
     this.contieneLactosa = contieneLactosa;
   }
-
-  public void setPrecioEstimado(Double precio) {
-    this.precioEstimado = precio;
-  }
-  
 }

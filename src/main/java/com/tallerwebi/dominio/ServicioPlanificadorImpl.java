@@ -48,7 +48,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
     Double costoTotalCalculado = 0.0;
     for (Alimento alimento : alimentosAptos) {
-      costoTotalCalculado += (alimento.getPrecioEstimado() * DIAS_DE_LA_SEMANA);
+      costoTotalCalculado += (alimento.getPrecioPorKg() * DIAS_DE_LA_SEMANA);
     }
 
     List<String> advertencias = new ArrayList<>();

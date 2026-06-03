@@ -1,0 +1,47 @@
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+.titulo-principal {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.contenedor-comidas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+.card-comida {
+    background-color: white;
+    width: 320px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    transition: 0.2s;
+}
+
+.card-comida:hover {
+    transform: scale(1.02);
+}
+
+.card-comida h2 {
+    margin-bottom: 15px;
+    color: #198754;
+    font-size: 24px;
+}
+
+.card-comida ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card-comida li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eaeaea;
+}
