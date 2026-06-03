@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioPresupuesto;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
+import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +20,7 @@ public class ControladorPresupuesto {
   private static final String MENSAJE_FECHA_OBLIGATORIA = "La fecha es obligatoria";
   private static final String MENSAJE_MONTO_OBLIGATORIO = "El monto es obligatorio";
   private ServicioPresupuesto servicioPresupuesto;
+  private static final String CAMPO_MAIL_USUARIO = "usuarioLogueadoEmail";
 
   @Autowired
   public ControladorPresupuesto(ServicioPresupuesto servicioPresupuesto) {
@@ -25,7 +28,10 @@ public class ControladorPresupuesto {
   }
 
   @RequestMapping("/configurar-presupuesto")
-  public ModelAndView irAConfigurarPresupuesto() {
+  public ModelAndView irAConfigurarPresupuesto(HttpSession session) {
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
+      "redirect:/login"
+    );
     ModelMap modelo = new ModelMap();
     modelo.put("datosPresupuesto", new DatosPresupuesto());
     return new ModelAndView("configurar-presupuesto", modelo);
@@ -33,11 +39,14 @@ public class ControladorPresupuesto {
 
   @RequestMapping(path = "/mi-presupuesto", method = RequestMethod.POST)
   public ModelAndView validarPresupuesto(
-    @ModelAttribute("datosPresupuesto") DatosPresupuesto datosPresupuesto
+    @ModelAttribute("datosPresupuesto") DatosPresupuesto datosPresupuesto,
+    HttpSession session
   ) {
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
+      "redirect:/login"
+    );
     ModelMap model = new ModelMap();
     model.put("mensaje", MENSAJE_PRESUPUESTO_EXITOSO);
-
     if (datosPresupuesto.getIntervalo() == 0) {
       return fallarPresupuesto(MENSAJE_INTERVALO_OBLIGATORIO);
     }
@@ -48,8 +57,12 @@ public class ControladorPresupuesto {
       servicioPresupuesto.crearPresupuesto(
         datosPresupuesto.getMonto(),
         datosPresupuesto.getIntervalo(),
-        datosPresupuesto.getFecha()
+        datosPresupuesto.getFecha(),
+        session.getAttribute(CAMPO_MAIL_USUARIO).toString()
       );
+      model.put("monto", datosPresupuesto.getMonto());
+      model.put("intervalo", datosPresupuesto.getIntervalo());
+      model.put("fecha", datosPresupuesto.getFecha());
     } catch (PresupuestoNoPositivoException e) {
       return fallarPresupuesto(MENSAJE_MONTO_OBLIGATORIO);
     }
@@ -63,8 +76,22 @@ public class ControladorPresupuesto {
   }
 
   @RequestMapping("/mi-presupuesto")
-  public ModelAndView irAMiPresupuesto() {
-    return new ModelAndView("mi-presupuesto");
+  public ModelAndView irAMiPresupuesto(HttpSession session) {
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
+      "redirect:/login"
+    );
+    try {
+      DatosPresupuesto datosPresupuesto = servicioPresupuesto.buscarPresupuesto(
+        session.getAttribute(CAMPO_MAIL_USUARIO).toString()
+      );
+      ModelMap model = new ModelMap();
+      model.put("monto", datosPresupuesto.getMonto());
+      model.put("intervalo", datosPresupuesto.getIntervalo());
+      model.put("fecha", datosPresupuesto.getFecha());
+      return new ModelAndView("mi-presupuesto", model);
+    } catch (UsuarioSinPresupuestoException e) {
+      return new ModelAndView("redirect:/configurar-presupuesto");
+    }
   }
 
   public String getMENSAJE_PRESUPUESTO_EXITOSO() {

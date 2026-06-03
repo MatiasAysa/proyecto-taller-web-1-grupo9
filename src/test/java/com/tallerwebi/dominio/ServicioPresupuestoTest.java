@@ -7,15 +7,16 @@ import static org.mockito.Mockito.mock;
 
 import com.google.protobuf.NullValue;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
-import java.time.LocalDate;
-
 import com.tallerwebi.infraestructura.RepositorioPresupuestoImpl;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 public class ServicioPresupuestoTest {
 
   private RepositorioPresupuesto repositorioPresupuesto = mock(RepositorioPresupuestoImpl.class);
-  private ServicioPresupuesto servicioPresupuesto = new ServicioPresupuestoImpl(repositorioPresupuesto);
+  private ServicioPresupuesto servicioPresupuesto = new ServicioPresupuestoImpl(
+    repositorioPresupuesto
+  );
   private final float monto = 200000;
   private final int intervalo = 7;
   private final LocalDate fecha = LocalDate.now();
@@ -45,7 +46,7 @@ public class ServicioPresupuestoTest {
     int intervalo,
     LocalDate fecha
   ) {
-    return servicioPresupuesto.crearPresupuesto(monto, intervalo, fecha);
+    return servicioPresupuesto.crearPresupuesto(monto, intervalo, fecha, "a@a.com");
   }
 
   private void givenExisteUsuario() {}

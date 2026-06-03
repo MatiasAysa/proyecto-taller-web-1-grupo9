@@ -1,10 +1,7 @@
 package com.tallerwebi.dominio;
 
 import java.time.LocalDate;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Presupuesto {
@@ -16,6 +13,18 @@ public class Presupuesto {
   private float monto;
   private int intervalo;
   private LocalDate fecha;
+
+  @OneToOne
+  @JoinColumn(name = "usuario_id")
+  private Usuario usuario;
+
+  public Usuario getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
 
   public Long getId() {
     return id;
@@ -33,7 +42,7 @@ public class Presupuesto {
     this.monto = monto;
   }
 
-  public float getIntervalo() {
+  public int getIntervalo() {
     return intervalo;
   }
 
@@ -41,7 +50,11 @@ public class Presupuesto {
     this.intervalo = intervalo;
   }
 
-  public LocalDate getFecha() {return fecha;}
+  public LocalDate getFecha() {
+    return fecha;
+  }
 
-  public void setFecha(LocalDate fecha) {this.fecha = fecha;}
+  public void setFecha(LocalDate fecha) {
+    this.fecha = fecha;
+  }
 }
