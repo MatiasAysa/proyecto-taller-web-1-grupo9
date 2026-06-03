@@ -41,6 +41,28 @@
             <h3>Costo Semanal Estimado: <span th:text="${'$' + #numbers.formatDecimal(planGenerado.costoTotalPlan, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></h3>
         </div>
 
+        <div class="resumen-nutricional">
+            <h3>Balance Nutricional Semanal</h3>
+            <div class="grilla-macros">
+                <div class="tarjeta-macro item-calorias">
+                    <span class="macro-etiqueta">Calorías</span>
+                    <strong class="macro-valor" th:text="${planGenerado.totalCalorias + ' kcal'}">0 kcal</strong>
+                </div>
+                <div class="tarjeta-macro item-proteinas">
+                    <span class="macro-etiqueta">Proteínas</span>
+                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalProteinas, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                </div>
+                <div class="tarjeta-macro item-carbohidratos">
+                    <span class="macro-etiqueta">Carbohidratos</span>
+                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalCarbohidratos, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                </div>
+                <div class="tarjeta-macro item-grasas">
+                    <span class="macro-etiqueta">Grasas</span>
+                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalGrasas, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                </div>
+            </div>
+        </div>
+
         <div class="grilla-menu">
 
             <div class="tarjeta-dia" th:if="${planGenerado.costoTotalPlan <= 40000 and planGenerado.costoTotalPlan > 0}">

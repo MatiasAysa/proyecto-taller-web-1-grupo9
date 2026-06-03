@@ -23,19 +23,33 @@ public class ServicioPlanificadorTest {
     this.repositorioPlanificadorMock = mock(RepositorioPlanificador.class);
     this.servicioPlanificador = new ServicioPlanificadorImpl(this.repositorioPlanificadorMock);
     this.alimentosEnStock = new ArrayList<>();
-    this.alimentosEnStock.add(crearAlimento("Pollo", 8500.0, "ALMUERZO", false, false));
-    this.alimentosEnStock.add(crearAlimento("Lentejas", 2200.0, "ALMUERZO", true, false));
-    this.alimentosEnStock.add(crearAlimento("Avena", 1500.0, "DESAYUNO", true, false));
-    this.alimentosEnStock.add(crearAlimento("Yogur Entero", 3500.0, "DESAYUNO", true, true)); // Contiene lactosa
-    this.alimentosEnStock.add(crearAlimento("Fruta", 1000.0, "MERIENDA", true, false));
-    this.alimentosEnStock.add(crearAlimento("Wok de Pollo", 4200.0, "CENA", false, false));
-    this.alimentosEnStock.add(crearAlimento("Tortilla Espinaca", 1800.0, "CENA", true, false));
+
+    this.alimentosEnStock.add(
+        crearAlimento("Pollo", 8500.0, "ALMUERZO", false, false, 165, 31.0, 0.0, 3.6)
+      );
+    this.alimentosEnStock.add(
+        crearAlimento("Lentejas", 2200.0, "ALMUERZO", true, false, 116, 9.0, 20.0, 0.4)
+      );
+    this.alimentosEnStock.add(
+        crearAlimento("Avena", 1500.0, "DESAYUNO", true, false, 389, 16.9, 66.3, 6.9)
+      );
+    this.alimentosEnStock.add(
+        crearAlimento("Yogur Entero", 3500.0, "DESAYUNO", true, true, 61, 3.5, 4.7, 3.3)
+      );
+    this.alimentosEnStock.add(
+        crearAlimento("Fruta", 1000.0, "MERIENDA", true, false, 52, 0.3, 14.0, 0.2)
+      );
+    this.alimentosEnStock.add(
+        crearAlimento("Wok de Pollo", 4200.0, "CENA", false, false, 250, 20.0, 15.0, 5.0)
+      );
+    this.alimentosEnStock.add(
+        crearAlimento("Tortilla Espinaca", 1800.0, "CENA", true, false, 150, 7.0, 10.0, 8.0)
+      );
   }
 
   @Test
-  public void queUnUsuarioVegetarianoRecibaUnPlanSinCarneYAcordeAlPresupuesto()
+  public void queUnUsuarioVegetarianoRecibaUnPlanSinCarneYAcordeAlPresupuestoYConMacrosCalculados()
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
-    // Given
     Long usuarioId = 1L;
     Usuario usuarioVegetariano = new Usuario();
     usuarioVegetariano.setId(usuarioId);
@@ -46,12 +60,12 @@ public class ServicioPlanificadorTest {
     when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioVegetariano);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    // When
     PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(usuarioId);
 
-    // Then
     assertThat(planObtenido, notNullValue());
     assertThat(planObtenido.getCostoTotalPlan(), is(lessThanOrEqualTo(40000.0)));
+    assertThat(planObtenido.getTotalCalorias(), is(5376));
+    assertThat(planObtenido.getTotalProteinas(), is(256.9));
 
     for (Alimento al : planObtenido.getAlimentosAsignados()) {
       assertThat(al.getEsVegetariano(), is(true));
@@ -59,9 +73,8 @@ public class ServicioPlanificadorTest {
   }
 
   @Test
-  public void queUnUsuarioCarnivoroConPresupuestoPremiumRecibaUnPlanVariadoConCarne()
+  public void queUnUsuarioCarnivoroConPresupuestoPremiumRecibaUnPlanVariadoConCarneYMacrosTotales()
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
-    // Given
     Long usuarioId = 2L;
     Usuario usuarioPremium = new Usuario();
     usuarioPremium.setId(usuarioId);
@@ -72,12 +85,11 @@ public class ServicioPlanificadorTest {
     when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioPremium);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    // When
     PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(usuarioId);
 
-    // Then
     assertThat(planObtenido, notNullValue());
     assertThat(planObtenido.getCostoTotalPlan(), is(greaterThan(40000.0)));
+    assertThat(planObtenido.getTotalCalorias(), is(8281));
 
     boolean tieneCarne = planObtenido
       .getAlimentosAsignados()
@@ -89,7 +101,6 @@ public class ServicioPlanificadorTest {
   @Test
   public void queUnUsuarioIntoleranteALaLactosaRecibaUnPlanLibreDeLactosa()
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
-    // Given
     Long usuarioId = 3L;
     Usuario usuarioIntolerante = new Usuario();
     usuarioIntolerante.setId(usuarioId);
@@ -100,10 +111,8 @@ public class ServicioPlanificadorTest {
     when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioIntolerante);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    // When
     PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(usuarioId);
 
-    // Then
     assertThat(planObtenido, notNullValue());
 
     for (Alimento al : planObtenido.getAlimentosAsignados()) {
@@ -113,7 +122,6 @@ public class ServicioPlanificadorTest {
 
   @Test
   public void queLancePresupuestoInsuficienteExceptionSiElDineroNoCubreElMinimoEconomico() {
-    // Given
     Long usuarioId = 4L;
     Usuario usuarioEvadido = new Usuario();
     usuarioEvadido.setId(usuarioId);
@@ -124,7 +132,6 @@ public class ServicioPlanificadorTest {
     when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioEvadido);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    // When & Then
     assertThrows(
       PresupuestoInsuficienteException.class,
       () -> {
@@ -152,7 +159,11 @@ public class ServicioPlanificadorTest {
     Double precio,
     String tipo,
     Boolean esVegetariano,
-    Boolean contieneLactosa
+    Boolean contieneLactosa,
+    Integer calorias,
+    Double proteinas,
+    Double carbohidratos,
+    Double grasas
   ) {
     Alimento alimento = new Alimento();
     alimento.setNombre(nombre);
@@ -161,6 +172,10 @@ public class ServicioPlanificadorTest {
     alimento.setEsVegetariano(esVegetariano);
     alimento.setContieneLactosa(contieneLactosa);
     alimento.setEsCeliaco(false);
+    alimento.setCalorias(calorias);
+    alimento.setProteinas(proteinas);
+    alimento.setCarbohidratos(carbohidratos);
+    alimento.setGrasas(grasas);
     return alimento;
   }
 }

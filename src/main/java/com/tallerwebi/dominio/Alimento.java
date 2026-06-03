@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,9 @@ public class Alimento {
   private Boolean esVegetariano;
   private Boolean esCeliaco;
   private Boolean contieneLactosa = false;
+
+  @Embedded
+  private InformacionNutricional infoNutricional = new InformacionNutricional();
 
   public Long getId() {
     return id;
@@ -39,8 +43,8 @@ public class Alimento {
     return precioEstimado;
   }
 
-  public void setPrecioEstimated(Double precioEstimado) {
-    this.precioEstimado = precioEstimado;
+  public void setPrecioEstimado(Double precio) {
+    this.precioEstimado = precio;
   }
 
   public String getTipoComida() {
@@ -75,7 +79,35 @@ public class Alimento {
     this.contieneLactosa = contieneLactosa;
   }
 
-  public void setPrecioEstimado(Double precio) {
-    this.precioEstimado = precio;
+  public Integer getCalorias() {
+    return infoNutricional.getCalorias();
+  }
+
+  public void setCalorias(Integer calorias) {
+    infoNutricional.setCalorias(calorias);
+  }
+
+  public Double getProteinas() {
+    return infoNutricional.getProteinas();
+  }
+
+  public void setProteinas(Double proteinas) {
+    infoNutricional.setProteinas(proteinas);
+  }
+
+  public Double getCarbohidratos() {
+    return infoNutricional.getCarbohidratos();
+  }
+
+  public void setCarbohidratos(Double carbohidratos) {
+    infoNutricional.setCarbohidratos(carbohidratos);
+  }
+
+  public Double getGrasas() {
+    return infoNutricional.getGrasas();
+  }
+
+  public void setGrasas(Double grasas) {
+    infoNutricional.setGrasas(grasas);
   }
 }
