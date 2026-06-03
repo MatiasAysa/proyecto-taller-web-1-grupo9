@@ -3,6 +3,7 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.ServicioPresupuesto;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -87,7 +88,7 @@ public class ControladorPresupuesto {
       ModelMap model = new ModelMap();
       model.put("monto", datosPresupuesto.getMonto());
       model.put("intervalo", datosPresupuesto.getIntervalo());
-      model.put("fecha", datosPresupuesto.getFecha());
+      model.put("fecha", datosPresupuesto.getFecha().format(DateTimeFormatter.ISO_DATE));
       return new ModelAndView("mi-presupuesto", model);
     } catch (UsuarioSinPresupuestoException e) {
       return new ModelAndView("redirect:/configurar-presupuesto");
