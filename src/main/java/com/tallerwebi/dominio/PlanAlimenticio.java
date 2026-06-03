@@ -9,6 +9,10 @@ public class PlanAlimenticio {
   private Double costoTotalPlan;
   private List<String> advertencias = new ArrayList<>();
   private List<Alimento> alimentosAsignados = new ArrayList<>();
+  private Integer totalCalorias = 0;
+  private Double totalProteinas = 0.0;
+  private Double totalCarbohidratos = 0.0;
+  private Double totalGrasas = 0.0;
 
   public Long getId() {
     return id;
@@ -40,5 +44,37 @@ public class PlanAlimenticio {
 
   public void setAlimentosAsignados(List<Alimento> alimentosAsignados) {
     this.alimentosAsignados = alimentosAsignados;
+  }
+
+  public Integer getTotalCalorias() {
+    return totalCalorias;
+  }
+
+  public void setTotalCalorias(Integer totalCalorias) {
+    this.totalCalorias = totalCalorias;
+  }
+
+  public Double getTotalProteinas() {
+    return totalProteinas;
+  }
+
+  public void setTotalProteinas(Double totalProteinas) {
+    this.totalProteinas = totalProteinas;
+  }
+
+  public Double getTotalCarbohidratos() {
+    return totalCarbohidratos;
+  }
+
+  public void setTotalCarbohidratos(Double totalCarbohidratos) {
+    this.totalCarbohidratos = totalCarbohidratos;
+  }
+
+  public Double getTotalGrasas() {
+    return totalGrasas;
+  }
+
+  public void setTotalGrasas(Double totalGrasas) {
+    this.totalGrasas = totalGrasas;
   }
 }
