@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Planificador Inteligente de Comidas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/planificador.css}"/>
+</head>
+<body>
+<div class="contenedor-principal">
+    <header class="encabezado">
+        <h1>Generador de Menú Económico Inteligente</h1>
+        <p>Optimizando tu nutrición en base a tu presupuesto real.</p>
+    </header>
+
+    <div th:if="${error}" class="alerta-error">
+        <p>AVISO: <span th:text="${#strings.toString(error).replace('??', '')}"></span></p>
+    </div>
+
+    <div class="panel-accion" th:if="${planGenerado == null}">
+        <p>Presioná el botón para calcular tu distribución semanal óptima basada en tus restricciones y el dinero disponible en tu cuenta.</p>
+        <form th:action="@{/generar-plan}" method="POST">
+            <input type="hidden" name="usuarioId" value="1"/>
+            <button type="submit" class="btn-principal">Calcular Menú Semanal</button>
+        </form>
+    </div>
+
+    <div th:if="${planGenerado != null}" class="resultado-plan">
+
+        <div th:if="${not #lists.isEmpty(advertencias)}" class="bloque-advertencias">
+            <h3>RECOMENDACIONES DE AHORRO</h3>
+            <ul>
+                <li th:each="adv : ${advertencias}" th:text="${#strings.toString(adv).replace('??', '')}"></li>
+            </ul>
+        </div>
+
+        <div class="resumen-costo">
+            <h3>Costo Semanal Estimado: <span th:text="${'$' + #numbers.formatDecimal(planGenerado.costoTotalPlan, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></h3>
+        </div>
+
+        <div class="resumen-nutricional">
+            <h3>Balance Nutricional Semanal</h3>
+            <div class="grilla-macros">
+                <div class="tarjeta-macro item-calorias">
+                    <span class="macro-etiqueta">Calorías</span>
+                    <strong class="macro-valor" th:text="${planGenerado.totalCalorias + ' kcal'}">0 kcal</strong>
+                </div>
+                <div class="tarjeta-macro item-proteinas">
+                    <span class="macro-etiqueta">Proteínas</span>
+                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalProteinas, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                </div>
+                <div class="tarjeta-macro item-carbohidratos">
+                    <span class="macro-etiqueta">Carbohidratos</span>
+                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalCarbohidratos, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                </div>
+                <div class="tarjeta-macro item-grasas">
+                    <span class="macro-etiqueta">Grasas</span>
+                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalGrasas, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="grilla-menu">
+
+            <div class="tarjeta-dia" th:if="${planGenerado.costoTotalPlan <= 40000 and planGenerado.costoTotalPlan > 0}">
+                <h4>PLAN SEMANAL ECONÓMICO INTELIGENTE</h4>
+                <div class="comida"><strong>Desayuno:</strong> Avena caliente con frutas de estación y té infusor.</div>
+                <div class="comida"><strong>Almuerzo:</strong> Guiso de lentejas nutritivo con arroz y vegetales base.</div>
+                <div class="comida"><strong>Merienda:</strong> Mate cocido o infusión con rodajas de pan integral tostado.</div>
+                <div class="comida"><strong>Cena:</strong> Tortilla de espinaca con revuelto de huevos y arroz reutilizado.</div>
+            </div>
+
+            <div class="tarjeta-dia" th:if="${planGenerado.costoTotalPlan > 40000}">
+                <h4>PLAN SEMANAL VARIADO PREMIUM</h4>
+                <div class="comida"><strong>Desayuno:</strong> Yogur firme con granola premium, frutos secos y frutas frescas.</div>
+                <div class="comida"><strong>Almuerzo:</strong> Suprema de pechuga de pollo a la plancha con puré mixto o fideos integrales.</div>
+                <div class="comida"><strong>Merienda:</strong> Café con leche, tostadas de pan integral y porción de queso cremoso.</div>
+                <div class="comida"><strong>Cena:</strong> Wok de pollo saltado con vegetales selectos, semillas de sésamo y arroz integral.</div>
+            </div>
+
+        </div>
+
+        <div style="text-align: center;">
+            <a th:href="@{/configurar-presupuesto}" class="btn-secundario">Volver a calcular</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
