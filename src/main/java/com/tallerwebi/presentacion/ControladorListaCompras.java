@@ -1,9 +1,6 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Alimento;
-import com.tallerwebi.dominio.Comida;
-import com.tallerwebi.dominio.ItemComida;
-import com.tallerwebi.dominio.ServicioListaCompras;
+import com.tallerwebi.dominio.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +32,22 @@ public class ControladorListaCompras {
     Alimento alimento3 = new Alimento();
     alimento3.setNombre("Tomate");
     alimento3.setPrecioPorKg(3000.0);
+    Alimento alimento4 = new Alimento();
+    alimento4.setNombre("Zapallo");
+    alimento4.setPrecioPorKg(3000.0);
+    Alimento alimento5 = new Alimento();
+    alimento5.setNombre("Papa");
+    alimento5.setPrecioPorKg(3000.0);
+    Alimento alimento6 = new Alimento();
+    alimento6.setNombre("Banana");
+    alimento6.setPrecioPorKg(3000.0);
 
     ItemComida itemComida1 = new ItemComida(100.0, alimento1);
     ItemComida itemComida2 = new ItemComida(200.0, alimento2);
     ItemComida itemComida3 = new ItemComida(100.0, alimento3);
+    ItemComida itemComida4 = new ItemComida(500.0, alimento4);
+    ItemComida itemComida5 = new ItemComida(240.0, alimento5);
+    ItemComida itemComida6 = new ItemComida(1000.0, alimento6);
 
     Comida comida1 = new Comida();
     comida1.setNombre("Arroz Con Pollo y Tomate");
@@ -56,12 +65,37 @@ public class ControladorListaCompras {
     comida3.getItems().add(itemComida2);
     comida3.getItems().add(itemComida3);
 
+    Comida comida4 = new Comida();
+    comida4.setNombre("Pollo con Zapallo ");
+    comida4.getItems().add(itemComida1);
+    comida4.getItems().add(itemComida4);
+
+    Comida comida5 = new Comida();
+    comida5.setNombre("Pollo con tomate y papa ");
+    comida5.getItems().add(itemComida2);
+    comida5.getItems().add(itemComida5);
+    comida5.getItems().add(itemComida3);
+
+    Comida comida6 = new Comida();
+    comida6.setNombre("Banana ");
+    comida6.getItems().add(itemComida6);
+
     List<Comida> comidas = new ArrayList<>();
     comidas.add(comida1);
     comidas.add(comida2);
     comidas.add(comida3);
+    comidas.add(comida4);
+    comidas.add(comida5);
+    comidas.add(comida6);
+
+    List<ItemCompra> listaDeCompras = servicioListaCompras.generarListaCompras(comidas);
+    servicioListaCompras.calcularPrecios(listaDeCompras);
+
+    Double total = servicioListaCompras.calcularTotalListaCompras(listaDeCompras);
 
     modelo.put("comidas", comidas);
+    modelo.put("listaDeCompras", listaDeCompras);
+    modelo.put("totalLista", total);
     return new ModelAndView("lista-compras", modelo);
   }
 }

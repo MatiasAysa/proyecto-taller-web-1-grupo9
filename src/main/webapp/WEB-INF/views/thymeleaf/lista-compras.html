@@ -31,11 +31,27 @@
             <ul>
                 <li th:each="item : ${comida.items}">
                     <span th:text="${item.alimento.nombre}"></span>
-                    <span th:text="${item.cantidadEnGramos}"></span>
+                    <span th:text="${item.cantidadGramos}"></span>
                 </li>
             </ul>
         </div>
     </div>
+    <h1 class="titulo-principal">Lista de compras generada</h1>
+
+    <div class="contenedor-comidas">
+        <div class="card-comida">
+            <ul>
+                <li th:each="item : ${listaDeCompras}">
+                    <span th:text="${item.alimento.nombre}"></span>
+                    <span th:text="${item.cantidadTotal}"></span>
+                    <span>$</span>
+                    <span th:text="${item.precoTotal}"></span>
+                </li>
+            </ul>
+            <h3>Total: $ <span th:text="${totalLista}"></span></h3>
+        </div>
+    </div>
+
 </main>
 
 </body>

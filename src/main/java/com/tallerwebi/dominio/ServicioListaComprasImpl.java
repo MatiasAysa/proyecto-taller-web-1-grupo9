@@ -9,13 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ServicioListaComprasImpl implements ServicioListaCompras {
 
+  private final double CANTIDAD_KILO_A_GRAMOS = 1000.0;
+
   @Override
   public List<ItemCompra> generarListaCompras(List<Comida> Comidas) {
-    List<ItemCompra> listaFinal = new ArrayList<>();
+    List<ItemCompra> listaFinalCompra = new ArrayList<>();
 
     for (Comida comida : Comidas) {
       for (ItemComida itemComida : comida.getItems()) {
-        ItemCompra itemExistente = buscarItemCompra(listaFinal, itemComida.getAlimento());
+        ItemCompra itemExistente = buscarItemCompra(listaFinalCompra, itemComida);
 
         if (itemExistente != null) {
           Double nuevaCantidad = itemExistente.getCantidadTotal() + itemComida.getCantidadGramos();
@@ -25,20 +27,38 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
           nuevoItem.setAlimento(itemComida.getAlimento());
           nuevoItem.setCantidadTotal(itemComida.getCantidadGramos());
 
-          listaFinal.add(nuevoItem);
+          listaFinalCompra.add(nuevoItem);
         }
       }
     }
-    return listaFinal;
+    return listaFinalCompra;
   }
 
   @Override
-  public ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, Alimento alimento) {
+  public ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, ItemComida itemComida) {
     for (ItemCompra itemCompra : itemsCompra) {
-      if (itemCompra.getAlimento().getNombre().equals(alimento.getNombre())) {
+      if (itemCompra.getAlimento().getNombre().equals(itemComida.getAlimento().getNombre())) {
         return itemCompra;
       }
     }
     return null;
+  }
+
+  @Override
+  public void calcularPrecios(List<ItemCompra> listaCompra) {
+    for (ItemCompra item : listaCompra) {
+      Double precioPorKilo = item.getAlimento().getPrecioPorKg();
+      Double precioTotal = (item.getCantidadTotal() / CANTIDAD_KILO_A_GRAMOS) * precioPorKilo;
+      item.setPrecoTotal(precioTotal);
+    }
+  }
+
+  @Override
+  public Double calcularTotalListaCompras(List<ItemCompra> listaCompra) {
+    Double total = 0.0;
+    for (ItemCompra item : listaCompra) {
+      total += item.getPrecoTotal();
+    }
+    return total;
   }
 }

@@ -2,10 +2,7 @@ package com.tallerwebi.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Comida {
@@ -16,6 +13,8 @@ public class Comida {
 
   private String nombre;
   private TipoDeComida tipo;
+
+  @Transient
   private List<ItemComida> items = new ArrayList<ItemComida>();
 
   public String getNombre() {
