@@ -100,11 +100,10 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     validarObjetivo(perfilAlimentarioDTO.getObjetivo());
   }
 
-  // Cambiar por UsuarioInexistenteException
-  public Usuario obtenerUsuarioLogueado(String email) throws UsuarioExistente {
+  public Usuario obtenerUsuarioLogueado(String email) throws UsuarioInexistenteException  {
     Usuario usuario = repositorioUsuario.buscar(email);
     if (usuario == null) {
-      throw new UsuarioExistente();
+      throw new UsuarioInexistenteException();
     }
     return usuario;
   }
