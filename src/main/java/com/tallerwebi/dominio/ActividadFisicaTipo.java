@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio;
 
-public enum AcividadFisica {
+public enum ActividadFisicaTipo {
   SEDENTARIA,
   MODERADA,
   ACTIVA,

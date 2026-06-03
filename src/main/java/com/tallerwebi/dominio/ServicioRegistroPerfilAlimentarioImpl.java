@@ -1,5 +1,14 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.perfilException.ActividadFisicaInvalidaException;
+import com.tallerwebi.dominio.excepcion.perfilException.AlturaInvalidaException;
+import com.tallerwebi.dominio.excepcion.perfilException.EdadInvalidaException;
+import com.tallerwebi.dominio.excepcion.perfilException.ObjetivoInvalidaException;
+import com.tallerwebi.dominio.excepcion.perfilException.PerfilAlimentarioDTONuloException;
+import com.tallerwebi.dominio.excepcion.perfilException.PesoInvalidoException;
+import com.tallerwebi.dominio.excepcion.perfilException.RestriccionesAlimentariasInvalidasException;
+import com.tallerwebi.dominio.excepcion.perfilException.SexoInvalidoException;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,97 +44,113 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     return false;
   }
 
-  private Boolean validarPeso(Double peso) {
-    return peso != null && peso > 0 && peso < 635;
-  }
-
-  private Boolean validarAltura(Double altura) {
-    return altura != null && altura > 0 && altura < 272;
-  }
-
-  private Boolean validarEdad(Integer edad) {
-    return edad != null && edad > 0 && edad < 100;
-  }
-
-  private Boolean validarSexo(String sexo) {
-    return valorValido(Sexo.class, sexo);
-  }
-
-  private Boolean validarActividadFisica(String actividadFisica) {
-    return valorValido(AcividadFisica.class, actividadFisica);
-  }
-
-  private Boolean validarRestriccionesAlimentarias(Set<String> restriccionesAlimentarias) {
-    if (restriccionesAlimentarias == null) return false;
-    for (String restriccion : restriccionesAlimentarias) {
-      if (!valorValido(RestriccionAlimentariaTipo.class, restriccion)) return false;
+  private void validarPeso(Double peso) {
+    if (peso == null || peso < 0 || peso > 635) {
+      throw new PesoInvalidoException();
     }
-    return true;
   }
 
-  private Boolean validarObjetivo(String objetivo) {
-    return valorValido(Objetivo.class, objetivo);
+  private void validarAltura(Double altura) {
+    if (altura == null || altura < 0 || altura > 272) {
+      throw new AlturaInvalidaException();
+    }
+  }
+
+  private void validarEdad(Integer edad) {
+    if (edad == null || edad < 0 || edad > 100) {
+      throw new EdadInvalidaException();
+    }
+  }
+
+  private void validarSexo(String sexo) {
+    if (!valorValido(SexoTipo.class, sexo)) {
+      throw new SexoInvalidoException();
+    }
+  }
+
+  private void validarActividadFisica(String actividadFisica) {
+    if (!valorValido(ActividadFisicaTipo.class, actividadFisica)) {
+      throw new ActividadFisicaInvalidaException();
+    }
+  }
+
+  private void validarRestriccionesAlimentarias(Set<String> restriccionesAlimentarias) {
+    for (String restriccion : restriccionesAlimentarias) {
+      if (
+        !valorValido(RestriccionAlimentariaTipo.class, restriccion)
+      ) throw new RestriccionesAlimentariasInvalidasException();
+    }
+  }
+
+  private void validarObjetivo(String objetivo) {
+    if (!valorValido(ObjetivoTipo.class, objetivo)) throw new ObjetivoInvalidaException();
   }
 
   @Override
-  public Boolean validarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO) {
+  public void validarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO) {
     if (perfilAlimentarioDTO == null) {
-      return false;
+      throw new PerfilAlimentarioDTONuloException();
     }
-    return (
-      validarPeso(perfilAlimentarioDTO.getPeso()) &&
-      validarAltura(perfilAlimentarioDTO.getAltura()) &&
-      validarEdad(perfilAlimentarioDTO.getEdad()) &&
-      validarSexo(perfilAlimentarioDTO.getSexo()) &&
-      validarActividadFisica(perfilAlimentarioDTO.getActividadFisica()) &&
-      validarRestriccionesAlimentarias(perfilAlimentarioDTO.getRestriccionesAlimentarias()) &&
-      validarObjetivo(perfilAlimentarioDTO.getObjetivo())
-    );
+    validarPeso(perfilAlimentarioDTO.getPeso());
+    validarAltura(perfilAlimentarioDTO.getAltura());
+    validarEdad(perfilAlimentarioDTO.getEdad());
+    validarSexo(perfilAlimentarioDTO.getSexo());
+    validarActividadFisica(perfilAlimentarioDTO.getActividadFisica());
+    validarRestriccionesAlimentarias(perfilAlimentarioDTO.getRestriccionesAlimentarias());
+    validarObjetivo(perfilAlimentarioDTO.getObjetivo());
+  }
+
+  // Cambiar por UsuarioInexistenteException
+  public Usuario obtenerUsuarioLogueado(String email) throws UsuarioExistente {
+    Usuario usuario = repositorioUsuario.buscar(email);
+    if (usuario == null) {
+      throw new UsuarioExistente();
+    }
+    return usuario;
   }
 
   // guardo los datos en la base de datos
   @Override
-  public Boolean guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email) {
-    Usuario usuario = repositorioUsuario.buscar(email);
+  public void guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email)
+    throws UsuarioExistente {
+    Usuario usuario = obtenerUsuarioLogueado(email);
+    validarPerfilAlimentario(perfilAlimentarioDTO);
 
-    if (validarPerfilAlimentario(perfilAlimentarioDTO) && usuario != null) {
-      if (usuario.getPerfilAlimentario() != null) {
-        return actualizarPerfilAlimentario(
-          usuario.getPerfilAlimentario(),
-          perfilAlimentarioDTO
-        );
-      }
-      PerfilAlimentarioUsuario nuevoPerfil = crearPerfilAlimentarioUsuarioDesdeDTO(
-        perfilAlimentarioDTO
-      );
-      // primero se crea un perfil sin restricciones para relacionarlo
-      repositorioPerfil.guardar(nuevoPerfil);
-      usuario.setPerfilAlimentario(nuevoPerfil);
+    // Si el usuario ya tiene un perfil, se actualiza
+    if (usuario.getPerfilAlimentario() != null) {
+      actualizarPerfilAlimentario(usuario.getPerfilAlimentario(), perfilAlimentarioDTO);
+      return;
+    }
 
-      // despues con las restricciones se crea un perfil de restricciones y se
-      // relaciona con el perfil
-      Set<String> restriccionesAlimentarias = perfilAlimentarioDTO.getRestriccionesAlimentarias();
-      // guardar cada restriccion en la base de datos
+    // se crea uno nuevo perfil
+    PerfilAlimentarioUsuario nuevoPerfil = crearPerfilAlimentarioUsuarioDesdeDTO(
+      perfilAlimentarioDTO
+    );
+    // primero se crea un perfil sin restricciones para relacionarlo
+    repositorioPerfil.guardar(nuevoPerfil);
+    usuario.setPerfilAlimentario(nuevoPerfil);
+
+    // despues con las restricciones se crea un perfil de restricciones y se
+    // relaciona con el perfil
+    Set<String> restriccionesAlimentarias = perfilAlimentarioDTO.getRestriccionesAlimentarias();
+    if (restriccionesAlimentarias != null && !restriccionesAlimentarias.isEmpty()) {
       for (String restriccion : restriccionesAlimentarias) {
         RestriccionAlimentaria restriccionAlimentaria = new RestriccionAlimentaria();
         restriccionAlimentaria.setNombre(restriccion);
         restriccionAlimentaria.setPerfil(nuevoPerfil);
         repositorioRestriccionAlimentaria.guardar(restriccionAlimentaria);
       }
-      if (restriccionesAlimentarias.isEmpty()) {
-        RestriccionAlimentaria restriccionAlimentaria = new RestriccionAlimentaria();
-        restriccionAlimentaria.setNombre(RestriccionAlimentariaTipo.NINGUNO.name());
-        restriccionAlimentaria.setPerfil(nuevoPerfil);
-        repositorioRestriccionAlimentaria.guardar(restriccionAlimentaria);
-      }
-
-      return true;
+    } else {
+      // Si no hay restricciones se agrega la restriccion de "NINGUNO"
+      RestriccionAlimentaria restriccionAlimentaria = new RestriccionAlimentaria();
+      restriccionAlimentaria.setNombre(RestriccionAlimentariaTipo.NINGUNO.name());
+      restriccionAlimentaria.setPerfil(nuevoPerfil);
+      repositorioRestriccionAlimentaria.guardar(restriccionAlimentaria);
     }
-    return false;
   }
 
   // @Override
-  public Boolean actualizarPerfilAlimentario(
+  public void actualizarPerfilAlimentario(
     PerfilAlimentarioUsuario pefiAlimentarioUsuario,
     PerfilAlimentarioDTO perfilAlimentarioDTO
   ) {
@@ -138,6 +163,8 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
 
     Set<String> nuevaRestriccionesAlimentarias =
       perfilAlimentarioDTO.getRestriccionesAlimentarias();
+
+    // si no hay restricciones se agrega "NINGUNO"
     if (nuevaRestriccionesAlimentarias.isEmpty()) {
       pefiAlimentarioUsuario.getRestriccionesAlimentarias().clear();
       pefiAlimentarioUsuario
@@ -148,18 +175,15 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
             RestriccionAlimentariaTipo.NINGUNO.name()
           )
         );
-      return true;
+      return;
     }
-
+    // se actualizan las restricciones alimentarias
     pefiAlimentarioUsuario.getRestriccionesAlimentarias().clear();
-
     for (String nombreNuevaRestriccion : nuevaRestriccionesAlimentarias) {
       pefiAlimentarioUsuario
         .getRestriccionesAlimentarias()
         .add(new RestriccionAlimentaria(pefiAlimentarioUsuario, nombreNuevaRestriccion));
     }
-
-    return true;
   }
 
   public PerfilAlimentarioUsuario crearPerfilAlimentarioUsuarioDesdeDTO(

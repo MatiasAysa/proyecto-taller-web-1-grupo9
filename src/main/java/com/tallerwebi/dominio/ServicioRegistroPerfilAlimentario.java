@@ -1,7 +1,10 @@
 package com.tallerwebi.dominio;
 
-public interface ServicioRegistroPerfilAlimentario {
-  Boolean validarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO);
+import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 
-  Boolean guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email);
+public interface ServicioRegistroPerfilAlimentario {
+  void validarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO);
+
+  void guardarPerfilAlimentario(PerfilAlimentarioDTO perfilAlimentarioDTO, String email)
+    throws UsuarioExistente;
 }

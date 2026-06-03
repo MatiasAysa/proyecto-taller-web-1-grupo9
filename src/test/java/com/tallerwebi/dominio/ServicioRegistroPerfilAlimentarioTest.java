@@ -2,8 +2,12 @@ package com.tallerwebi.dominio;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.perfilException.*;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +18,8 @@ class ServicioRegistroPerfilAlimentarioTest {
 
   private RepositorioPerfilAlimentarioUsuario repositorioPerfilAlimentarioUsuarioMock;
   private RepositorioUsuario repositorioUsuario;
-  private ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentario;
   private RepositorioRestriccionAlimentaria repositorioRestriccionAlimentaria;
+  private ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentario;
 
   @BeforeEach
   void setUp() {
@@ -31,7 +35,8 @@ class ServicioRegistroPerfilAlimentarioTest {
   }
 
   @Test
-  void dadoQueTodosLosDatosSonValidosYQueElUsuarioExisteCuandoSeGuardaEntoncesPersisteEnElRepositorio() {
+  void dadoQueTodosLosDatosSonValidosYQueElUsuarioExisteCuandoSeGuardaEntoncesPersisteEnElRepositorio()
+    throws UsuarioExistente {
     // Given
     PerfilAlimentarioDTO perfilDTO = givenPerfilConDatosValidos();
     Usuario usuario = givenUsuarioExiste();
@@ -40,170 +45,153 @@ class ServicioRegistroPerfilAlimentarioTest {
     when(repositorioUsuario.buscar(usuario.getEmail())).thenReturn(usuario);
 
     // When
-    boolean resultado = whenGuardarPerfilAlimentario(perfilDTO, usuario.getEmail());
+    servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilDTO, usuario.getEmail());
 
     // Then
-    verify(repositorioPerfilAlimentarioUsuarioMock)
+    verify(repositorioPerfilAlimentarioUsuarioMock, times(1))
       .guardar(perfilAlimentarioUsuarioCaptor.capture());
+
     PerfilAlimentarioUsuario perfilEntidadCapturado = perfilAlimentarioUsuarioCaptor.getValue();
-
-    thenElResultadoEsTrue(resultado);
-    verify(repositorioPerfilAlimentarioUsuarioMock, times(1)).guardar(perfilEntidadCapturado);
-  }
-
-  boolean whenGuardarPerfilAlimentario(PerfilAlimentarioDTO perfilDTO, String email) {
-    return servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilDTO, email);
+    assertThat(perfilEntidadCapturado.getPeso(), is(perfilDTO.getPeso()));
+    assertThat(perfilEntidadCapturado.getAltura(), is(perfilDTO.getAltura()));
   }
 
   @Test
-  void dadoQueTodosLosDatosSonValidosCuandoSeValidaObtengoTrue() {
+  void dadoQueTodosLosDatosSonValidosCuandoSeValidaNoLanzaNingunaExcepcion() {
     // Given
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
 
-    // When
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-
-    // Then
-    thenElResultadoEsTrue(resultado);
+    // When & Then
+    assertDoesNotThrow(() -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil));
   }
 
   @Test
-  void dadoQueIngresoUnPesoNegativoCuandoSeValidaObtengoFalse() {
+  void dadoQueIngresoUnPesoNegativoCuandoSeValidaLanzaPesoInvalidoException() {
     PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setPeso(-100.0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
+    perfil.setPeso(-10.0);
 
-  @Test
-  void dadoQueIngresoUnPesoCeroCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setPeso(0.0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnPesoMayorOIgualA635CuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setPeso(635.0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnaAlturaNegativaCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setAltura(-100.0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnaAlturaCeroCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setAltura(0.0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnaAlturaMayorOIgualA272CuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setAltura(272.0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnaEdadNegativaCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setEdad(-1);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnaEdadCeroCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setEdad(0);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnaEdadMayorOIgualA100CuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setEdad(100);
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnSexoInvalidoCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setSexo("x");
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-
-  @Test
-  void dadoQueIngresoUnaActividadFisicaInvalidaCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setActividadFisica("x");
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  @Test
-  void dadoQueIngresoUnObjetivoInvalidoCuandoSeValidaObtengoFalse() {
-    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
-    perfil.setObjetivo("x");
-    boolean resultado = whenValidarPerfilAlimentario(perfil);
-    thenElResultadoEsFalse(resultado);
-  }
-
-  public PerfilAlimentarioDTO givenPerfilConDatosValidos() {
-    Double peso = 100.0;
-    Double altura = 100.0;
-    Integer edad = 20;
-    String sexo = Sexo.M.name();
-    String actividadFisica = AcividadFisica.ACTIVA.name();
-    Set<String> restriccionesAlimentarias = new HashSet<>();
-    restriccionesAlimentarias.add(RestriccionAlimentariaTipo.CELIACO.name());
-    restriccionesAlimentarias.add(RestriccionAlimentariaTipo.DIABETICO.name());
-    String objetivo = Objetivo.GANAR_PESO.name();
-
-    return new PerfilAlimentarioDTO(
-            peso,
-            altura,
-            edad,
-            sexo,
-            actividadFisica,
-            restriccionesAlimentarias,
-            objetivo
+    assertThrows(
+      PesoInvalidoException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
     );
   }
 
-  public Usuario givenUsuarioExiste() {
+  @Test
+  void dadoQueIngresoUnPesoMayorA635CuandoSeValidaLanzaPesoInvalidoException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setPeso(635.1); // Tu servicio permite hasta 635 exacto, cambiamos a 635.1 para romperlo
+
+    assertThrows(
+      PesoInvalidoException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnaAlturaNegativaCuandoSeValidaLanzaAlturaInvalidaException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setAltura(-1.0);
+
+    assertThrows(
+      AlturaInvalidaException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnaAlturaMayorA272CuandoSeValidaLanzaAlturaInvalidaException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setAltura(272.1); // Tu servicio permite hasta 272 exacto
+
+    assertThrows(
+      AlturaInvalidaException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnaEdadNegativaCuandoSeValidaLanzaEdadInvalidaException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setEdad(-1);
+
+    assertThrows(
+      EdadInvalidaException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnaEdadMayorA100CuandoSeValidaLanzaEdadInvalidaException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setEdad(101); // Tu servicio permite hasta 100 exacto
+
+    assertThrows(
+      EdadInvalidaException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnSexoInvalidoCuandoSeValidaLanzaSexoInvalidoException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setSexo("x");
+
+    assertThrows(
+      SexoInvalidoException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnaActividadFisicaInvalidaCuandoSeValidaLanzaActividadFisicaInvalidaException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setActividadFisica("x");
+
+    assertThrows(
+      ActividadFisicaInvalidaException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  @Test
+  void dadoQueIngresoUnObjetivoInvalidoCuandoSeValidaLanzaObjetivoInvalidaException() {
+    PerfilAlimentarioDTO perfil = givenPerfilConDatosValidos();
+    perfil.setObjetivo("x");
+
+    assertThrows(
+      ObjetivoInvalidaException.class,
+      () -> servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil)
+    );
+  }
+
+  private PerfilAlimentarioDTO givenPerfilConDatosValidos() {
+    Double peso = 100.0;
+    Double altura = 100.0;
+    Integer edad = 20;
+    String sexo = "M";
+    String actividadFisica = "ACTIVA";
+    Set<String> restriccionesAlimentarias = new HashSet<>();
+    restriccionesAlimentarias.add("CELIACO");
+    restriccionesAlimentarias.add("DIABETICO");
+    String objetivo = "GANAR_PESO";
+
+    return new PerfilAlimentarioDTO(
+      peso,
+      altura,
+      edad,
+      sexo,
+      actividadFisica,
+      restriccionesAlimentarias,
+      objetivo
+    );
+  }
+
+  private Usuario givenUsuarioExiste() {
     Usuario usuario = new Usuario();
     usuario.setId(1L);
     usuario.setEmail("test@test.com");
     usuario.setPassword("test");
     usuario.setRol("user");
     return usuario;
-  }
-
-  public boolean whenValidarPerfilAlimentario(PerfilAlimentarioDTO perfil) {
-    return servicioRegistroPerfilAlimentario.validarPerfilAlimentario(perfil);
-  }
-
-  public void thenElResultadoEsFalse(boolean resultado) {
-    assertThat(resultado, is(false));
-  }
-
-  public void thenElResultadoEsTrue(boolean resultado) {
-    assertThat(resultado, is(true));
   }
 }

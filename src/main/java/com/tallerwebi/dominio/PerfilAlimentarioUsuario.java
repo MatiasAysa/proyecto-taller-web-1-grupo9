@@ -99,4 +99,8 @@ public class PerfilAlimentarioUsuario {
   public void setRestriccionesAlimentarias(Set<RestriccionAlimentaria> restriccionesAlimentarias) {
     this.restriccionesAlimentarias = restriccionesAlimentarias;
   }
+
+  public Long getId() {
+    return id;
+  }
 }

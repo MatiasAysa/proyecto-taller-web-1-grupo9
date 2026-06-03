@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio;
 
-public enum Sexo {
+public enum SexoTipo {
   M,
   F,
   O,
