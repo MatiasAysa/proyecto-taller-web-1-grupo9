@@ -40,6 +40,9 @@ public class ControladorLogin {
     );
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
+      //Se guarda el email usario logueado
+      request.getSession().setAttribute("usuarioLogueadoEmail", usuarioBuscado.getEmail());
+
       return new ModelAndView("redirect:/home");
     } else {
       /* Se instancia el ModelMap solo cuando es necesario (en el flujo de error) para evitar anomalías en el flujo de datos (DU-anomaly de PMD) */

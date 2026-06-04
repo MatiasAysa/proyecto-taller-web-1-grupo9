@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,18 +14,16 @@ public class Alimento {
   private Long id;
 
   private String nombre;
-  private Double precioPorKg;
+  //private Double precioPorKg;
+  private String tipoComida;
+  private Double precioEstimado;
   private Boolean esVegetariano;
   private Boolean esCeliaco;
   private Boolean contieneLactosa = false;
 
-  public Double getPrecioPorKg() {
-    return precioPorKg;
-  }
+  @Embedded
+  private InformacionNutricional infoNutricional = new InformacionNutricional();
 
-  public void setPrecioPorKg(Double precioPorKg) {
-    this.precioPorKg = precioPorKg;
-  }
 
   public Long getId() {
     return id;
@@ -40,6 +39,22 @@ public class Alimento {
 
   public void setNombre(String nombre) {
     this.nombre = nombre;
+  }
+
+  public Double getPrecioEstimado() {
+    return precioEstimado;
+  }
+
+  public void setPrecioEstimado(Double precio) {
+    this.precioEstimado = precio;
+  }
+
+  public String getTipoComida() {
+    return tipoComida;
+  }
+
+  public void setTipoComida(String tipoComida) {
+    this.tipoComida = tipoComida;
   }
 
   public Boolean getEsVegetariano() {
@@ -65,4 +80,37 @@ public class Alimento {
   public void setContieneLactosa(Boolean contieneLactosa) {
     this.contieneLactosa = contieneLactosa;
   }
+
+  public Integer getCalorias() {
+    return infoNutricional.getCalorias();
+  }
+
+  public void setCalorias(Integer calorias) {
+    infoNutricional.setCalorias(calorias);
+  }
+
+  public Double getProteinas() {
+    return infoNutricional.getProteinas();
+  }
+
+  public void setProteinas(Double proteinas) {
+    infoNutricional.setProteinas(proteinas);
+  }
+
+  public Double getCarbohidratos() {
+    return infoNutricional.getCarbohidratos();
+  }
+
+  public void setCarbohidratos(Double carbohidratos) {
+    infoNutricional.setCarbohidratos(carbohidratos);
+  }
+
+  public Double getGrasas() {
+    return infoNutricional.getGrasas();
+  }
+
+  public void setGrasas(Double grasas) {
+    infoNutricional.setGrasas(grasas);
+  }
+
 }

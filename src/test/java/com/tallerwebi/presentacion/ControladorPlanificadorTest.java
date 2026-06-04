@@ -61,4 +61,26 @@ public class ControladorPlanificadorTest {
       equalToIgnoringCase("No se pudo generar el plan: Presupuesto insuficiente extremo")
     );
   }
+
+  @Test
+  public void siElUsuarioNoExisteEnElSistemaDeberiaMostrarMensajeDeErrorEspecifico()
+    throws PresupuestoInsuficienteException, UsuarioInexistenteException {
+    Long usuarioIdInexistente = 99L;
+    String mensajeErrorEsperado = "El usuario solicitado no existe en el sistema.";
+
+    when(servicioPlanificadorMock.generarPlanParaUsuario(usuarioIdInexistente))
+      .thenThrow(new UsuarioInexistenteException(mensajeErrorEsperado));
+
+    ModelAndView modelAndView = controladorPlanificador.generarPlanAutomatizado(
+      usuarioIdInexistente
+    );
+
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("planificador"));
+    assertThat(modelAndView.getModel().get("error"), notNullValue());
+    assertThat(
+      modelAndView.getModel().get("error").toString(),
+      equalToIgnoringCase(mensajeErrorEsperado)
+    );
+    verify(servicioPlanificadorMock, times(1)).generarPlanParaUsuario(usuarioIdInexistente);
+  }
 }

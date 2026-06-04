@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @SuppressWarnings("PMD.TooManyFields")
@@ -23,6 +20,12 @@ public class Usuario {
   private Boolean esVegetariano = false;
   private Boolean esIntoleranteLactosa = false;
   private String objetivo;
+
+  //Sincroniza las acciones del Usuario en su Perfil (Guardar/Borrar)
+  // y elimina automáticamente el Perfil viejo de la base de datos si deja de estar asociado al Usuario.
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "perfil_alimentario_id")
+  private PerfilAlimentarioUsuario perfilAlimentario;
 
   public Long getId() {
     return id;
@@ -114,5 +117,17 @@ public class Usuario {
 
   public void setObjetivo(String objetivo) {
     this.objetivo = objetivo;
+  }
+
+  public void setContieneLactosa(Boolean contieneLactosa) {
+    this.esIntoleranteLactosa = !contieneLactosa;
+  }
+
+  public PerfilAlimentarioUsuario getPerfilAlimentario() {
+    return perfilAlimentario;
+  }
+
+  public void setPerfilAlimentario(PerfilAlimentarioUsuario perfilAlimentario) {
+    this.perfilAlimentario = perfilAlimentario;
   }
 }
