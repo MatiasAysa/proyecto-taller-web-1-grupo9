@@ -23,36 +23,36 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration(classes = { HibernateInfraestructuraTestConfig.class })
 public class RepositorioRestriccionAlimentariaTest {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+  @Autowired
+  private SessionFactory sessionFactory;
 
-    private RepositorioRestriccionAlimentaria repositorioRestriccion;
+  private RepositorioRestriccionAlimentaria repositorioRestriccion;
 
-    @BeforeEach
-    public void init() {
-        repositorioRestriccion = new RepositorioRestriccionAlimentariaImpl(sessionFactory);
-    }
+  @BeforeEach
+  public void init() {
+    repositorioRestriccion = new RepositorioRestriccionAlimentariaImpl(sessionFactory);
+  }
 
-    @Test
-    @Transactional
-    @Rollback
-    public void deberiaGuardarUnaNuevaRestriccionAlimentaria() {
-        // give
-        RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaGuardarUnaNuevaRestriccionAlimentaria() {
+    // give
+    RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
 
-        // when
-        this.cuandoGuardoLaRestriccionAlimentaria(restriccion);
+    // when
+    this.cuandoGuardoLaRestriccionAlimentaria(restriccion);
 
-        // then
-        this.entoncesSeGuardoLaRestriccionAlimentaria(restriccion);
-    }
+    // then
+    this.entoncesSeGuardoLaRestriccionAlimentaria(restriccion);
+  }
 
-    private void cuandoGuardoLaRestriccionAlimentaria(RestriccionAlimentaria restriccion) {
-        repositorioRestriccion.guardar(restriccion);
-    }
+  private void cuandoGuardoLaRestriccionAlimentaria(RestriccionAlimentaria restriccion) {
+    repositorioRestriccion.guardar(restriccion);
+  }
 
-    private void entoncesSeGuardoLaRestriccionAlimentaria(RestriccionAlimentaria restriccion) {
-        Long id = restriccion.getId();
-        assertThat(id, is(notNullValue()));
-    }
+  private void entoncesSeGuardoLaRestriccionAlimentaria(RestriccionAlimentaria restriccion) {
+    Long id = restriccion.getId();
+    assertThat(id, is(notNullValue()));
+  }
 }

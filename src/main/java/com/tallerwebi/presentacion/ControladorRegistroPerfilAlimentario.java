@@ -39,7 +39,7 @@ public class ControladorRegistroPerfilAlimentario {
     this.servicioRegistroPerfilAlimentario = servicioRegistroPerfilAlimentario;
   }
 
-  @GetMapping("/Registro-perfil-alimentario")
+  @GetMapping("Registro-perfil-alimentario/")
   public ModelAndView mostrarFormulario(HttpSession session) {
     if (session.getAttribute(ATT_USUARIO_LOGUEADO_EMAIL) == null) {
       return new ModelAndView(REDIRECT_LOGIN);

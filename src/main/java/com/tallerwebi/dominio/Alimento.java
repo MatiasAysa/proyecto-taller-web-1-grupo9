@@ -24,7 +24,6 @@ public class Alimento {
   @Embedded
   private InformacionNutricional infoNutricional = new InformacionNutricional();
 
-
   public Long getId() {
     return id;
   }
@@ -112,5 +111,4 @@ public class Alimento {
   public void setGrasas(Double grasas) {
     infoNutricional.setGrasas(grasas);
   }
-
 }

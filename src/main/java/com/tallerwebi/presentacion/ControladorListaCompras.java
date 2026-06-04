@@ -1,6 +1,10 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.Alimento;
+import com.tallerwebi.dominio.Comida;
+import com.tallerwebi.dominio.ItemComida;
+import com.tallerwebi.dominio.ItemCompra;
+import com.tallerwebi.dominio.ServicioListaCompras;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +29,22 @@ public class ControladorListaCompras {
 
     Alimento alimento1 = new Alimento();
     alimento1.setNombre("Pollo");
-    alimento1.setPrecioPorKg(1000.0);
+    alimento1.setPrecioEstimado(1000.0);
     Alimento alimento2 = new Alimento();
     alimento2.setNombre("Arroz");
-    alimento2.setPrecioPorKg(2000.0);
+    alimento2.setPrecioEstimado(2000.0);
     Alimento alimento3 = new Alimento();
     alimento3.setNombre("Tomate");
-    alimento3.setPrecioPorKg(3000.0);
+    alimento3.setPrecioEstimado(3000.0);
     Alimento alimento4 = new Alimento();
     alimento4.setNombre("Zapallo");
-    alimento4.setPrecioPorKg(3000.0);
+    alimento4.setPrecioEstimado(3000.0);
     Alimento alimento5 = new Alimento();
     alimento5.setNombre("Papa");
-    alimento5.setPrecioPorKg(3000.0);
+    alimento5.setPrecioEstimado(3000.0);
     Alimento alimento6 = new Alimento();
     alimento6.setNombre("Banana");
-    alimento6.setPrecioPorKg(3000.0);
+    alimento6.setPrecioEstimado(3000.0);
 
     ItemComida itemComida1 = new ItemComida(100.0, alimento1);
     ItemComida itemComida2 = new ItemComida(200.0, alimento2);

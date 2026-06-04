@@ -47,7 +47,7 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
   @Override
   public void calcularPrecios(List<ItemCompra> listaCompra) {
     for (ItemCompra item : listaCompra) {
-      Double precioPorKilo = item.getAlimento().getPrecioPorKg();
+      Double precioPorKilo = item.getAlimento().getPrecioEstimado();
       Double precioTotal = (item.getCantidadTotal() / CANTIDAD_KILO_A_GRAMOS) * precioPorKilo;
       item.setPrecoTotal(precioTotal);
     }
