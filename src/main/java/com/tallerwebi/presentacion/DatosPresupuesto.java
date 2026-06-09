@@ -11,7 +11,9 @@ public class DatosPresupuesto {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate fecha;
 
-  public DatosPresupuesto() {}
+  public DatosPresupuesto() {
+    this.fecha = LocalDate.now();
+  }
 
   public float getMonto() {
     return monto;
