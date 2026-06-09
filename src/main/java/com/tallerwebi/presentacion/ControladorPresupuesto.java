@@ -43,9 +43,6 @@ public class ControladorPresupuesto {
     @ModelAttribute("datosPresupuesto") DatosPresupuesto datosPresupuesto,
     HttpSession session
   ) {
-    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
-      "redirect:/login"
-    );
     ModelMap model = new ModelMap();
     model.put("mensaje", MENSAJE_PRESUPUESTO_EXITOSO);
     if (datosPresupuesto.getIntervalo() == 0) {

@@ -13,12 +13,6 @@ public class DatosPresupuesto {
 
   public DatosPresupuesto() {}
 
-  public DatosPresupuesto(float monto, int intervalo, LocalDate fecha) {
-    this.monto = monto;
-    this.intervalo = intervalo;
-    this.fecha = fecha;
-  }
-
   public float getMonto() {
     return monto;
   }

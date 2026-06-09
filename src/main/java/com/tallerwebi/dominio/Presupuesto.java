@@ -30,10 +30,6 @@ public class Presupuesto {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   public float getMonto() {
     return monto;
   }

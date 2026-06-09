@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import com.tallerwebi.dominio.ServicioPresupuesto;
 import com.tallerwebi.dominio.ServicioPresupuestoImpl;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
+import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
 import java.time.LocalDate;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
@@ -18,9 +19,7 @@ public class ControladorPresupuestoTest {
   private final int intervalo = 7;
   private final LocalDate fecha = LocalDate.now();
   private ServicioPresupuesto servicioPresupuesto = mock(ServicioPresupuestoImpl.class);
-  private ControladorPresupuesto controladorPresupuesto = new ControladorPresupuesto(
-    servicioPresupuesto
-  );
+  private ControladorPresupuesto controladorPresupuesto = new ControladorPresupuesto(servicioPresupuesto);
   private HttpSession session = mock(HttpSession.class);
   private final String email = "a@a.com";
   private String mensaje;
@@ -35,6 +34,62 @@ public class ControladorPresupuestoTest {
   public void siNoInicioSesionMiPresupuestoVuelveALogin() {
     ModelAndView mav = whenNoInicioSesionEnVistaMiPresupuesto();
     thenSeVuelveAlLogin(mav);
+  }
+
+  @Test
+  public void sePuedeIrAMiPresupuesto() {
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(monto);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(fecha);
+    ModelAndView mav = whenIrAPresupuesto(datosPresupuesto);
+    thenVoyAMiPresupuesto(mav);
+  }
+
+  @Test
+  public void sePuedeIrAConfigurarPresupuesto() {
+    ModelAndView mav = whenIrAConfigurarPresupuesto();
+    thenVoyAConfigurarPresupuesto(mav);
+  }
+
+  private ModelAndView whenIrAConfigurarPresupuesto() {
+    when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
+    return controladorPresupuesto.irAConfigurarPresupuesto(session);
+  }
+
+  private void thenVoyAConfigurarPresupuesto(ModelAndView mav) {
+    assertThat(mav.getViewName(), equalToIgnoringCase("configurar-presupuesto"));
+  }
+
+  @Test
+  public void siNoHayUnPresupuestoMiPresupuestoRedirigeAConfigurarPresupuesto() {
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    ModelAndView mav = whenIrAPresupuestoSinPresupuesto(datosPresupuesto);
+    thenRedirigeAConfigurarPresupuesto(mav);
+  }
+
+  private ModelAndView whenIrAPresupuestoSinPresupuesto(DatosPresupuesto datosPresupuesto) {
+    when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
+    when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
+    doThrow(UsuarioSinPresupuestoException.class)
+      .when(servicioPresupuesto)
+      .buscarPresupuesto(email);
+    return controladorPresupuesto.irAMiPresupuesto(session);
+  }
+
+  private void thenRedirigeAConfigurarPresupuesto(ModelAndView mav) {
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/configurar-presupuesto"));
+  }
+
+  private void thenVoyAMiPresupuesto(ModelAndView mav) {
+    assertThat(mav.getViewName(), equalToIgnoringCase("mi-presupuesto"));
+  }
+
+  private ModelAndView whenIrAPresupuesto(DatosPresupuesto datosPresupuesto) {
+    when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
+    when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
+    when(servicioPresupuesto.buscarPresupuesto(email)).thenReturn(datosPresupuesto);
+    return controladorPresupuesto.irAMiPresupuesto(session);
   }
 
   private ModelAndView whenNoInicioSesionEnVistaMiPresupuesto() {
@@ -54,14 +109,22 @@ public class ControladorPresupuestoTest {
   @Test
   public void siIngresoMontoFechaEIntervaloElPresupuestoEsExitoso() {
     givenUsuarioExiste();
-    ModelAndView mav = whenIngresoMontoEIntervalo(new DatosPresupuesto(monto, intervalo, fecha));
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(monto);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(fecha);
+    ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
     thenSeCreaElPresupuesto(mav);
   }
 
   @Test
   public void siIngresoMontoYFechaYNoIngresoIntervaloElPresupuestoFalla() {
     givenUsuarioExiste();
-    ModelAndView mav = whenIngresoMontoEIntervalo(new DatosPresupuesto(monto, 0, fecha));
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(monto);
+    datosPresupuesto.setIntervalo(0);
+    datosPresupuesto.setFecha(fecha);
+    ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
     mensaje = controladorPresupuesto.getMENSAJE_INTERVALO_OBLIGATORIO();
     thenNoSeCreaElPresupuesto(mav, mensaje);
   }
@@ -69,7 +132,11 @@ public class ControladorPresupuestoTest {
   @Test
   public void siIngresoMontoEIntervaloYNoIngresoFechaElPresupuestoFalla() {
     givenUsuarioExiste();
-    ModelAndView mav = whenIngresoMontoEIntervalo(new DatosPresupuesto(monto, intervalo, null));
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(monto);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(null);
+    ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
     mensaje = controladorPresupuesto.getMENSAJE_FECHA_OBLIGATORIA();
     thenNoSeCreaElPresupuesto(mav, mensaje);
   }
@@ -77,11 +144,15 @@ public class ControladorPresupuestoTest {
   @Test
   public void siIngresoFechaEIntervaloYNoIngresoMontoElPresupuestoFalla() {
     givenUsuarioExiste();
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(0);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(fecha);
     doThrow(PresupuestoNoPositivoException.class)
       .when(servicioPresupuesto)
       .crearPresupuesto(0, intervalo, fecha, email);
 
-    ModelAndView mav = whenIngresoMontoEIntervalo(new DatosPresupuesto(0, intervalo, fecha));
+    ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
     mensaje = controladorPresupuesto.getMENSAJE_MONTO_OBLIGATORIO();
     thenNoSeCreaElPresupuesto(mav, mensaje);
   }

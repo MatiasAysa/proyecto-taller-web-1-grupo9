@@ -25,14 +25,25 @@ public class RepositorioPresupuestoImpl implements RepositorioPresupuesto {
   }
 
   @Override
-  public void guardarPresupuesto(Presupuesto presupuesto, String email) {
-    presupuesto.setUsuario(repositorioUsuario.buscar(email));
+  public void guardarPresupuesto(Presupuesto presupuesto, Usuario usuario) {
+    if(this.buscarPresupuesto(usuario) != null)
+    {
+      modificarPresupuesto(this.buscarPresupuesto(usuario), presupuesto);
+      return;
+    }
+    presupuesto.setUsuario(usuario);
     this.sessionFactory.getCurrentSession().save(presupuesto);
   }
 
+  private void modificarPresupuesto(Presupuesto presupuestoActual, Presupuesto presupuestoNuevo) {
+    presupuestoActual.setMonto(presupuestoNuevo.getMonto());
+    presupuestoActual.setFecha(presupuestoNuevo.getFecha());
+    presupuestoActual.setIntervalo(presupuestoNuevo.getIntervalo());
+    this.sessionFactory.getCurrentSession().update(presupuestoActual);
+  }
+
   @Override
-  public Presupuesto buscarPresupuesto(String email) {
-    Usuario usuario = repositorioUsuario.buscar(email);
+  public Presupuesto buscarPresupuesto(Usuario usuario) {
     return (Presupuesto) this.sessionFactory.getCurrentSession()
       .createCriteria(Presupuesto.class)
       .add(Restrictions.eq("usuario", usuario))
