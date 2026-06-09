@@ -73,6 +73,7 @@ public class ControladorPresupuesto {
   private ModelAndView fallarPresupuesto(String mensaje) {
     ModelMap model = new ModelMap();
     model.put("mensaje", mensaje);
+    model.put("datosPresupuesto", new DatosPresupuesto());
     return new ModelAndView("configurar-presupuesto", model);
   }
 

@@ -14,7 +14,6 @@ public class Alimento {
   private Long id;
 
   private String nombre;
-  //private Double precioPorKg;
   private String tipoComida;
   private Double precioEstimado;
   private Boolean esVegetariano;
