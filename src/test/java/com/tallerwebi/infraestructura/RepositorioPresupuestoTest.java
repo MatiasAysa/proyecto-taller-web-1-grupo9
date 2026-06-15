@@ -1,8 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
 import com.tallerwebi.dominio.Presupuesto;
@@ -41,10 +40,40 @@ public class RepositorioPresupuestoTest {
   @Rollback
   public void sePuedeGuardarUnPresupuesto() {
     Usuario usuario = givenExisteUnUsuario();
+    Presupuesto presupuesto = new Presupuesto();
+    presupuesto.setMonto(100000);
+    presupuesto.setIntervalo(7);
+    presupuesto.setFecha(LocalDate.now());
 
-    Presupuesto presupuesto = whenGuardoUnPresupuesto(usuario);
+    whenGuardoUnPresupuesto(usuario, presupuesto);
 
     thenElPresupuestoSeGuardaEnLaBD(presupuesto, usuario);
+  }
+
+  @Transactional
+  @Rollback
+  @Test
+  public void siYaExisteUnPresupuestoSeModificaElPresupuestoExistente() {
+    Usuario usuario = givenExisteUnUsuario();
+    Presupuesto presupuesto1 = givenExisteUnPresupuestoEnBD(usuario);
+    Presupuesto presupuesto2 = new Presupuesto();
+    presupuesto2.setMonto(222222);
+    presupuesto2.setIntervalo(30);
+    presupuesto2.setFecha(LocalDate.now());
+
+    whenGuardoUnPresupuesto(usuario, presupuesto2);
+
+    thenSeModificaElPresupuestoOriginal(usuario, presupuesto1, presupuesto2);
+  }
+
+  private void thenSeModificaElPresupuestoOriginal(Usuario usuario, Presupuesto presupuesto1, Presupuesto presupuesto2) {
+    Presupuesto presupuestoEncontrado = repositorioPresupuesto.buscarPresupuesto(usuario);
+
+    assertThat(presupuestoEncontrado.getId(), is(equalTo(presupuesto1.getId())));
+    assertThat(presupuesto2.getId(), nullValue());
+    assertThat(presupuestoEncontrado.getFecha(), is(equalTo(presupuesto2.getFecha())));
+    assertThat(presupuestoEncontrado.getMonto(), is(equalTo(presupuesto2.getMonto())));
+    assertThat(presupuestoEncontrado.getIntervalo(), is(equalTo(presupuesto2.getIntervalo())));
   }
 
   private Usuario givenExisteUnUsuario() {
@@ -63,12 +92,8 @@ public class RepositorioPresupuestoTest {
     assertThat(presupuesto.getUsuario(), equalTo(usuario));
   }
 
-  private Presupuesto whenGuardoUnPresupuesto(Usuario usuario) {
-    Presupuesto presupuesto = new Presupuesto();
-    presupuesto.setMonto(100000);
-    presupuesto.setIntervalo(7);
-    presupuesto.setFecha(LocalDate.now());
-    repositorioPresupuesto.guardarPresupuesto(presupuesto, usuario.getEmail());
+  private Presupuesto whenGuardoUnPresupuesto(Usuario usuario, Presupuesto presupuesto) {
+    repositorioPresupuesto.guardarPresupuesto(presupuesto, usuario);
     return presupuesto;
   }
 
@@ -79,7 +104,7 @@ public class RepositorioPresupuestoTest {
     Usuario usuario = givenExisteUnUsuario();
     Presupuesto presupuesto = givenExisteUnPresupuestoEnBD(usuario);
 
-    Presupuesto presupuestoEncontrado = whenBuscoPresupuesto(usuario.getEmail());
+    Presupuesto presupuestoEncontrado = whenBuscoPresupuesto(usuario);
 
     thenElPresupuestoExiste(presupuestoEncontrado, presupuesto);
   }
@@ -88,11 +113,15 @@ public class RepositorioPresupuestoTest {
     assertThat(presupuesto, equalTo(presupuestoEncontrado));
   }
 
-  private Presupuesto whenBuscoPresupuesto(String email) {
-    return repositorioPresupuesto.buscarPresupuesto(email);
+  private Presupuesto whenBuscoPresupuesto(Usuario usuario) {
+    return repositorioPresupuesto.buscarPresupuesto(usuario);
   }
 
   private Presupuesto givenExisteUnPresupuestoEnBD(Usuario usuario) {
-    return whenGuardoUnPresupuesto(usuario);
+    Presupuesto presupuesto = new Presupuesto();
+    presupuesto.setMonto(100000);
+    presupuesto.setIntervalo(7);
+    presupuesto.setFecha(LocalDate.now());
+    return whenGuardoUnPresupuesto(usuario, presupuesto);
   }
 }

@@ -11,12 +11,8 @@ public class DatosPresupuesto {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate fecha;
 
-  public DatosPresupuesto() {}
-
-  public DatosPresupuesto(float monto, int intervalo, LocalDate fecha) {
-    this.monto = monto;
-    this.intervalo = intervalo;
-    this.fecha = fecha;
+  public DatosPresupuesto() {
+    this.fecha = LocalDate.now();
   }
 
   public float getMonto() {
