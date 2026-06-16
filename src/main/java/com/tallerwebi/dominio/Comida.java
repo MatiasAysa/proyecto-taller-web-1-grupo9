@@ -1,6 +1,5 @@
 package com.tallerwebi.dominio;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -14,8 +13,8 @@ public class Comida {
   private String nombre;
   private TipoDeComida tipo;
 
-  @Transient
-  private List<ItemComida> items = new ArrayList<ItemComida>();
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Ingrediente> items;
 
   public String getNombre() {
     return nombre;
@@ -33,11 +32,11 @@ public class Comida {
     this.tipo = tipo;
   }
 
-  public List<ItemComida> getItems() {
+  public List<Ingrediente> getItems() {
     return items;
   }
 
-  public void setItems(List<ItemComida> items) {
+  public void setItems(List<Ingrediente> items) {
     this.items = items;
   }
 }

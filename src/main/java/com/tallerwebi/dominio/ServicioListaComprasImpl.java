@@ -16,16 +16,16 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
     List<ItemCompra> listaFinalCompra = new ArrayList<>();
 
     for (Comida comida : Comidas) {
-      for (ItemComida itemComida : comida.getItems()) {
-        ItemCompra itemExistente = buscarItemCompra(listaFinalCompra, itemComida);
+      for (Ingrediente ingrediente : comida.getItems()) {
+        ItemCompra itemExistente = buscarItemCompra(listaFinalCompra, ingrediente);
 
         if (itemExistente != null) {
-          Double nuevaCantidad = itemExistente.getCantidadTotal() + itemComida.getCantidadGramos();
+          Double nuevaCantidad = itemExistente.getCantidadTotal() + ingrediente.getCantidadGramos();
           itemExistente.setCantidadTotal(nuevaCantidad);
         } else {
           ItemCompra nuevoItem = new ItemCompra();
-          nuevoItem.setAlimento(itemComida.getAlimento());
-          nuevoItem.setCantidadTotal(itemComida.getCantidadGramos());
+          nuevoItem.setAlimento(ingrediente.getAlimento());
+          nuevoItem.setCantidadTotal(ingrediente.getCantidadGramos());
 
           listaFinalCompra.add(nuevoItem);
         }
@@ -35,9 +35,9 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
   }
 
   @Override
-  public ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, ItemComida itemComida) {
+  public ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, Ingrediente ingrediente) {
     for (ItemCompra itemCompra : itemsCompra) {
-      if (itemCompra.getAlimento().getNombre().equals(itemComida.getAlimento().getNombre())) {
+      if (itemCompra.getAlimento().getNombre().equals(ingrediente.getAlimento().getNombre())) {
         return itemCompra;
       }
     }

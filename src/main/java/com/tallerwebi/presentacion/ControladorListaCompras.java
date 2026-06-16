@@ -2,7 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Alimento;
 import com.tallerwebi.dominio.Comida;
-import com.tallerwebi.dominio.ItemComida;
+import com.tallerwebi.dominio.Ingrediente;
 import com.tallerwebi.dominio.ItemCompra;
 import com.tallerwebi.dominio.ServicioListaCompras;
 import java.util.ArrayList;
@@ -46,43 +46,43 @@ public class ControladorListaCompras {
     alimento6.setNombre("Banana");
     alimento6.setPrecioEstimado(3000.0);
 
-    ItemComida itemComida1 = new ItemComida(100.0, alimento1);
-    ItemComida itemComida2 = new ItemComida(200.0, alimento2);
-    ItemComida itemComida3 = new ItemComida(100.0, alimento3);
-    ItemComida itemComida4 = new ItemComida(500.0, alimento4);
-    ItemComida itemComida5 = new ItemComida(240.0, alimento5);
-    ItemComida itemComida6 = new ItemComida(1000.0, alimento6);
+    Ingrediente ingrediente1 = new Ingrediente(100.0, alimento1);
+    Ingrediente ingrediente2 = new Ingrediente(200.0, alimento2);
+    Ingrediente ingrediente3 = new Ingrediente(100.0, alimento3);
+    Ingrediente ingrediente4 = new Ingrediente(500.0, alimento4);
+    Ingrediente ingrediente5 = new Ingrediente(240.0, alimento5);
+    Ingrediente ingrediente6 = new Ingrediente(1000.0, alimento6);
 
     Comida comida1 = new Comida();
     comida1.setNombre("Arroz Con Pollo y Tomate");
-    comida1.getItems().add(itemComida1);
-    comida1.getItems().add(itemComida2);
-    comida1.getItems().add(itemComida3);
+    comida1.getItems().add(ingrediente1);
+    comida1.getItems().add(ingrediente2);
+    comida1.getItems().add(ingrediente3);
 
     Comida comida2 = new Comida();
     comida2.setNombre("Tomate Con Pollo");
-    comida2.getItems().add(itemComida1);
-    comida2.getItems().add(itemComida3);
+    comida2.getItems().add(ingrediente1);
+    comida2.getItems().add(ingrediente3);
 
     Comida comida3 = new Comida();
     comida3.setNombre("Tomate Con Arroz ");
-    comida3.getItems().add(itemComida2);
-    comida3.getItems().add(itemComida3);
+    comida3.getItems().add(ingrediente2);
+    comida3.getItems().add(ingrediente3);
 
     Comida comida4 = new Comida();
     comida4.setNombre("Pollo con Zapallo ");
-    comida4.getItems().add(itemComida1);
-    comida4.getItems().add(itemComida4);
+    comida4.getItems().add(ingrediente1);
+    comida4.getItems().add(ingrediente4);
 
     Comida comida5 = new Comida();
     comida5.setNombre("Pollo con tomate y papa ");
-    comida5.getItems().add(itemComida2);
-    comida5.getItems().add(itemComida5);
-    comida5.getItems().add(itemComida3);
+    comida5.getItems().add(ingrediente2);
+    comida5.getItems().add(ingrediente5);
+    comida5.getItems().add(ingrediente3);
 
     Comida comida6 = new Comida();
     comida6.setNombre("Banana ");
-    comida6.getItems().add(itemComida6);
+    comida6.getItems().add(ingrediente6);
 
     List<Comida> comidas = new ArrayList<>();
     comidas.add(comida1);
