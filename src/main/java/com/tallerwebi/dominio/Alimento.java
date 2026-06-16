@@ -14,15 +14,19 @@ public class Alimento {
   private Long id;
 
   private String nombre;
-  //private Double precioPorKg;
   private String tipoComida;
   private Double precioEstimado;
-  private Boolean esVegetariano;
-  private Boolean esCeliaco;
-  private Boolean contieneLactosa = false;
 
   @Embedded
   private InformacionNutricional infoNutricional = new InformacionNutricional();
+
+  //el precio estimado es el precio del alimento por kg
+  //tal vez en caso de frutas,es mejor usar un precio por la una unidad del alimento,tipo una banana
+ //private Boolean esVegetariano;
+  //private Boolean esCeliaco;
+  //private Boolean contieneLactosa = false;
+
+
 
   public Long getId() {
     return id;
@@ -55,7 +59,7 @@ public class Alimento {
   public void setTipoComida(String tipoComida) {
     this.tipoComida = tipoComida;
   }
-
+/*
   public Boolean getEsVegetariano() {
     return esVegetariano;
   }
@@ -79,7 +83,7 @@ public class Alimento {
   public void setContieneLactosa(Boolean contieneLactosa) {
     this.contieneLactosa = contieneLactosa;
   }
-
+*/
   public Integer getCalorias() {
     return infoNutricional.getCalorias();
   }

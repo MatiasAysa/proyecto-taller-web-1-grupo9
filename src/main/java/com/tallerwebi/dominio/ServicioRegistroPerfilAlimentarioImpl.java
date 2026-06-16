@@ -125,6 +125,7 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     PerfilAlimentarioUsuario nuevoPerfil = crearPerfilAlimentarioUsuarioDesdeDTO(
       perfilAlimentarioDTO
     );
+
     // primero se crea un perfil sin restricciones para relacionarlo
     repositorioPerfil.guardar(nuevoPerfil);
     usuario.setPerfilAlimentario(nuevoPerfil);
