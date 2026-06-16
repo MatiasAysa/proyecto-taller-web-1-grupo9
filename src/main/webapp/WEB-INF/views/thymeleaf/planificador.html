@@ -6,11 +6,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" th:href="@{/css/planificador.css}"/>
 </head>
 <body>
-<div class="contenedor-principal">
+<div class="contenedor-principal" th:data-dias="${planGenerado != null ? planGenerado.cronogramaDias.size() : 7}">
+
     <header class="encabezado">
         <h1>Generador de Menú Económico Inteligente</h1>
         <p>Optimizando tu nutrición en base a tu presupuesto real.</p>
@@ -21,72 +21,137 @@
     </div>
 
     <div class="panel-accion" th:if="${planGenerado == null}">
-        <p>Presioná el botón para calcular tu distribución semanal óptima basada en tus restricciones y el dinero disponible en tu cuenta.</p>
+        <p>Presioná el botón para calcular tu distribución nutricional óptima basada en tus restricciones de salud y el dinero disponible en tu cuenta.</p>
         <form th:action="@{/generar-plan}" method="POST">
-            <input type="hidden" name="usuarioId" value="1"/>
-            <button type="submit" class="btn-principal">Calcular Menú Semanal</button>
+            <button type="submit" class="btn-principal">Calcular Mi Plan Inteligente</button>
         </form>
     </div>
 
     <div th:if="${planGenerado != null}" class="resultado-plan">
 
-        <div th:if="${not #lists.isEmpty(advertencias)}" class="bloque-advertencias">
-            <h3>RECOMENDACIONES DE AHORRO</h3>
+        <div th:if="${not #lists.isEmpty(planGenerado.advertencias)}" class="bloque-advertencias">
+            <h3>RECOMENDACIONES Y VENTANA TEMPORAL</h3>
             <ul>
-                <li th:each="adv : ${advertencias}" th:text="${#strings.toString(adv).replace('??', '')}"></li>
+                <li th:each="adv : ${planGenerado.advertencias}" th:text="${#strings.toString(adv).replace('??', '')}"></li>
             </ul>
         </div>
 
-        <div class="resumen-costo">
-            <h3>Costo Semanal Estimado: <span th:text="${'$' + #numbers.formatDecimal(planGenerado.costoTotalPlan, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></h3>
+        <div class="resumen-costo" th:data-presupuesto-total="${planGenerado.costoTotalPlan}" id="contenedor-costo-base">
+            <h3>Tu Presupuesto Total Configurado: <span th:text="${'$' + #numbers.formatDecimal(planGenerado.costoTotalPlan, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></h3>
+            <h4 class="subtitulo-costo-diario">
+                Tu Presupuesto Disponible por Día: <span id="txt-presupuesto-diario-puro">$0.00</span>
+            </h4>
+        </div>
+
+        <div class="panel-control-seleccion">
+            <h3>&#128722; Resumen de Selección Actual</h3>
+            <div class="grilla-seleccion-dinamica">
+                <div class="tarjeta-seleccion-precio">
+                    <span class="macro-etiqueta">Costo de alimentos seleccionados</span>
+                    <strong id="txt-costo-seleccion-acumulado">$0.00</strong>
+                </div>
+                <div class="tarjeta-seleccion-precio">
+                    <span class="macro-etiqueta">Estado del Presupuesto Total</span>
+                    <span id="txt-balance-estado-diario" class="badge-alerta-js">Sin Alimentos</span>
+                </div>
+            </div>
         </div>
 
         <div class="resumen-nutricional">
-            <h3>Balance Nutricional Semanal</h3>
+            <h3>Balance Nutricional Seleccionado</h3>
             <div class="grilla-macros">
                 <div class="tarjeta-macro item-calorias">
                     <span class="macro-etiqueta">Calorías</span>
-                    <strong class="macro-valor" th:text="${planGenerado.totalCalorias + ' kcal'}">0 kcal</strong>
+                    <strong class="macro-valor" id="txt-calorias-dinamicas">0 kcal</strong>
                 </div>
                 <div class="tarjeta-macro item-proteinas">
                     <span class="macro-etiqueta">Proteínas</span>
-                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalProteinas, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                    <strong class="macro-valor" id="txt-proteinas-dinamicas">0.0g</strong>
                 </div>
                 <div class="tarjeta-macro item-carbohidratos">
                     <span class="macro-etiqueta">Carbohidratos</span>
-                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalCarbohidratos, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                    <strong class="macro-valor" id="txt-carbohidratos-dinamicos">0.0g</strong>
                 </div>
                 <div class="tarjeta-macro item-grasas">
                     <span class="macro-etiqueta">Grasas</span>
-                    <strong class="macro-valor" th:text="${#numbers.formatDecimal(planGenerado.totalGrasas, 1, 'DEFAULT', 1, 'DEFAULT') + 'g'}">0.0g</strong>
+                    <strong class="macro-valor" id="txt-grasas-dinamicas">0.0g</strong>
                 </div>
             </div>
         </div>
 
-        <div class="grilla-menu">
+        <h3 class="titulo-seccion-cronograma">Cronograma Diario Planificado</h3>
+        <div class="grilla-menu-kanban">
 
-            <div class="tarjeta-dia" th:if="${planGenerado.costoTotalPlan <= 40000 and planGenerado.costoTotalPlan > 0}">
-                <h4>PLAN SEMANAL ECONÓMICO INTELIGENTE</h4>
-                <div class="comida"><strong>Desayuno:</strong> Avena caliente con frutas de estación y té infusor.</div>
-                <div class="comida"><strong>Almuerzo:</strong> Guiso de lentejas nutritivo con arroz y vegetales base.</div>
-                <div class="comida"><strong>Merienda:</strong> Mate cocido o infusión con rodajas de pan integral tostado.</div>
-                <div class="comida"><strong>Cena:</strong> Tortilla de espinaca con revuelto de huevos y arroz reutilizado.</div>
-            </div>
+            <div class="tarjeta-dia-kanban" th:each="dia : ${planGenerado.cronogramaDias}">
+                <div class="cabecera-tarjeta-dia">
+                    <h4 th:text="'DÍA ' + ${dia.numeroDia}">DÍA 1</h4>
+                    <span class="fecha-tarjeta" th:text="${#dates.format(dia.fechaCalendario, 'dd/MM/yyyy')}">10/06/2026</span>
+                </div>
 
-            <div class="tarjeta-dia" th:if="${planGenerado.costoTotalPlan > 40000}">
-                <h4>PLAN SEMANAL VARIADO PREMIUM</h4>
-                <div class="comida"><strong>Desayuno:</strong> Yogur firme con granola premium, frutos secos y frutas frescas.</div>
-                <div class="comida"><strong>Almuerzo:</strong> Suprema de pechuga de pollo a la plancha con puré mixto o fideos integrales.</div>
-                <div class="comida"><strong>Merienda:</strong> Café con leche, tostadas de pan integral y porción de queso cremoso.</div>
-                <div class="comida"><strong>Cena:</strong> Wok de pollo saltado con vegetales selectos, semillas de sésamo y arroz integral.</div>
+                <div class="bloque-comidas-dia">
+
+                    <div class="comida-bloque"
+                         th:data-precio="${dia.desayuno.precioEstimado}"
+                         th:data-calorias="${dia.desayuno.calorias != null ? dia.desayuno.calorias : 0}"
+                         th:data-proteinas="${dia.desayuno.proteinas != null ? dia.desayuno.proteinas : 0.0}"
+                         th:data-carbohidratos="${dia.desayuno.carbohidratos != null ? dia.desayuno.carbohidratos : 0.0}"
+                         th:data-grasas="${dia.desayuno.grasas != null ? dia.desayuno.grasas : 0.0}">
+                        <div class="linea-superior-comida">
+                            <label class="contenedor-checkbox">
+                                <input type="checkbox" class="check-consumo-js">
+                                <span class="custom-check"></span>
+                            </label>
+                            <span class="badge-momento momento-desayuno">DESAYUNO</span>
+                            <span class="nombre-alimento-kanban" th:text="${dia.desayuno.nombre}">Avena</span>
+                            <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(dia.desayuno.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                        </div>
+                    </div>
+
+                    <div class="comida-bloque"
+                         th:data-precio="${dia.almuerzo.precioEstimado}"
+                         th:data-calorias="${dia.almuerzo.calorias != null ? dia.almuerzo.calorias : 0}"
+                         th:data-proteinas="${dia.almuerzo.proteinas != null ? dia.almuerzo.proteinas : 0.0}"
+                         th:data-carbohidratos="${dia.almuerzo.carbohidratos != null ? dia.almuerzo.carbohidratos : 0.0}"
+                         th:data-grasas="${dia.almuerzo.grasas != null ? dia.almuerzo.grasas : 0.0}">
+                        <div class="linea-superior-comida">
+                            <label class="contenedor-checkbox">
+                                <input type="checkbox" class="check-consumo-js">
+                                <span class="custom-check"></span>
+                            </label>
+                            <span class="badge-momento momento-almuerzo">ALMUERZO</span>
+                            <span class="nombre-alimento-kanban" th:text="${dia.almuerzo.nombre}">Pollo</span>
+                            <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(dia.almuerzo.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                        </div>
+                    </div>
+
+                    <div class="comida-bloque"
+                         th:data-precio="${dia.cena.precioEstimado}"
+                         th:data-calorias="${dia.cena.calorias != null ? dia.cena.calorias : 0}"
+                         th:data-proteinas="${dia.cena.proteinas != null ? dia.cena.proteinas : 0.0}"
+                         th:data-carbohidratos="${dia.cena.carbohidratos != null ? dia.cena.carbohidratos : 0.0}"
+                         th:data-grasas="${dia.cena.grasas != null ? dia.cena.grasas : 0.0}">
+                        <div class="linea-superior-comida">
+                            <label class="contenedor-checkbox">
+                                <input type="checkbox" class="check-consumo-js">
+                                <span class="custom-check"></span>
+                            </label>
+                            <span class="badge-momento momento-cena">CENA</span>
+                            <span class="nombre-alimento-kanban" th:text="${dia.cena.nombre}">Merluza</span>
+                            <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(dia.cena.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>
 
-        <div style="text-align: center;">
-            <a th:href="@{/configurar-presupuesto}" class="btn-secundario">Volver a calcular</a>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a th:href="@{/configurar-presupuesto}" class="btn-secundario">Volver a ajustar presupuesto</a>
         </div>
     </div>
 </div>
+
+<script th:src="@{/js/planificador.js}"></script>
 </body>
 </html>

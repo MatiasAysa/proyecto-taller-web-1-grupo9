@@ -12,10 +12,15 @@ import org.springframework.stereotype.Service;
 public class ServicioPresupuestoImpl implements ServicioPresupuesto {
 
   private RepositorioPresupuesto repositorioPresupuesto;
+  private RepositorioUsuario repositorioUsuario;
 
   @Autowired
-  public ServicioPresupuestoImpl(RepositorioPresupuesto repositorioPresupuesto) {
+  public ServicioPresupuestoImpl(
+    RepositorioPresupuesto repositorioPresupuesto,
+    RepositorioUsuario repositorioUsuario
+  ) {
     this.repositorioPresupuesto = repositorioPresupuesto;
+    this.repositorioUsuario = repositorioUsuario;
   }
 
   @Transactional
@@ -30,7 +35,7 @@ public class ServicioPresupuestoImpl implements ServicioPresupuesto {
     presupuesto.setIntervalo(intervalo);
     presupuesto.setFecha(fecha);
 
-    repositorioPresupuesto.guardarPresupuesto(presupuesto, email);
+    repositorioPresupuesto.guardarPresupuesto(presupuesto, repositorioUsuario.buscar(email));
 
     return presupuesto;
   }
@@ -38,12 +43,14 @@ public class ServicioPresupuestoImpl implements ServicioPresupuesto {
   @Transactional
   @Override
   public DatosPresupuesto buscarPresupuesto(String email) {
-    Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(email);
-    if (presupuesto == null) throw new UsuarioSinPresupuestoException();
-    return new DatosPresupuesto(
-      presupuesto.getMonto(),
-      presupuesto.getIntervalo(),
-      presupuesto.getFecha()
+    Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(
+      repositorioUsuario.buscar(email)
     );
+    if (presupuesto == null) throw new UsuarioSinPresupuestoException();
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(presupuesto.getMonto());
+    datosPresupuesto.setIntervalo(presupuesto.getIntervalo());
+    datosPresupuesto.setFecha(presupuesto.getFecha());
+    return datosPresupuesto;
   }
 }
