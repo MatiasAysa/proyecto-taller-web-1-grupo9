@@ -66,7 +66,11 @@ public class RepositorioPresupuestoTest {
     thenSeModificaElPresupuestoOriginal(usuario, presupuesto1, presupuesto2);
   }
 
-  private void thenSeModificaElPresupuestoOriginal(Usuario usuario, Presupuesto presupuesto1, Presupuesto presupuesto2) {
+  private void thenSeModificaElPresupuestoOriginal(
+    Usuario usuario,
+    Presupuesto presupuesto1,
+    Presupuesto presupuesto2
+  ) {
     Presupuesto presupuestoEncontrado = repositorioPresupuesto.buscarPresupuesto(usuario);
 
     assertThat(presupuestoEncontrado.getId(), is(equalTo(presupuesto1.getId())));

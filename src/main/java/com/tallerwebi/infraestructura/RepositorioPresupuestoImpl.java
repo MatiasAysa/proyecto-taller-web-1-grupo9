@@ -26,8 +26,7 @@ public class RepositorioPresupuestoImpl implements RepositorioPresupuesto {
 
   @Override
   public void guardarPresupuesto(Presupuesto presupuesto, Usuario usuario) {
-    if(this.buscarPresupuesto(usuario) != null)
-    {
+    if (this.buscarPresupuesto(usuario) != null) {
       modificarPresupuesto(this.buscarPresupuesto(usuario), presupuesto);
       return;
     }

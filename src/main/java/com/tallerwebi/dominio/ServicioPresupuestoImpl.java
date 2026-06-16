@@ -15,7 +15,10 @@ public class ServicioPresupuestoImpl implements ServicioPresupuesto {
   private RepositorioUsuario repositorioUsuario;
 
   @Autowired
-  public ServicioPresupuestoImpl(RepositorioPresupuesto repositorioPresupuesto, RepositorioUsuario repositorioUsuario) {
+  public ServicioPresupuestoImpl(
+    RepositorioPresupuesto repositorioPresupuesto,
+    RepositorioUsuario repositorioUsuario
+  ) {
     this.repositorioPresupuesto = repositorioPresupuesto;
     this.repositorioUsuario = repositorioUsuario;
   }
@@ -40,7 +43,9 @@ public class ServicioPresupuestoImpl implements ServicioPresupuesto {
   @Transactional
   @Override
   public DatosPresupuesto buscarPresupuesto(String email) {
-    Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(repositorioUsuario.buscar(email));
+    Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(
+      repositorioUsuario.buscar(email)
+    );
     if (presupuesto == null) throw new UsuarioSinPresupuestoException();
     DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
     datosPresupuesto.setMonto(presupuesto.getMonto());

@@ -2,32 +2,84 @@ package com.tallerwebi.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "PLAN_ALIMENTICIO")
 public class PlanAlimenticio {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Double costoTotalPlan;
+
+  private double costoTotalPlan;
+  private int totalCalorias;
+  private double totalProteinas;
+  private double totalCarbohidratos;
+  private double totalGrasas;
+
+  @ElementCollection(fetch = FetchType.LAZY)
   private List<String> advertencias = new ArrayList<>();
+
+  @OneToMany(
+    mappedBy = "planAlimenticio",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true,
+    fetch = FetchType.LAZY
+  )
+  private List<DiaPlan> cronogramaDias = new ArrayList<>();
+
+  @Transient
   private List<Alimento> alimentosAsignados = new ArrayList<>();
-  private Integer totalCalorias = 0;
-  private Double totalProteinas = 0.0;
-  private Double totalCarbohidratos = 0.0;
-  private Double totalGrasas = 0.0;
 
-  public Long getId() {
-    return id;
+  public PlanAlimenticio() {}
+
+  public List<DiaPlan> getCronogramaDias() {
+    return cronogramaDias;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setCronogramaDias(List<DiaPlan> cronogramaDias) {
+    this.cronogramaDias = cronogramaDias;
   }
 
-  public Double getCostoTotalPlan() {
+  public double getCostoTotalPlan() {
     return costoTotalPlan;
   }
 
-  public void setCostoTotalPlan(Double costoTotalPlan) {
+  public void setCostoTotalPlan(double costoTotalPlan) {
     this.costoTotalPlan = costoTotalPlan;
+  }
+
+  public int getTotalCalorias() {
+    return totalCalorias;
+  }
+
+  public void setTotalCalorias(int totalCalorias) {
+    this.totalCalorias = totalCalorias;
+  }
+
+  public double getTotalProteinas() {
+    return totalProteinas;
+  }
+
+  public void setTotalProteinas(double totalProteinas) {
+    this.totalProteinas = totalProteinas;
+  }
+
+  public double getTotalCarbohidratos() {
+    return totalCarbohidratos;
+  }
+
+  public void setTotalCarbohidratos(double totalCarbohidratos) {
+    this.totalCarbohidratos = totalCarbohidratos;
+  }
+
+  public double getTotalGrasas() {
+    return totalGrasas;
+  }
+
+  public void setTotalGrasas(double totalGrasas) {
+    this.totalGrasas = totalGrasas;
   }
 
   public List<String> getAdvertencias() {
@@ -44,37 +96,5 @@ public class PlanAlimenticio {
 
   public void setAlimentosAsignados(List<Alimento> alimentosAsignados) {
     this.alimentosAsignados = alimentosAsignados;
-  }
-
-  public Integer getTotalCalorias() {
-    return totalCalorias;
-  }
-
-  public void setTotalCalorias(Integer totalCalorias) {
-    this.totalCalorias = totalCalorias;
-  }
-
-  public Double getTotalProteinas() {
-    return totalProteinas;
-  }
-
-  public void setTotalProteinas(Double totalProteinas) {
-    this.totalProteinas = totalProteinas;
-  }
-
-  public Double getTotalCarbohidratos() {
-    return totalCarbohidratos;
-  }
-
-  public void setTotalCarbohidratos(Double totalCarbohidratos) {
-    this.totalCarbohidratos = totalCarbohidratos;
-  }
-
-  public Double getTotalGrasas() {
-    return totalGrasas;
-  }
-
-  public void setTotalGrasas(Double totalGrasas) {
-    this.totalGrasas = totalGrasas;
   }
 }

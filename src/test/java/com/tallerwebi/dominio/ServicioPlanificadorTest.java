@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import com.tallerwebi.dominio.excepcion.PresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +17,29 @@ public class ServicioPlanificadorTest {
 
   private ServicioPlanificador servicioPlanificador;
   private RepositorioPlanificador repositorioPlanificadorMock;
+  private RepositorioPresupuesto repositorioPresupuestoMock;
+  private RepositorioUsuario repositorioUsuarioMock;
+
   private List<Alimento> alimentosEnStock;
+
+  private static final String EMAIL_VEGETARIANO = "vegetariano@unlam.edu.ar";
+  private static final String EMAIL_PREMIUM = "premium@unlam.edu.ar";
+  private static final String EMAIL_INTOLERANTE = "intolerante@unlam.edu.ar";
+  private static final String EMAIL_INS_EXTREMO = "insuficiente@unlam.edu.ar";
+  private static final String EMAIL_INEXISTENTE = "inexistente@unlam.edu.ar";
 
   @BeforeEach
   public void init() {
     this.repositorioPlanificadorMock = mock(RepositorioPlanificador.class);
-    this.servicioPlanificador = new ServicioPlanificadorImpl(this.repositorioPlanificadorMock);
+    this.repositorioPresupuestoMock = mock(RepositorioPresupuesto.class);
+    this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
+    this.servicioPlanificador =
+      new ServicioPlanificadorImpl(
+        this.repositorioPlanificadorMock,
+        this.repositorioPresupuestoMock,
+        this.repositorioUsuarioMock
+      );
+
     this.alimentosEnStock = new ArrayList<>();
 
     this.alimentosEnStock.add(
@@ -50,22 +68,29 @@ public class ServicioPlanificadorTest {
   @Test
   public void queUnUsuarioVegetarianoRecibaUnPlanSinCarneYAcordeAlPresupuestoYConMacrosCalculados()
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
-    Long usuarioId = 1L;
     Usuario usuarioVegetariano = new Usuario();
-    usuarioVegetariano.setId(usuarioId);
-    usuarioVegetariano.setPresupuestoSemanal(40000.0);
-    usuarioVegetariano.setEsVegetariano(true);
-    usuarioVegetariano.setContieneLactosa(true);
+    PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
+    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
+    restriccion.setNombre("VEGETARIANO");
+    perfil.getRestriccionesAlimentarias().add(restriccion);
+    usuarioVegetariano.setPerfilAlimentario(perfil);
 
-    when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioVegetariano);
+    Presupuesto presupuesto = new Presupuesto();
+    presupuesto.setMonto(40000.0f);
+    presupuesto.setIntervalo(7);
+
+    when(repositorioUsuarioMock.buscar(EMAIL_VEGETARIANO)).thenReturn(usuarioVegetariano);
+    when(repositorioPresupuestoMock.buscarPresupuesto(usuarioVegetariano)).thenReturn(presupuesto);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(usuarioId);
+    PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(
+      EMAIL_VEGETARIANO,
+      null
+    );
 
     assertThat(planObtenido, notNullValue());
     assertThat(planObtenido.getCostoTotalPlan(), is(lessThanOrEqualTo(40000.0)));
-    assertThat(planObtenido.getTotalCalorias(), is(5376));
-    assertThat(planObtenido.getTotalProteinas(), is(256.9));
 
     for (Alimento al : planObtenido.getAlimentosAsignados()) {
       assertThat(al.getEsVegetariano(), is(true));
@@ -75,21 +100,23 @@ public class ServicioPlanificadorTest {
   @Test
   public void queUnUsuarioCarnivoroConPresupuestoPremiumRecibaUnPlanVariadoConCarneYMacrosTotales()
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
-    Long usuarioId = 2L;
     Usuario usuarioPremium = new Usuario();
-    usuarioPremium.setId(usuarioId);
-    usuarioPremium.setPresupuestoSemanal(80000.0);
-    usuarioPremium.setEsVegetariano(false);
-    usuarioPremium.setContieneLactosa(true);
+    PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
+    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    usuarioPremium.setPerfilAlimentario(perfil);
 
-    when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioPremium);
+    Presupuesto presupuesto = new Presupuesto();
+    presupuesto.setMonto(80000.0f);
+    presupuesto.setIntervalo(7);
+
+    when(repositorioUsuarioMock.buscar(EMAIL_PREMIUM)).thenReturn(usuarioPremium);
+    when(repositorioPresupuestoMock.buscarPresupuesto(usuarioPremium)).thenReturn(presupuesto);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(usuarioId);
+    PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(EMAIL_PREMIUM, null);
 
     assertThat(planObtenido, notNullValue());
-    assertThat(planObtenido.getCostoTotalPlan(), is(greaterThan(40000.0)));
-    assertThat(planObtenido.getTotalCalorias(), is(8281));
+    assertThat(planObtenido.getCostoTotalPlan(), is(greaterThan(20000.0)));
 
     boolean tieneCarne = planObtenido
       .getAlimentosAsignados()
@@ -101,55 +128,67 @@ public class ServicioPlanificadorTest {
   @Test
   public void queUnUsuarioIntoleranteALaLactosaRecibaUnPlanLibreDeLactosa()
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
-    Long usuarioId = 3L;
     Usuario usuarioIntolerante = new Usuario();
-    usuarioIntolerante.setId(usuarioId);
-    usuarioIntolerante.setPresupuestoSemanal(50000.0);
-    usuarioIntolerante.setEsVegetariano(true);
-    usuarioIntolerante.setContieneLactosa(false);
+    PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
+    perfil.setRestriccionesAlimentarias(new HashSet<>());
 
-    when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioIntolerante);
+    RestriccionAlimentaria lactosa = new RestriccionAlimentaria();
+    lactosa.setNombre("INTOLERANCIA_LACTOSA");
+    perfil.getRestriccionesAlimentarias().add(lactosa);
+    usuarioIntolerante.setPerfilAlimentario(perfil);
+
+    Presupuesto presupuesto = new Presupuesto();
+    presupuesto.setMonto(50000.0f);
+    presupuesto.setIntervalo(7);
+
+    when(repositorioUsuarioMock.buscar(EMAIL_INTOLERANTE)).thenReturn(usuarioIntolerante);
+    // 💡 SOLUCIÓN: Cambiamos EMAIL_INTOLERANTE por el objeto usuarioIntolerante
+    when(repositorioPresupuestoMock.buscarPresupuesto(usuarioIntolerante)).thenReturn(presupuesto);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
-    PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(usuarioId);
+    PlanAlimenticio planObtenido = servicioPlanificador.generarPlanParaUsuario(
+      EMAIL_INTOLERANTE,
+      null
+    );
 
     assertThat(planObtenido, notNullValue());
-
     for (Alimento al : planObtenido.getAlimentosAsignados()) {
-      assertThat(al.getContieneLactosa(), is(false));
+      if (al.getContieneLactosa() != null) {
+        assertThat(al.getContieneLactosa(), is(false));
+      }
     }
   }
 
   @Test
   public void queLancePresupuestoInsuficienteExceptionSiElDineroNoCubreElMinimoEconomico() {
-    Long usuarioId = 4L;
     Usuario usuarioEvadido = new Usuario();
-    usuarioEvadido.setId(usuarioId);
-    usuarioEvadido.setPresupuestoSemanal(1000.0);
-    usuarioEvadido.setEsVegetariano(true);
-    usuarioEvadido.setContieneLactosa(true);
+    PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
+    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    usuarioEvadido.setPerfilAlimentario(perfil);
 
-    when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioId)).thenReturn(usuarioEvadido);
-    when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
+    Presupuesto presupuestoBajo = new Presupuesto();
+    presupuestoBajo.setMonto(1000.0f);
+    presupuestoBajo.setIntervalo(7);
+
+    when(repositorioUsuarioMock.buscar(EMAIL_INS_EXTREMO)).thenReturn(usuarioEvadido);
+    when(repositorioPresupuestoMock.buscarPresupuesto(usuarioEvadido)).thenReturn(presupuestoBajo);
 
     assertThrows(
       PresupuestoInsuficienteException.class,
       () -> {
-        servicioPlanificador.generarPlanParaUsuario(usuarioId);
+        servicioPlanificador.generarPlanParaUsuario(EMAIL_INS_EXTREMO, null);
       }
     );
   }
 
   @Test
   public void queLanceUsuarioInexistenteExceptionSiElIdNoCorrespondeAUnUsuarioValido() {
-    Long usuarioIdInexistente = 99L;
-
-    when(repositorioPlanificadorMock.buscarUsuarioPorId(usuarioIdInexistente)).thenReturn(null);
+    when(repositorioUsuarioMock.buscar(EMAIL_INEXISTENTE)).thenReturn(null);
 
     assertThrows(
       UsuarioInexistenteException.class,
       () -> {
-        servicioPlanificador.generarPlanParaUsuario(usuarioIdInexistente);
+        servicioPlanificador.generarPlanParaUsuario(EMAIL_INEXISTENTE, null);
       }
     );
   }

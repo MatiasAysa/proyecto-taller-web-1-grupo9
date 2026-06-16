@@ -18,7 +18,10 @@ public class ServicioPresupuestoTest {
 
   private RepositorioPresupuesto repositorioPresupuesto = mock(RepositorioPresupuesto.class);
   private RepositorioUsuario repositorioUsuario = mock(RepositorioUsuario.class);
-  private ServicioPresupuesto servicioPresupuesto = new ServicioPresupuestoImpl(repositorioPresupuesto, repositorioUsuario);
+  private ServicioPresupuesto servicioPresupuesto = new ServicioPresupuestoImpl(
+    repositorioPresupuesto,
+    repositorioUsuario
+  );
   private final float monto = 200000;
   private final int intervalo = 7;
   private final LocalDate fecha = LocalDate.now();
@@ -77,8 +80,11 @@ public class ServicioPresupuestoTest {
     assertThat(resultado, is(notNullValue()));
   }
 
-  private Presupuesto whenUsuarioIngresaMontoEIntervalo(float monto, int intervalo, LocalDate fecha)
-  {
+  private Presupuesto whenUsuarioIngresaMontoEIntervalo(
+    float monto,
+    int intervalo,
+    LocalDate fecha
+  ) {
     return servicioPresupuesto.crearPresupuesto(monto, intervalo, fecha, "a@a.com");
   }
 

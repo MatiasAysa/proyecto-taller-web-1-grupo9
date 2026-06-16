@@ -19,7 +19,9 @@ public class ControladorPresupuestoTest {
   private final int intervalo = 7;
   private final LocalDate fecha = LocalDate.now();
   private ServicioPresupuesto servicioPresupuesto = mock(ServicioPresupuestoImpl.class);
-  private ControladorPresupuesto controladorPresupuesto = new ControladorPresupuesto(servicioPresupuesto);
+  private ControladorPresupuesto controladorPresupuesto = new ControladorPresupuesto(
+    servicioPresupuesto
+  );
   private HttpSession session = mock(HttpSession.class);
   private final String email = "a@a.com";
   private String mensaje;
