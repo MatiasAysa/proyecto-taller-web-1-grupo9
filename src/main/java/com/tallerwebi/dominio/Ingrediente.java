@@ -16,6 +16,8 @@ public class Ingrediente {
   private Double cantidadGramos;
   @ManyToOne
   private Alimento alimento;
+  @ManyToOne
+  private Comida comida;
 
   public Double getCantidadGramos() {
     return cantidadGramos;
