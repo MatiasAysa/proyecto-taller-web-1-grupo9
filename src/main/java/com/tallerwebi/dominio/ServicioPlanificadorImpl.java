@@ -212,21 +212,23 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
   ) {
     if (
       perfil == null ||
-      perfil.getRestriccionesAlimentarias() == null ||
-      perfil.getRestriccionesAlimentarias().isEmpty()
+      perfil.getPerfilRestricciones() == null ||
+      perfil.getPerfilRestricciones().isEmpty()
     ) {
       return alimentos;
     }
 
     List<Alimento> aptos = new ArrayList<>();
+
     for (Alimento alim : alimentos) {
       if (
         verificarAlimentoApto(
           alim,
           perfil
-            .getRestriccionesAlimentarias()
+            .getPerfilRestricciones()
             .stream()
-            .map(r -> r.getNombre().toUpperCase(Locale.ROOT))
+            .filter(pr -> pr.getRestriccion() != null)
+            .map(pr -> pr.getRestriccion().getNombre().toUpperCase(Locale.ROOT))
             .collect(Collectors.toSet())
         )
       ) {

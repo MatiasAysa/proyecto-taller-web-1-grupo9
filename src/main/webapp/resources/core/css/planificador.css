@@ -24,11 +24,12 @@ body {
 .contenedor-principal {
     background-color: #ffffff;
     width: 100%;
-    max-width: 650px;
+    max-width: 1200px;
     padding: 2.5rem;
     margin: 2rem;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
 .encabezado {
@@ -97,13 +98,15 @@ body {
     color: white;
     text-decoration: none;
     text-align: center;
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 2.5rem;
     font-size: 0.9rem;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     margin-top: 1.5rem;
-    width: calc(100% - 3rem);
+    width: auto;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .btn-secundario:hover {
@@ -228,27 +231,22 @@ body {
 .nombre-alimento {
     font-weight: 500;
 }
+
 .tip-combinacion-js {
     display: block;
-    font-size: 0.78rem;
-    color: #555;
+    font-size: 0.85rem;
+    color: #718096 !important;
     font-style: italic;
-    margin-top: 0.6rem;
-    padding: 0.5rem 0.75rem;
-    background-color: #f0f5f1;
-    border-left: 3px solid var(--color-principal);
-    border-radius: 4px;
-    clear: both;
+    line-height: 1.3;
 }
+
 .precio-alimento-txt {
-    float: right;
-    font-size: 0.9rem;
-    color: var(--color-texto);
-    font-weight: bold;
-    background-color: #eef1ee;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-top: -2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2f855a;
+    margin-left: auto;
+    padding-left: 10px;
 }
 
 .resumen-nutricional {
@@ -302,21 +300,10 @@ body {
     display: block;
 }
 
-.item-calorias .macro-valor {
-    color: #e67e22;
-}
-
-.item-proteinas .macro-valor {
-    color: var(--color-principal-hover);
-}
-
-.item-carbohidratos .macro-valor {
-    color: #2980b9;
-}
-
-.item-grasas .macro-valor {
-    color: #c0392b;
-}
+.item-calorias .macro-valor { color: #e67e22; }
+.item-proteinas .macro-valor { color: var(--color-principal-hover); }
+.item-carbohidratos .macro-valor { color: #2980b9; }
+.item-grasas .macro-valor { color: #c0392b; }
 
 .barra-filtros-js {
     display: flex;
@@ -349,6 +336,7 @@ body {
     border-color: var(--color-principal);
     color: #ffffff;
 }
+
 .fila-interactiva {
     display: flex;
     align-items: center;
@@ -390,6 +378,7 @@ body {
     background-color: var(--color-principal);
     border-color: var(--color-principal);
 }
+
 .panel-control-seleccion {
     background-color: #ffffff;
     border: 2px solid #eaeaea;
@@ -427,6 +416,7 @@ body {
     display: block;
     margin-top: 0.2rem;
 }
+
 .comida.fila-interactiva {
     padding: 16px;
     margin-bottom: 12px;
@@ -435,6 +425,7 @@ body {
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
 }
+
 .bloque-alimento-linea-superior {
     display: flex;
     align-items: center;
@@ -453,20 +444,13 @@ body {
     min-width: 90px;
     text-align: center;
 }
+
 .nombre-alimento {
     font-family: 'Lato', sans-serif;
     font-size: 1.05rem;
     font-weight: 700;
     color: #2d3748;
     flex-grow: 1;
-}
-.precio-alimento-txt {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #2f855a;
-    margin-left: auto;
-    padding-left: 10px;
 }
 
 .contenedor-tip-alimento {
@@ -476,12 +460,6 @@ body {
     border-top: 1px dashed #edf2f7;
 }
 
-.tip-combinacion-js {
-    font-size: 0.85rem;
-    color: #718096 !important;
-    font-style: italic;
-    line-height: 1.3;
-}
 .titulo-seccion-cronograma {
     margin-top: 2rem;
     color: #2d3748;
@@ -492,8 +470,8 @@ body {
 
 .grilla-menu-kanban {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
     margin-top: 1.5rem;
 }
 
@@ -536,11 +514,17 @@ body {
 }
 
 .comida-bloque {
-    padding: 10px;
+    padding: 12px;
     background: #f7fafc;
     border: 1px solid #edf2f7;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.comida-bloque:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e0;
 }
 
 .linea-superior-comida {
@@ -548,6 +532,7 @@ body {
     align-items: center;
     gap: 10px;
 }
+
 .badge-momento {
     font-size: 0.65rem;
     font-weight: bold;
@@ -556,6 +541,7 @@ body {
     text-align: center;
     min-width: 75px;
 }
+
 .momento-desayuno { background: #feebc8; color: #c05621; }
 .momento-almuerzo { background: #e2f0d9; color: #38a169; }
 .momento-cena { background: #e2e8f0; color: #4a5568; }

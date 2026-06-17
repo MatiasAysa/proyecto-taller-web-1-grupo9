@@ -22,6 +22,7 @@ public class RepositorioRestriccionAlimentariaImpl implements RepositorioRestric
     sessionFactory.getCurrentSession().save(restriccion);
   }
 
+  @Override
   public RestriccionAlimentaria buscarPorNombre(String nombre) {
     return (RestriccionAlimentaria) sessionFactory
       .getCurrentSession()
