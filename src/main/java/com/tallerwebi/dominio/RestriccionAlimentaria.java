@@ -11,23 +11,10 @@ public class RestriccionAlimentaria {
 
   private String nombre;
 
-  @ManyToOne
-  @JoinColumn(name = "perfil_alimentario_usuario_id")
-  private PerfilAlimentarioUsuario perfil;
-
   public RestriccionAlimentaria() {}
 
-  public RestriccionAlimentaria(PerfilAlimentarioUsuario perfil, String nombre) {
-    this.perfil = perfil;
+  public RestriccionAlimentaria(String nombre) {
     this.nombre = nombre;
-  }
-
-  public PerfilAlimentarioUsuario getPerfil() {
-    return perfil;
-  }
-
-  public void setPerfil(PerfilAlimentarioUsuario perfil) {
-    this.perfil = perfil;
   }
 
   public String getNombre() {

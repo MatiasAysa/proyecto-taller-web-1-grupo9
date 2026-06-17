@@ -115,3 +115,12 @@ VALUES (34, 'Polenta instantánea base', 1100.00, 'CENA', true, true, false, 345
 
 INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas)
 VALUES (35, 'Aceite de Girasol x 900ml', 2150.00, 'CENA', true, true, false, 884, 0.0, 0.0, 100.0);
+
+
+--==================RESTRICCIONES ALIMENTARIAS===================
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('NINGUNO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('CELIACO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('DIABETICO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('VEGETARIANO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('VEGANO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('INTOLERANCIA_LACTOSA');
