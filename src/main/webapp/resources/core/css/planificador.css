@@ -560,3 +560,19 @@ body {
     font-weight: bold;
     color: #2f855a;
 }
+.grupo-momento-comida {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.grupo-momento-comida .badge-momento {
+    align-self: flex-start;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.custom-check.radio-style {
+    border-radius: 50% !important;
+}

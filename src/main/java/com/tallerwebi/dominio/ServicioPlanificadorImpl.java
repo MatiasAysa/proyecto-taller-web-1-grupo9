@@ -291,12 +291,24 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     for (int i = 1; i <= dias; i++) {
       DiaPlan dia = new DiaPlan(i, calendar.getTime(), plan);
 
-      dia.setDesayuno(desayunos.get((i - 1) % desayunos.size()));
-      dia.setAlmuerzo(almuerzos.get((i - 1) % almuerzos.size()));
-      dia.setCena(cenas.get((i - 1) % cenas.size()));
+      if (!desayunos.isEmpty()) {
+        dia.getOpcionesAlimentos().add(desayunos.get((i - 1) % desayunos.size()));
+        dia.getOpcionesAlimentos().add(desayunos.get(i % desayunos.size()));
+        dia.getOpcionesAlimentos().add(desayunos.get((i + 1) % desayunos.size()));
+      }
+      if (!almuerzos.isEmpty()) {
+        dia.getOpcionesAlimentos().add(almuerzos.get((i - 1) % almuerzos.size()));
+        dia.getOpcionesAlimentos().add(almuerzos.get(i % almuerzos.size()));
+        dia.getOpcionesAlimentos().add(almuerzos.get((i + 1) % almuerzos.size()));
+      }
+
+      if (!cenas.isEmpty()) {
+        dia.getOpcionesAlimentos().add(cenas.get((i - 1) % cenas.size()));
+        dia.getOpcionesAlimentos().add(cenas.get(i % cenas.size()));
+        dia.getOpcionesAlimentos().add(cenas.get((i + 1) % cenas.size()));
+      }
 
       cronograma.add(dia);
-
       calendar.add(Calendar.DAY_OF_YEAR, 1);
     }
     int dummyVar = calendar.get(Calendar.YEAR);

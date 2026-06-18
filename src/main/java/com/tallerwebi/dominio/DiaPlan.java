@@ -1,6 +1,9 @@
 package com.tallerwebi.dominio;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 
 @Entity
@@ -20,17 +23,13 @@ public class DiaPlan {
   @JoinColumn(name = "plan_alimenticio_id")
   private PlanAlimenticio planAlimenticio;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "desayuno_id")
-  private Alimento desayuno;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "almuerzo_id")
-  private Alimento almuerzo;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "cena_id")
-  private Alimento cena;
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+    name = "DIA_PLAN_OPCIONES",
+    joinColumns = @JoinColumn(name = "dia_plan_id"),
+    inverseJoinColumns = @JoinColumn(name = "alimento_id")
+  )
+  private List<Alimento> opcionesAlimentos = new ArrayList<>();
 
   public DiaPlan() {}
 
@@ -38,6 +37,27 @@ public class DiaPlan {
     this.numeroDia = numeroDia;
     this.fechaCalendario = fechaCalendario;
     this.planAlimenticio = planAlimenticio;
+  }
+
+  public List<Alimento> getOpcionesDesayuno() {
+    return opcionesAlimentos
+      .stream()
+      .filter(a -> "DESAYUNO".equals(a.getTipoComida().toString()))
+      .collect(Collectors.toList());
+  }
+
+  public List<Alimento> getOpcionesAlmuerzo() {
+    return opcionesAlimentos
+      .stream()
+      .filter(a -> "ALMUERZO".equals(a.getTipoComida().toString()))
+      .collect(Collectors.toList());
+  }
+
+  public List<Alimento> getOpcionesCena() {
+    return opcionesAlimentos
+      .stream()
+      .filter(a -> "CENA".equals(a.getTipoComida().toString()))
+      .collect(Collectors.toList());
   }
 
   public Long getId() {
@@ -72,27 +92,11 @@ public class DiaPlan {
     this.planAlimenticio = planAlimenticio;
   }
 
-  public Alimento getDesayuno() {
-    return desayuno;
+  public List<Alimento> getOpcionesAlimentos() {
+    return opcionesAlimentos;
   }
 
-  public void setDesayuno(Alimento desayuno) {
-    this.desayuno = desayuno;
-  }
-
-  public Alimento getAlmuerzo() {
-    return almuerzo;
-  }
-
-  public void setAlmuerzo(Alimento almuerzo) {
-    this.almuerzo = almuerzo;
-  }
-
-  public Alimento getCena() {
-    return cena;
-  }
-
-  public void setCena(Alimento cena) {
-    this.cena = cena;
+  public void setOpcionesAlimentos(List<Alimento> opcionesAlimentos) {
+    this.opcionesAlimentos = opcionesAlimentos;
   }
 }

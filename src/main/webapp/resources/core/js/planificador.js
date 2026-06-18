@@ -11,8 +11,6 @@ function initCheckboxesPresupuesto() {
     const contenedorCostoBase = document.getElementById("contenedor-costo-base");
     const diasPlan = parseInt(contenedorPrincipal?.getAttribute("data-dias")) || 7;
     const presupuestoTotalBruto = parseFloat(contenedorCostoBase?.getAttribute("data-presupuesto-total")) || 0;
-
-    // Presupuesto diario real
     const presupuestoPorDiaReal = presupuestoTotalBruto / diasPlan;
 
     const txtPresupuestoDiarioPuro = document.getElementById("txt-presupuesto-diario-puro");
@@ -51,6 +49,7 @@ function initCheckboxesPresupuesto() {
                 comida.style.opacity = "0.65";
             }
         });
+
         if (txtCostoSelection) txtCostoSelection.innerText = "$" + costoAlimentosSeleccionados.toFixed(2);
 
         if (txtBalanceEstadoDiario) {
@@ -74,10 +73,28 @@ function initCheckboxesPresupuesto() {
         if (txtCarbohidratos) txtCarbohidratos.innerText = carbohidratosAcumulados.toFixed(1) + "g";
         if (txtGrasas) txtGrasas.innerText = grasasAcumuladas.toFixed(1) + "g";
     }
+
     comidas.forEach(comida => {
         const checkbox = comida.querySelector(".check-consumo-js");
         if (checkbox) {
-            checkbox.addEventListener("change", () => {
+            checkbox.setAttribute("data-was-checked", "false");
+
+            checkbox.addEventListener("click", () => {
+                const estabaMarcado = checkbox.getAttribute("data-was-checked") === "true";
+
+                if (estabaMarcado) {
+                    checkbox.checked = false;
+                    checkbox.setAttribute("data-was-checked", "false");
+                } else {
+                    const nombreGrupo = checkbox.getAttribute("name");
+                    if (nombreGrupo) {
+                        document.querySelectorAll(`input[name="${nombreGrupo}"]`).forEach(radio => {
+                            radio.setAttribute("data-was-checked", "false");
+                        });
+                    }
+                    // Marcamos el actual como activo
+                    checkbox.setAttribute("data-was-checked", "true");
+                }
                 actualizarTotalesPorSeleccion();
             });
         }

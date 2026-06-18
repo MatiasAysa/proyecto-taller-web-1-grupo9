@@ -70,7 +70,6 @@ public class ServicioPlanificadorTest {
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
     Usuario usuarioVegetariano = new Usuario();
     PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
-
     perfil.setPerfilRestricciones(new HashSet<>());
 
     RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
