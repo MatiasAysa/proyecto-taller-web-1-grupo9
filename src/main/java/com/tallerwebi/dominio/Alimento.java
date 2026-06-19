@@ -1,10 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Alimento {
@@ -22,6 +18,17 @@ public class Alimento {
 
   @Embedded
   private InformacionNutricional infoNutricional = new InformacionNutricional();
+
+  @Column(name = "url_supermercado", length = 500)
+  private String urlSupermercado;
+
+  public String getUrlSupermercado() {
+    return urlSupermercado;
+  }
+
+  public void setUrlSupermercado(String urlSupermercado) {
+    this.urlSupermercado = urlSupermercado;
+  }
 
   public Long getId() {
     return id;

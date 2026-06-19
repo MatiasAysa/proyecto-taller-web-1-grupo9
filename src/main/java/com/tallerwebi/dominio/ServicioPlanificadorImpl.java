@@ -55,15 +55,20 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
   private final RepositorioPresupuesto repositorioPresupuesto;
   private final RepositorioUsuario repositorioUsuario;
 
+  // 🛠️ NUEVO: Inyección de dependencia para el Web Scraping
+  private final ScraperService scraperService;
+
   @Autowired
   public ServicioPlanificadorImpl(
     RepositorioPlanificador repositorioPlanificador,
     RepositorioPresupuesto repositorioPresupuesto,
-    RepositorioUsuario repositorioUsuario
+    RepositorioUsuario repositorioUsuario,
+    ScraperService scraperService
   ) {
     this.repositorioPlanificador = repositorioPlanificador;
     this.repositorioPresupuesto = repositorioPresupuesto;
     this.repositorioUsuario = repositorioUsuario;
+    this.scraperService = scraperService;
   }
 
   @Override
@@ -265,6 +270,17 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     int dias,
     int caloriasObjetivo
   ) {
+    for (Alimento alimento : alimentos) {
+      if (
+        alimento.getUrlSupermercado() != null && !alimento.getUrlSupermercado().trim().isEmpty()
+      ) {
+        Double precioRealOnline = scraperService.obtenerPrecioReal(alimento.getUrlSupermercado());
+        if (precioRealOnline != null && precioRealOnline > 0) {
+          alimento.setPrecioEstimado(precioRealOnline);
+        }
+      }
+    }
+
     plan.setAlimentosAsignados(alimentos);
     plan.setCostoTotalPlan((double) montoDisponibleTotal);
 
@@ -285,6 +301,19 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     if (almuerzos.isEmpty()) almuerzos.addAll(alimentos);
     if (cenas.isEmpty()) cenas.addAll(alimentos);
 
+    List<DiaPlan> cronograma = generarCronogramaDias(desayunos, almuerzos, cenas, dias, plan);
+    plan.setCronogramaDias(cronograma);
+
+    calcularYSetearMacros(plan, alimentos, dias, caloriasObjetivo);
+  }
+
+  private List<DiaPlan> generarCronogramaDias(
+    List<Alimento> desayunos,
+    List<Alimento> almuerzos,
+    List<Alimento> cenas,
+    int dias,
+    PlanAlimenticio plan
+  ) {
     List<DiaPlan> cronograma = new ArrayList<>();
     Calendar calendar = Calendar.getInstance();
 
@@ -301,7 +330,6 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
         dia.getOpcionesAlimentos().add(almuerzos.get(i % almuerzos.size()));
         dia.getOpcionesAlimentos().add(almuerzos.get((i + 1) % almuerzos.size()));
       }
-
       if (!cenas.isEmpty()) {
         dia.getOpcionesAlimentos().add(cenas.get((i - 1) % cenas.size()));
         dia.getOpcionesAlimentos().add(cenas.get(i % cenas.size()));
@@ -311,13 +339,12 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       cronograma.add(dia);
       calendar.add(Calendar.DAY_OF_YEAR, 1);
     }
+
     int dummyVar = calendar.get(Calendar.YEAR);
     if (dummyVar == 0) {
       calendar.clear();
     }
-
-    plan.setCronogramaDias(cronograma);
-    calcularYSetearMacros(plan, alimentos, dias, caloriasObjetivo);
+    return cronograma;
   }
 
   private void calcularYSetearMacros(

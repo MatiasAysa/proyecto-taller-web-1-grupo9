@@ -73,28 +73,10 @@ function initCheckboxesPresupuesto() {
         if (txtCarbohidratos) txtCarbohidratos.innerText = carbohidratosAcumulados.toFixed(1) + "g";
         if (txtGrasas) txtGrasas.innerText = grasasAcumuladas.toFixed(1) + "g";
     }
-
     comidas.forEach(comida => {
         const checkbox = comida.querySelector(".check-consumo-js");
         if (checkbox) {
-            checkbox.setAttribute("data-was-checked", "false");
-
-            checkbox.addEventListener("click", () => {
-                const estabaMarcado = checkbox.getAttribute("data-was-checked") === "true";
-
-                if (estabaMarcado) {
-                    checkbox.checked = false;
-                    checkbox.setAttribute("data-was-checked", "false");
-                } else {
-                    const nombreGrupo = checkbox.getAttribute("name");
-                    if (nombreGrupo) {
-                        document.querySelectorAll(`input[name="${nombreGrupo}"]`).forEach(radio => {
-                            radio.setAttribute("data-was-checked", "false");
-                        });
-                    }
-                    // Marcamos el actual como activo
-                    checkbox.setAttribute("data-was-checked", "true");
-                }
+            checkbox.addEventListener("change", () => {
                 actualizarTotalesPorSeleccion();
             });
         }

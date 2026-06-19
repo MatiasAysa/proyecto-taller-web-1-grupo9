@@ -100,8 +100,8 @@
                              th:data-grasas="${des.grasas != null ? des.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="radio" th:name="'dia-' + ${dia.numeroDia} + '-desayuno'" class="check-consumo-js">
-                                    <span class="custom-check radio-style"></span>
+                                    <input type="checkbox" th:name="'dia-' + ${dia.numeroDia} + '-desayuno'" class="check-consumo-js">
+                                    <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${des.nombre}">Avena</span>
                                 <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(des.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
@@ -119,8 +119,8 @@
                              th:data-grasas="${alm.grasas != null ? alm.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="radio" th:name="'dia-' + ${dia.numeroDia} + '-almuerzo'" class="check-consumo-js">
-                                    <span class="custom-check radio-style"></span>
+                                    <input type="checkbox" th:name="'dia-' + ${dia.numeroDia} + '-almuerzo'" class="check-consumo-js">
+                                    <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${alm.nombre}">Pollo</span>
                                 <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(alm.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
@@ -138,8 +138,8 @@
                              th:data-grasas="${cen.grasas != null ? cen.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="radio" th:name="'dia-' + ${dia.numeroDia} + '-cena'" class="check-consumo-js">
-                                    <span class="custom-check radio-style"></span>
+                                    <input type="checkbox" th:name="'dia-' + ${dia.numeroDia} + '-cena'" class="check-consumo-js">
+                                    <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${cen.nombre}">Merluza</span>
                                 <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(cen.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
