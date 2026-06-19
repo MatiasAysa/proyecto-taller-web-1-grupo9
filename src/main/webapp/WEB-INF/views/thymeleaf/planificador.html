@@ -79,17 +79,21 @@
             </div>
         </div>
 
-        <h3 class="titulo-seccion-cronograma">Cronograma Diario Planificado</h3>
-        <div class="grilla-menu-kanban">
+        <div class="seccion-navegacion-semanas">
+            <h3 class="titulo-seccion-cronograma">Cronograma Planificado</h3>
+            <div class="barra-tabs-semanas" id="contenedor-bloques-semanas">
+            </div>
+        </div>
 
-            <div class="tarjeta-dia-kanban" th:each="dia : ${planGenerado.cronogramaDias}">
+        <div class="grilla-menu-kanban" id="contenedor-grilla-dias">
+
+            <div class="tarjeta-dia-kanban" th:each="dia : ${planGenerado.cronogramaDias}" th:data-numero-dia="${dia.numeroDia}">
                 <div class="cabecera-tarjeta-dia">
                     <h4 th:text="'DÍA ' + ${dia.numeroDia}">DÍA 1</h4>
                     <span class="fecha-tarjeta" th:text="${#dates.format(dia.fechaCalendario, 'dd/MM/yyyy')}">10/06/2026</span>
                 </div>
 
                 <div class="bloque-comidas-dia">
-
                     <div class="grupo-momento-comida">
                         <span class="badge-momento momento-desayuno">DESAYUNOS DISPONIBLES</span>
                         <div class="comida-bloque" th:each="des : ${dia.opcionesDesayuno}"
@@ -146,7 +150,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
