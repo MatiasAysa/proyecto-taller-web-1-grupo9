@@ -3,7 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.excepcion.PresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
   private static final double PRESUPUESTO_MINIMO_DIARIO = 6000.0;
-  private static final double FACTOR_PORCION_BALANCEADA = 2.0;
-  private static final double MULTIPLICADOR_REDONDEO = 100.0;
-  private static final int CALORIAS_BASE_REGULATORIAS = 2000;
+  private static final long MILISEGUNDOS_DIARIOS = 86400000L;
 
   private static final String STR_DIARIO_NUM = "1";
   private static final String STR_DIARIO_TEXTO = "DIARIO";
@@ -29,33 +27,19 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
   private static final String STR_MENSUAL_TEXTO = "MENSUAL";
   private static final String STR_PERDER_PESO = "PERDER_PESO";
   private static final String STR_GANAR_PESO = "GANAR_PESO";
-  private static final String STR_SEXO_FEM = "F";
-  private static final String STR_ACT_MODERADA = "MODERADA";
-  private static final String STR_ACT_ACTIVA = "ACTIVA";
   private static final String STR_NULL_LITERAL = "null";
 
-  private static final double HB_FEM_BASE = 447.593;
-  private static final double HB_FEM_PESO = 9.247;
-  private static final double HB_FEM_ALTURA = 3.098;
-  private static final double HB_FEM_EDAD = 4.330;
-
-  private static final double HB_MASC_BASE = 88.362;
-  private static final double HB_MASC_PESO = 13.397;
-  private static final double HB_MASC_ALTURA = 4.799;
-  private static final double HB_MASC_EDAD = 5.677;
-
-  private static final double FACTOR_ACT_SEDENTARIA = 1.2;
-  private static final double FACTOR_ACT_MODERADA = 1.55;
-  private static final double FACTOR_ACT_ACTIVA = 1.9;
-
-  private static final double MODIFICADOR_DEFICIT = 0.85;
-  private static final double MODIFICADOR_SUPERAVIT = 1.15;
+  private static final String RESTRICCION_VEGETARIANO = "VEGETARIANO";
+  private static final String RESTRICCION_VEGANO = "VEGANO";
+  private static final String RESTRICCION_LACTOSA = "INTOLERANCIA_LACTOSA";
+  private static final String RESTRICCION_CELIACO = "CELIACO";
+  private static final String COMIDA_DESAYUNO = "DESAYUNO";
+  private static final String COMIDA_ALMUERZO = "ALMUERZO";
+  private static final String COMIDA_CENA = "CENA";
 
   private final RepositorioPlanificador repositorioPlanificador;
   private final RepositorioPresupuesto repositorioPresupuesto;
   private final RepositorioUsuario repositorioUsuario;
-
-  // 🛠️ NUEVO: Inyección de dependencia para el Web Scraping
   private final ScraperService scraperService;
 
   @Autowired
@@ -80,30 +64,24 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
     Usuario usuario = repositorioUsuario.buscar(email);
     if (usuario == null) {
-      throw new UsuarioInexistenteException("El usuario solicitado no existe en el sistema.");
+      throw new UsuarioInexistenteException("El usuario solicitado no existe.");
     }
     Presupuesto presupuestoEntity = repositorioPresupuesto.buscarPresupuesto(usuario);
     if (presupuestoEntity == null) {
-      throw new PresupuestoInsuficienteException(
-        "Primero debes configurar un presupuesto en tu perfil."
-      );
+      throw new PresupuestoInsuficienteException("Primero debes configurar un presupuesto.");
     }
-    String duracionEvaluar = obtenerDuracionSegura(tipoDuracion, presupuestoEntity);
 
-    int diasTotales = determinarDiasPorDuracion(duracionEvaluar);
-    float montoDisponible = presupuestoEntity.getMonto();
-
-    validarPresupuestoMinimoNuevo(montoDisponible, diasTotales);
-
-    List<Alimento> todosLosAlimentos = repositorioPlanificador.obtenerAlimentosDisponibles();
-    List<Alimento> alimentosAptos = obtenerAlimentosFiltradosPorPerfil(
-      todosLosAlimentos,
-      usuario.getPerfilAlimentario()
+    int diasTotales = determinarDiasPorDuracion(
+      obtenerDuracionSegura(tipoDuracion, presupuestoEntity)
     );
+    validarPresupuestoMinimoNuevo(presupuestoEntity.getMonto(), diasTotales);
 
-    int caloriasObjetivoPeriodo = calcularCaloriasObjetivo(
-      usuario.getPerfilAlimentario(),
-      diasTotales
+    List<Alimento> alimentosAptos = ordenarAlimentosPorObjetivo(
+      obtenerAlimentosFiltradosPorPerfil(
+        repositorioPlanificador.obtenerAlimentosDisponibles(),
+        usuario.getPerfilAlimentario()
+      ),
+      usuario.getPerfilAlimentario()
     );
 
     PlanAlimenticio plan = new PlanAlimenticio();
@@ -111,15 +89,51 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     advertencias.add("Duración del plan: " + diasTotales + " días.");
     plan.setAdvertencias(advertencias);
 
+    int calObj = CalculadorNutricionalHelper.calcularCaloriasObjetivo(
+      usuario.getPerfilAlimentario(),
+      diasTotales
+    );
     armarEstructuraNutricionalYCostosNueva(
       plan,
       alimentosAptos,
-      montoDisponible,
+      presupuestoEntity.getMonto(),
       diasTotales,
-      caloriasObjetivoPeriodo
+      calObj
     );
-
     return plan;
+  }
+
+  private List<Alimento> ordenarAlimentosPorObjetivo(
+    List<Alimento> alimentos,
+    PerfilAlimentarioUsuario perfil
+  ) {
+    if (perfil == null || perfil.getObjetivo() == null) {
+      return alimentos;
+    }
+    String obj = perfil.getObjetivo().toUpperCase(Locale.ROOT);
+    if (STR_GANAR_PESO.equals(obj)) {
+      return alimentos
+        .stream()
+        .sorted((a1, a2) ->
+          Double.compare(
+            a2.getProteinas() != null ? a2.getProteinas() : 0.0,
+            a1.getProteinas() != null ? a1.getProteinas() : 0.0
+          )
+        )
+        .collect(Collectors.toList());
+    }
+    if (STR_PERDER_PESO.equals(obj)) {
+      return alimentos
+        .stream()
+        .sorted((a1, a2) ->
+          Double.compare(
+            a1.getGrasas() != null ? a1.getGrasas() : 0.0,
+            a2.getGrasas() != null ? a2.getGrasas() : 0.0
+          )
+        )
+        .collect(Collectors.toList());
+    }
+    return alimentos;
   }
 
   private String obtenerDuracionSegura(String tipoDuracion, Presupuesto presupuestoEntity) {
@@ -149,66 +163,9 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
   private void validarPresupuestoMinimoNuevo(float monto, int dias)
     throws PresupuestoInsuficienteException {
-    double presupuestoMinimoRequerido = PRESUPUESTO_MINIMO_DIARIO * (double) dias;
-    if ((double) monto < presupuestoMinimoRequerido) {
-      throw new PresupuestoInsuficienteException(
-        "El monto de $" +
-        monto +
-        " es insuficiente para cubrir un plan de " +
-        dias +
-        " dias de forma saludable. Requerido minimo: $" +
-        presupuestoMinimoRequerido
-      );
+    if ((double) monto < (PRESUPUESTO_MINIMO_DIARIO * (double) dias)) {
+      throw new PresupuestoInsuficienteException("El monto es insuficiente.");
     }
-  }
-
-  private int calcularCaloriasObjetivo(PerfilAlimentarioUsuario perfil, int dias) {
-    if (
-      perfil == null ||
-      perfil.getPeso() == null ||
-      perfil.getAltura() == null ||
-      perfil.getEdad() == null
-    ) {
-      return CALORIAS_BASE_REGULATORIAS * dias;
-    }
-
-    double metabolismoBasal;
-    if (STR_SEXO_FEM.equalsIgnoreCase(perfil.getSexo())) {
-      metabolismoBasal =
-        HB_FEM_BASE +
-        (HB_FEM_PESO * perfil.getPeso()) +
-        (HB_FEM_ALTURA * perfil.getAltura()) -
-        (HB_FEM_EDAD * perfil.getEdad());
-    } else {
-      metabolismoBasal =
-        HB_MASC_BASE +
-        (HB_MASC_PESO * perfil.getPeso()) +
-        (HB_MASC_ALTURA * perfil.getAltura()) -
-        (HB_MASC_EDAD * perfil.getEdad());
-    }
-
-    double gastoEnergeticoTotal =
-      metabolismoBasal * obtenerFactorActividad(perfil.getActividadFisica());
-
-    if (STR_PERDER_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
-      gastoEnergeticoTotal = gastoEnergeticoTotal * MODIFICADOR_DEFICIT;
-    } else if (STR_GANAR_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
-      gastoEnergeticoTotal = gastoEnergeticoTotal * MODIFICADOR_SUPERAVIT;
-    }
-    return (int) (gastoEnergeticoTotal * (double) dias);
-  }
-
-  private double obtenerFactorActividad(String actividad) {
-    if (actividad == null) {
-      return FACTOR_ACT_SEDENTARIA;
-    }
-    if (STR_ACT_MODERADA.equalsIgnoreCase(actividad)) {
-      return FACTOR_ACT_MODERADA;
-    }
-    if (STR_ACT_ACTIVA.equalsIgnoreCase(actividad)) {
-      return FACTOR_ACT_ACTIVA;
-    }
-    return FACTOR_ACT_SEDENTARIA;
   }
 
   private List<Alimento> obtenerAlimentosFiltradosPorPerfil(
@@ -222,43 +179,46 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     ) {
       return alimentos;
     }
-
     List<Alimento> aptos = new ArrayList<>();
-
     for (Alimento alim : alimentos) {
-      if (
-        verificarAlimentoApto(
-          alim,
-          perfil
-            .getPerfilRestricciones()
-            .stream()
-            .filter(pr -> pr.getRestriccion() != null)
-            .map(pr -> pr.getRestriccion().getNombre().toUpperCase(Locale.ROOT))
-            .collect(Collectors.toSet())
-        )
-      ) {
+      if (verificarAlimentoApto(alim, perfil.getPerfilRestricciones())) {
         aptos.add(alim);
       }
     }
     return aptos;
   }
 
-  private boolean verificarAlimentoApto(Alimento alim, Set<String> restricciones) {
+  private boolean verificarAlimentoApto(Alimento alim, Set<PerfilRestriccion> restricciones) {
+    for (PerfilRestriccion pr : restricciones) {
+      if (
+        pr.getRestriccion() != null &&
+        pr.getRestriccion().getNombre() != null &&
+        !evaluarFiltrosEspecificos(alim, pr.getRestriccion().getNombre().toUpperCase(Locale.ROOT))
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private boolean evaluarFiltrosEspecificos(Alimento alim, String restriccionNombre) {
     if (
-      (restricciones.contains("VEGETARIANO") || restricciones.contains("VEGANO")) &&
+      (RESTRICCION_VEGETARIANO.equals(restriccionNombre) ||
+        RESTRICCION_VEGANO.equals(restriccionNombre)) &&
       (alim.getEsVegetariano() == null || !alim.getEsVegetariano())
     ) {
       return false;
     }
     if (
-      restricciones.contains("INTOLERANCIA_LACTOSA") &&
+      RESTRICCION_LACTOSA.equals(restriccionNombre) &&
       alim.getContieneLactosa() != null &&
       alim.getContieneLactosa()
     ) {
       return false;
     }
     return (
-      !restricciones.contains("CELIACO") || (alim.getEsCeliaco() != null && alim.getEsCeliaco())
+      !RESTRICCION_CELIACO.equals(restriccionNombre) ||
+      (alim.getEsCeliaco() != null && alim.getEsCeliaco())
     );
   }
 
@@ -266,148 +226,99 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
   public void armarEstructuraNutricionalYCostosNueva(
     PlanAlimenticio plan,
     List<Alimento> alimentos,
-    float montoDisponibleTotal,
+    float monto,
     int dias,
-    int caloriasObjetivo
+    int calObj
   ) {
-    for (Alimento alimento : alimentos) {
-      if (
-        alimento.getUrlSupermercado() != null && !alimento.getUrlSupermercado().trim().isEmpty()
-      ) {
-        Double precioRealOnline = scraperService.obtenerPrecioReal(alimento.getUrlSupermercado());
-        if (precioRealOnline != null && precioRealOnline > 0) {
-          alimento.setPrecioEstimado(precioRealOnline);
+    for (Alimento alim : alimentos) {
+      if (alim.getUrlSupermercado() != null && !alim.getUrlSupermercado().trim().isEmpty()) {
+        Double pr = scraperService.obtenerPrecioReal(alim.getUrlSupermercado());
+        if (pr != null && pr > 0) {
+          alim.setPrecioEstimado(pr);
         }
       }
     }
-
     plan.setAlimentosAsignados(alimentos);
-    plan.setCostoTotalPlan((double) montoDisponibleTotal);
+    plan.setCostoTotalPlan((double) monto);
 
-    List<Alimento> desayunos = alimentos
+    List<Alimento> des = alimentos
       .stream()
-      .filter(a -> "DESAYUNO".equalsIgnoreCase(a.getTipoComida()))
+      .filter(a -> COMIDA_DESAYUNO.equalsIgnoreCase(a.getTipoComida()))
       .collect(Collectors.toList());
-    List<Alimento> almuerzos = alimentos
+    List<Alimento> alm = alimentos
       .stream()
-      .filter(a -> "ALMUERZO".equalsIgnoreCase(a.getTipoComida()))
+      .filter(a -> COMIDA_ALMUERZO.equalsIgnoreCase(a.getTipoComida()))
       .collect(Collectors.toList());
-    List<Alimento> cenas = alimentos
+    List<Alimento> cen = alimentos
       .stream()
-      .filter(a -> "CENA".equalsIgnoreCase(a.getTipoComida()))
+      .filter(a -> COMIDA_CENA.equalsIgnoreCase(a.getTipoComida()))
       .collect(Collectors.toList());
 
-    if (desayunos.isEmpty()) desayunos.addAll(alimentos);
-    if (almuerzos.isEmpty()) almuerzos.addAll(alimentos);
-    if (cenas.isEmpty()) cenas.addAll(alimentos);
+    if (des.isEmpty()) {
+      des.addAll(alimentos);
+    }
+    if (alm.isEmpty()) {
+      alm.addAll(alimentos);
+    }
+    if (cen.isEmpty()) {
+      cen.addAll(alimentos);
+    }
 
-    List<DiaPlan> cronograma = generarCronogramaDias(desayunos, almuerzos, cenas, dias, plan);
-    plan.setCronogramaDias(cronograma);
-
-    calcularYSetearMacros(plan, alimentos, dias, caloriasObjetivo);
+    plan.setCronogramaDias(generarCronogramaDias(des, alm, cen, dias, plan));
+    CalculadorNutricionalHelper.calcularYSetearMacros(plan, alimentos, dias, calObj);
   }
 
   private List<DiaPlan> generarCronogramaDias(
-    List<Alimento> desayunos,
-    List<Alimento> almuerzos,
-    List<Alimento> cenas,
+    List<Alimento> des,
+    List<Alimento> alm,
+    List<Alimento> cen,
     int dias,
     PlanAlimenticio plan
   ) {
     List<DiaPlan> cronograma = new ArrayList<>();
-    Calendar calendar = Calendar.getInstance();
-
-    for (int i = 1; i <= dias; i++) {
-      DiaPlan dia = new DiaPlan(i, calendar.getTime(), plan);
-
-      if (!desayunos.isEmpty()) {
-        dia.getOpcionesAlimentos().add(desayunos.get((i - 1) % desayunos.size()));
-        dia.getOpcionesAlimentos().add(desayunos.get(i % desayunos.size()));
-        dia.getOpcionesAlimentos().add(desayunos.get((i + 1) % desayunos.size()));
-      }
-      if (!almuerzos.isEmpty()) {
-        dia.getOpcionesAlimentos().add(almuerzos.get((i - 1) % almuerzos.size()));
-        dia.getOpcionesAlimentos().add(almuerzos.get(i % almuerzos.size()));
-        dia.getOpcionesAlimentos().add(almuerzos.get((i + 1) % almuerzos.size()));
-      }
-      if (!cenas.isEmpty()) {
-        dia.getOpcionesAlimentos().add(cenas.get((i - 1) % cenas.size()));
-        dia.getOpcionesAlimentos().add(cenas.get(i % cenas.size()));
-        dia.getOpcionesAlimentos().add(cenas.get((i + 1) % cenas.size()));
-      }
-
+    for (int diaIndex = 1; diaIndex <= dias; diaIndex++) {
+      long tiempoDesplazado =
+        System.currentTimeMillis() + ((long) (diaIndex - 1) * MILISEGUNDOS_DIARIOS);
+      DiaPlan dia = new DiaPlan(diaIndex, new Date(tiempoDesplazado), plan);
+      inyectarOpcionesComida(dia, des, alm, cen, diaIndex);
       cronograma.add(dia);
-      calendar.add(Calendar.DAY_OF_YEAR, 1);
-    }
-
-    int dummyVar = calendar.get(Calendar.YEAR);
-    if (dummyVar == 0) {
-      calendar.clear();
     }
     return cronograma;
   }
 
-  private void calcularYSetearMacros(
-    PlanAlimenticio plan,
-    List<Alimento> filtrados,
-    int dias,
-    int caloriasObjetivo
+  private void inyectarOpcionesComida(
+    DiaPlan dia,
+    List<Alimento> des,
+    List<Alimento> alm,
+    List<Alimento> cen,
+    int idx
   ) {
-    int caloriasPlan = 0;
-    double proteinas = 0.0;
-    double carbohidratos = 0.0;
-    double grasas = 0.0;
-
-    for (Alimento alimentoSeleccionado : filtrados) {
-      int caloriasIndividuales = alimentoSeleccionado.getCalorias() != null
-        ? alimentoSeleccionado.getCalorias()
-        : 0;
-      double proteinasIndividuales = alimentoSeleccionado.getProteinas() != null
-        ? alimentoSeleccionado.getProteinas()
-        : 0.0;
-      double carbohidratosIndividuales = alimentoSeleccionado.getCarbohidratos() != null
-        ? alimentoSeleccionado.getCarbohidratos()
-        : 0.0;
-      double grasasIndividuales = alimentoSeleccionado.getGrasas() != null
-        ? alimentoSeleccionado.getGrasas()
-        : 0.0;
-
-      caloriasPlan += (int) (caloriasIndividuales * ((double) dias / FACTOR_PORCION_BALANCEADA));
-      proteinas += proteinasIndividuales * ((double) dias / FACTOR_PORCION_BALANCEADA);
-      carbohidratos += carbohidratosIndividuales * ((double) dias / FACTOR_PORCION_BALANCEADA);
-      grasas += grasasIndividuales * ((double) dias / FACTOR_PORCION_BALANCEADA);
+    if (!des.isEmpty()) {
+      dia.getOpcionesAlimentos().add(des.get((idx - 1) % des.size()));
+      dia.getOpcionesAlimentos().add(des.get(idx % des.size()));
+      dia.getOpcionesAlimentos().add(des.get((idx + 1) % des.size()));
     }
-
-    if (caloriasPlan > caloriasObjetivo) {
-      double factorAjuste = (double) caloriasObjetivo / (double) caloriasPlan;
-      caloriasPlan = caloriasObjetivo;
-      proteinas = proteinas * factorAjuste;
-      carbohidratos = carbohidratos * factorAjuste;
-      grasas = grasas * factorAjuste;
+    if (!alm.isEmpty()) {
+      dia.getOpcionesAlimentos().add(alm.get((idx - 1) % alm.size()));
+      dia.getOpcionesAlimentos().add(alm.get(idx % alm.size()));
+      dia.getOpcionesAlimentos().add(alm.get((idx + 1) % alm.size()));
     }
-
-    plan.setTotalCalorias(caloriasPlan);
-    plan.setTotalProteinas(Math.round(proteinas * MULTIPLICADOR_REDONDEO) / MULTIPLICADOR_REDONDEO);
-    plan.setTotalCarbohidratos(
-      Math.round(carbohidratos * MULTIPLICADOR_REDONDEO) / MULTIPLICADOR_REDONDEO
-    );
-    plan.setTotalGrasas(Math.round(grasas * MULTIPLICADOR_REDONDEO) / MULTIPLICADOR_REDONDEO);
+    if (!cen.isEmpty()) {
+      dia.getOpcionesAlimentos().add(cen.get((idx - 1) % cen.size()));
+      dia.getOpcionesAlimentos().add(cen.get(idx % cen.size()));
+      dia.getOpcionesAlimentos().add(cen.get((idx + 1) % cen.size()));
+    }
   }
 
   private List<String> generarAdvertenciasPorObjetivo(PerfilAlimentarioUsuario perfil) {
     List<String> ads = new ArrayList<>();
-    if (perfil == null) {
-      return ads;
-    }
-    if (STR_PERDER_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
-      ads.add(
-        "El plan aplica un deficit calorico controlado para alcanzar tu objetivo de perder peso de forma segura."
-      );
-    }
-    if (STR_GANAR_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
-      ads.add(
-        "Se incremento la densidad calorica y proteica para favorecer la ganancia de masa muscular."
-      );
+    if (perfil != null && perfil.getObjetivo() != null) {
+      if (STR_PERDER_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
+        ads.add("El plan aplica un deficit calorico controlado.");
+      }
+      if (STR_GANAR_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
+        ads.add("Se incremento la densidad calorica y proteica.");
+      }
     }
     return ads;
   }

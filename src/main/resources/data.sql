@@ -1,6 +1,10 @@
-INSERT INTO Usuario(id, email, password, rol, activo) VALUES(null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 
 DELETE FROM Alimento;
+DELETE FROM RestriccionAlimentaria;
+DELETE FROM Usuario;
+
+INSERT INTO Usuario(id, email, password, rol, activo)
+VALUES(1, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 
 --================== DESAYUNOS ===================
 
@@ -19,6 +23,14 @@ VALUES (4, 'Café molido clásico La Virginia 250g', 4500.00, 'DESAYUNO', true, 
 INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
 VALUES (5, 'Galletitas de agua Express 312g', 1800.00, 'DESAYUNO', true, false, false, 421, 10.0, 68.0, 11.0, 'https://www.carrefour.com.ar/galletitas-de-agua-express-312-g/p');
 
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (16, 'Galletas de Arroz s/sal Sanissimo 100g', 1950.00, 'DESAYUNO', true, true, false, 376, 7.8, 81.0, 1.2, 'https://www.carrefour.com.ar/galletas-de-arroz-tostadas-sin-sal-sanissimo-100-g/p');
+
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (17, 'Queso crema clásico Casancrem 290g', 3100.00, 'DESAYUNO', true, true, true, 194, 7.0, 4.5, 16.0, 'https://www.carrefour.com.ar/queso-crema-clasico-casancrem-290-g/p');
+
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (18, 'Pan rallado tradicional Carrefour 500g', 1400.00, 'DESAYUNO', true, false, false, 350, 11.0, 72.0, 1.5, 'https://www.carrefour.com.ar/pan-rallado-carrefour-500-g/p');
 
 --================== ALMUERZOS ===================
 
@@ -37,6 +49,14 @@ VALUES (9, 'Atún al natural en trozos Carrefour 170g', 2900.00, 'ALMUERZO', fal
 INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
 VALUES (10, 'Aceite de girasol Cañuelas 900ml', 2200.00, 'ALMUERZO', true, true, false, 884, 0.0, 0.0, 100.0, 'https://www.carrefour.com.ar/aceite-de-girasol-canuelas-900-ml/p');
 
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (19, 'Suprema de pollo congelada Sadia 1kg', 8500.00, 'ALMUERZO', false, true, false, 120, 22.0, 0.0, 3.5, 'https://www.carrefour.com.ar/suprema-de-pollo-sadia-1-kg/p');
+
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (20, 'Medallones de lentejas y quinoa NotCo 2 un', 3400.00, 'ALMUERZO', true, true, false, 180, 12.0, 15.0, 7.0, 'https://www.carrefour.com.ar/hamburguesa-not-burger-notco-2-unidades-200-g/p');
+
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (21, 'Fideos de arroz s/TACC Matarazzo 500g', 2800.00, 'ALMUERZO', true, true, false, 348, 6.5, 78.0, 0.8, 'https://www.carrefour.com.ar/fideos-de-arroz-penne-rigate-matarazzo-sin-tacc-500-g/p');
 
 --================== CENAS ===================
 
@@ -55,6 +75,14 @@ VALUES (14, 'Garbanzos secos remojados Carrefour 300g', 1350.00, 'CENA', true, t
 INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
 VALUES (15, 'Lentejas secas remojadas Carrefour 300g', 1400.00, 'CENA', true, true, false, 116, 9.0, 20.0, 0.4, 'https://www.carrefour.com.ar/lentejas-secas-remojadas-carrefour-300-g/p');
 
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (22, 'Suprema de pollo congelada Sadia 1kg', 8500.00, 'CENA', false, true, false, 120, 22.0, 0.0, 3.5, 'https://www.carrefour.com.ar/suprema-de-pollo-sadia-1-kg/p');
+
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (23, 'Medallones de lentejas y quinoa NotCo 2 un', 3400.00, 'CENA', true, true, false, 180, 12.0, 15.0, 7.0, 'https://www.carrefour.com.ar/hamburguesa-not-burger-notco-2-unidades-200-g/p');
+
+INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
+VALUES (24, 'Fideos de arroz s/TACC Matarazzo 500g', 2800.00, 'CENA', true, true, false, 348, 6.5, 78.0, 0.8, 'https://www.carrefour.com.ar/fideos-de-arroz-penne-rigate-matarazzo-sin-tacc-500-g/p');
 
 --================== RESTRICCIONES ALIMENTARIAS ===================
 INSERT INTO RestriccionAlimentaria (nombre) VALUES ('NINGUNO');
