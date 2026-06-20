@@ -3,11 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.excepcion.PresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -219,8 +215,9 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     }
 
     List<Alimento> aptos = new ArrayList<>();
-    for (Alimento alim : alimentos) {
+    /*  for (Alimento alim : alimentos) {
       if (
+
         verificarAlimentoApto(
           alim,
           perfil
@@ -229,15 +226,20 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
             .map(r -> r.getNombre().toUpperCase(Locale.ROOT))
             .collect(Collectors.toSet())
         )
+
       ) {
         aptos.add(alim);
       }
     }
+     */
     return aptos;
   }
 
-  private boolean verificarAlimentoApto(Alimento alim, Set<String> restricciones) {
-    if (
+  /*
+  private boolean verificarAlimentoApto() {
+
+    Alimento alim, Set<String> restricciones ESTO VA ADENTRO DE PARAMETROS DE ENTRADA DEL METODO
+      if (
       (restricciones.contains("VEGETARIANO") || restricciones.contains("VEGANO")) &&
       (alim.getEsVegetariano() == null || !alim.getEsVegetariano())
     ) {
@@ -253,7 +255,10 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     return (
       !restricciones.contains("CELIACO") || (alim.getEsCeliaco() != null && alim.getEsCeliaco())
     );
+
+      return false; // SACAR ESTO CUANDO ESTE ARREGLANDO CODIGO
   }
+ */
 
   @Override
   public void armarEstructuraNutricionalYCostosNueva(
@@ -263,6 +268,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     int dias,
     int caloriasObjetivo
   ) {
+    /*
     plan.setAlimentosAsignados(alimentos);
     plan.setCostoTotalPlan((double) montoDisponibleTotal);
 
@@ -304,14 +310,18 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
     plan.setCronogramaDias(cronograma);
     calcularYSetearMacros(plan, alimentos, dias, caloriasObjetivo);
+    */
+
   }
 
+  /*
   private void calcularYSetearMacros(
-    PlanAlimenticio plan,
+   PlanAlimenticio plan,
     List<Alimento> filtrados,
     int dias,
     int caloriasObjetivo
   ) {
+
     int caloriasPlan = 0;
     double proteinas = 0.0;
     double carbohidratos = 0.0;
@@ -351,13 +361,15 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       Math.round(carbohidratos * MULTIPLICADOR_REDONDEO) / MULTIPLICADOR_REDONDEO
     );
     plan.setTotalGrasas(Math.round(grasas * MULTIPLICADOR_REDONDEO) / MULTIPLICADOR_REDONDEO);
-  }
 
+  }
+ */
   private List<String> generarAdvertenciasPorObjetivo(PerfilAlimentarioUsuario perfil) {
     List<String> ads = new ArrayList<>();
     if (perfil == null) {
       return ads;
     }
+    /*
     if (STR_PERDER_PESO.equalsIgnoreCase(perfil.getObjetivo())) {
       ads.add(
         "El plan aplica un deficit calorico controlado para alcanzar tu objetivo de perder peso de forma segura."
@@ -368,6 +380,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
         "Se incremento la densidad calorica y proteica para favorecer la ganancia de masa muscular."
       );
     }
+    */
     return ads;
   }
 }

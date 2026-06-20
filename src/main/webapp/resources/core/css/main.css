@@ -1,19 +1,142 @@
-body {
-  padding-top: 5rem;
-}
-.starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-h1{
-	color:#0000FF;
+body{
+    font-family:'Outfit',sans-serif;
+    background:#f4f9f6;
+    color:#26343F;
+}
+.navbar{
+    height:80px;
+    padding:0 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:white;
+    border-bottom:1px solid #ececec;
+}
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-h2{
-	color:#FF0000;
+.logo-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1;
 }
 
-.navbar-brand{
-    margin:0 2rem;
+.nutri{
+    color:#549A4D;
+    font-weight:700;
+}
+
+.wallet{
+    color:#26343F;
+    font-weight:700;
+}
+
+.register-link{
+    text-decoration:none;
+    color:#549A4D;
+    border:2px solid #549A4D;
+    padding:10px 20px;
+    border-radius:50px;
+    transition:.3s;
+}
+
+.register-link:hover{
+    background:#549A4D;
+    color:white;
+}
+
+.main-container{
+    display:flex;
+    height:calc(100vh - 80px);
+}
+
+.login-section{
+    width:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:white;
+}
+.login-box{
+    width:420px;
+    padding:20px;
+}
+
+.login-box h1{
+    font-size:3.2rem;
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+.subtitle{
+    font-size:1.2rem;
+    line-height:1.6;
+    margin-bottom:40px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:25px;
+}
+
+.input-group label{
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+.input-group input{
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    font-size:1rem;
+    transition:.3s;
+}
+
+.input-group input:focus{
+    outline:none;
+    border-color:#549A4D;
+    box-shadow:0 0 0 4px rgba(84,154,77,.2);
+}
+
+#btn-login{
+    width:100%;
+    border:none;
+    background:#549A4D;
+    color:white;
+    padding:16px;
+    border-radius:12px;
+    font-size:1rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#btn-login:hover:not(:disabled){
+    background:#45823f;
+}
+
+#btn-login:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.error{
+    margin-top:20px;
+    background:#ffe5e5;
+    color:#d63031;
+    padding:12px;
+    border-radius:10px;
 }

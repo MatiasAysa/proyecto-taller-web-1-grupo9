@@ -1,6 +1,5 @@
 package com.tallerwebi.dominio;
 
-import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.*;
 
@@ -12,6 +11,7 @@ public class Comida {
   private Long id;
 
   private String nombre;
+
   @Enumerated(EnumType.STRING)
   private TipoDeComida tipo;
 
@@ -25,7 +25,7 @@ public class Comida {
   private List<Ingrediente> ingredientes;
 
   public List<Ingrediente> getIngredientes() {
-    return ingredientes;
+    return this.ingredientes;
   }
 
   public void setIngredientes(List<Ingrediente> ingredientes) {
@@ -47,6 +47,4 @@ public class Comida {
   public void setTipo(TipoDeComida tipo) {
     this.tipo = tipo;
   }
-
-
 }

@@ -1,7 +1,9 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.infraestructura.RepositorioListaDeComprasImpl;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicioListaComprasImpl implements ServicioListaCompras {
 
   private final double CANTIDAD_KILO_A_GRAMOS = 1000.0;
+  private RepositorioListaDeComprasImpl repositorioListaDeCompras;
+
+  @Autowired
+  public ServicioListaComprasImpl(RepositorioListaDeComprasImpl repositorioListaDeCompras) {
+    this.repositorioListaDeCompras = repositorioListaDeCompras;
+  }
 
   @Override
   public List<ItemCompra> generarListaCompras(List<Comida> Comidas) {
     List<ItemCompra> listaFinalCompra = new ArrayList<>();
 
     for (Comida comida : Comidas) {
-      for (Ingrediente ingrediente : comida.getItems()) {
+      for (Ingrediente ingrediente : comida.getIngredientes()) {
         ItemCompra itemExistente = buscarItemCompra(listaFinalCompra, ingrediente);
 
         if (itemExistente != null) {
@@ -34,6 +42,7 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
     return listaFinalCompra;
   }
 
+  //CAMBIAR A PRIVAATO ESTE METODO EN UN FUTURO
   @Override
   public ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, Ingrediente ingrediente) {
     for (ItemCompra itemCompra : itemsCompra) {
@@ -45,7 +54,7 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
   }
 
   @Override
-  public void calcularPrecios(List<ItemCompra> listaCompra) {
+  public void calcularPreciosParaCadaAlimento(List<ItemCompra> listaCompra) {
     for (ItemCompra item : listaCompra) {
       Double precioPorKilo = item.getAlimento().getPrecioEstimado();
       Double precioTotal = (item.getCantidadTotal() / CANTIDAD_KILO_A_GRAMOS) * precioPorKilo;
@@ -60,5 +69,10 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
       total += item.getPrecoTotal();
     }
     return total;
+  }
+
+  @Override
+  public List<Comida> obtenerComidas() {
+    return this.repositorioListaDeCompras.obtenerListaComidas();
   }
 }

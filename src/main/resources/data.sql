@@ -6,7 +6,7 @@ DELETE FROM Alimento;
 --> NUTRICIONAL ESTA POR CADA 100 GRAMOS DEL ALIMENTO,OSEA LA AVENA TIENE 389 CALORIAS POR CADA 100 GRAMOS
 
 INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
-VALUES(1,'Avena',2200,389,16.9,66.3,6.9);
+VALUES(1,'Avena',3200,389,16.9,66.3,6.9);
 
 INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
 VALUES(2,'Banana',1500,89,1.1,22.8,0.3);
@@ -74,116 +74,149 @@ INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carb
 VALUES(22,'Berenjena',2500,25,1.0,6.0,0.2);
 
 -->//FRUTAS ------------
-INSERT INTO Alimento VALUES(23,'Manzana',1800,52,0.3,14.0,0.2);
-INSERT INTO Alimento VALUES(24,'Pera',2200,57,0.4,15.0,0.1);
-INSERT INTO Alimento VALUES(25,'Naranja',1700,47,0.9,12.0,0.1);
-INSERT INTO Alimento VALUES(26,'Mandarina',1800,53,0.8,13.0,0.3);
-INSERT INTO Alimento VALUES(27,'Frutilla',5000,32,0.7,7.7,0.3);
-INSERT INTO Alimento VALUES(28,'Kiwi',6500,61,1.1,15.0,0.5);
-INSERT INTO Alimento VALUES(29,'Durazno',2500,39,0.9,10.0,0.3);
-INSERT INTO Alimento VALUES(30,'Ciruela',3500,46,0.7,11.0,0.3);
-INSERT INTO Alimento VALUES(31,'Anana',3000,50,0.5,13.0,0.1);
-INSERT INTO Alimento VALUES(32,'Melon',1800,34,0.8,8.0,0.2);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(23,'Manzana',1800,52,0.3,14.0,0.2);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(24,'Pera',2200,57,0.4,15.0,0.1);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(25,'Naranja',1700,47,0.9,12.0,0.1);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(26,'Mandarina',1800,53,0.8,13.0,0.3);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(27,'Frutilla',5000,32,0.7,7.7,0.3);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(28,'Kiwi',6500,61,1.1,15.0,0.5);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(29,'Durazno',2500,39,0.9,10.0,0.3);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(30,'Ciruela',3500,46,0.7,11.0,0.3);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(31,'Anana',3000,50,0.5,13.0,0.1);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(32,'Melon',1800,34,0.8,8.0,0.2);
 
 -->//LEGUMBRES -------------
-INSERT INTO Alimento VALUES(33,'Garbanzos',3200,364,19.0,61.0,6.0);
-INSERT INTO Alimento VALUES(34,'Porotos Negros',2800,339,21.0,63.0,0.9);
-INSERT INTO Alimento VALUES(35,'Porotos Blancos',2600,333,21.0,60.0,1.5);
-INSERT INTO Alimento VALUES(36,'Arvejas Secas',2500,341,24.0,60.0,1.2);
-INSERT INTO Alimento VALUES(37,'Soja',3500,446,36.0,30.0,20.0);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(33,'Garbanzos',3200,364,19.0,61.0,6.0);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(34,'Porotos Negros',2800,339,21.0,63.0,0.9);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(35,'Porotos Blancos',2600,333,21.0,60.0,1.5);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(36,'Arvejas Secas',2500,341,24.0,60.0,1.2);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(37,'Soja',3500,446,36.0,30.0,20.0);
 
 -->//LIBRES DE GLUTEN (CELIACOS)
-INSERT INTO Alimento VALUES(38,'Quinoa',8500,368,14.0,64.0,6.0);
-INSERT INTO Alimento VALUES(39,'Polenta',1800,360,8.0,79.0,1.5);
-INSERT INTO Alimento VALUES(40,'Batata',1600,86,1.6,20.0,0.1);
-INSERT INTO Alimento VALUES(41,'Mandioca',2200,160,1.4,38.0,0.3);
-INSERT INTO Alimento VALUES(42,'Amaranto',9500,371,14.0,65.0,7.0);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(38,'Quinoa',8500,368,14.0,64.0,6.0);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(39,'Polenta',1800,360,8.0,79.0,1.5);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(40,'Batata',1600,86,1.6,20.0,0.1);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(41,'Mandioca',2200,160,1.4,38.0,0.3);
+INSERT INTO Alimento (id,nombre,precioEstimado,caloriasX100g,proteinasX100g,carbohidratosX100g,grasasX100g)
+VALUES(42,'Amaranto',9500,371,14.0,65.0,7.0);
 
 -->//COMIDA 1 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(1,100,1); -- avena
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(2,100,2); -- banana
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(3,250,9); -- leche
-
 INSERT INTO Comida (id, nombre, tipo, celiaco, diabetico, intoleranciaLactosa, vegetariano, vegano)
 VALUES (1, 'Avena con Banana y Leche', 'DESAYUNO', false, true, false, true, false);
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(1,100,1,1); -- avena
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(2,100,2,1); -- banana
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(3,250,9,1); -- leche
+
 
 
 -->//------------------------------------------------------------------------------------------------}
     --> LEER LAS COMIDAS FUERON PLANTEADAS SEGUN INGREDIENTES, LAS CANTIDADES SON UN ESTIMADO,TOTAL DESPUES LO SETEAMOS DEPENDIENDO LOS LOS
     --> REQUERIMENTOS DEL USUARIO
 -->//COMIDA 2 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(4,200,10); -- yogur
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(5,100,27); -- frutilla
 
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (2,'Yogur con Frutillas','DESAYUNO',true,true,false,true,false);
 
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(4,200,10,2); -- yogur
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(5,100,27,2); -- frutilla
+
 -->//COMIDA 3 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(6,100,3); -- arroz
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(7,150,6); -- pollo
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(8,50,5); -- tomate
 
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (3,'Arroz con Pollo y Tomate','ALMUERZO',true,true,true,false,false);
 
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(6,100,3,3); -- arroz
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(7,150,6,3); -- pollo
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(8,50,5,3); -- tomate
 
 -->//COMIDA 4 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(9,200,6); -- pollo
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(10,200,4); -- papa
 
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (4,'Pollo con Papa','ALMUERZO',true,true,true,false,false);
--->//COMIDA 5 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(11,150,12); -- lentejas
 
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(12,50,5); -- tomate
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(9,200,6,4); -- pollo
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(10,200,4,4); -- papa
+
+-->//COMIDA 5 ------------
+
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (5,'Lentejas con Tomate','ALMUERZO',true,true,true,true,true);
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(11,150,12,5); -- lentejas
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(12,50,5,5); -- tomate
+
 -->//COMIDA 6 ------------
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(13,150,33); -- garbanzos
-
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(14,100,14); -- zanahoria
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (6,'Garbanzos con Zanahoria','ALMUERZO',true,true,true,true,true);
--->//COMIDA 7 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(15,200,7); -- bola de lomo
 
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(16,200,4); -- papa
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(13,150,33,6); -- garbanzos
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(14,100,14,6); -- zanahoria
+
+
+-->//COMIDA 7 ------------
 
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (7,'Carne con Papa','CENA',true,true,true,false,false);
--->//COMIDA 8 ------------
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(17,120,8); -- huevo
 
-INSERT INTO Ingrediente(id,cantidadGramos,alimento_id)
-VALUES(18,50,19); -- espinaca
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(15,200,7,7); -- bola de lomo
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(16,200,4,7); -- papa
+
+-->//COMIDA 8 ------------
 
 INSERT INTO Comida (id,nombre,tipo,celiaco,diabetico,intoleranciaLactosa,vegetariano,vegano)
 VALUES (8,'Omelette de Espinaca','CENA',true,true,true,true,false);
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(17,120,8,8); -- huevo
+
+INSERT INTO Ingrediente(id,cantidadGramos,alimento_id,comida_id)
+VALUES(18,50,19,8); -- espinaca
+
 -->//COMIDA 9 ------------
 
 -->//COMIDA 10 ------------

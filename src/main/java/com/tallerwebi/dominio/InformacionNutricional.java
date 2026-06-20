@@ -4,11 +4,12 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class InformacionNutricional {
-//TODO EN FUNCION A 100 GRAMOS , CALORIAS CADA 100 GRAMOS DE UN ALIMENTO
+
+  //TODO EN FUNCION A 100 GRAMOS , CALORIAS CADA 100 GRAMOS DE UN ALIMENTO
   private Integer caloriasX100g;
   private Double proteinasX100g;
   private Double carbohidratosX100g;
-  private Double grasasX100;
+  private Double grasasX100g;
 
   public Integer getCaloriasX100g() {
     return caloriasX100g;
@@ -34,11 +35,11 @@ public class InformacionNutricional {
     this.carbohidratosX100g = carbohidratosX100g;
   }
 
-  public Double getGrasasX100() {
-    return grasasX100;
+  public Double getGrasasX100g() {
+    return this.grasasX100g;
   }
 
-  public void setGrasasX100(Double grasasX) {
-    this.grasasX100 = grasasX;
+  public void setGrasasX100g(Double grasasX100g) {
+    this.grasasX100g = grasasX100g;
   }
 }

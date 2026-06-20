@@ -71,7 +71,8 @@ public class Usuario {
   public void activar() {
     this.activo = true;
   }
-/*
+
+  /*
   public Double getPresupuestoSemanal() {
     return presupuestoSemanal;
   }

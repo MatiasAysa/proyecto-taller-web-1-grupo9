@@ -23,7 +23,7 @@ public class Alimento {
   //el precio estimado es el precio del alimento por kg
   //tal vez en caso de frutas,es mejor usar un precio por la una unidad del alimento,tipo una banana
   //private Boolean esVegetariano;
- // private Boolean esCeliaco;
+  // private Boolean esCeliaco;
   //private Boolean contieneLactosa = false;
 
   public Long getId() {
@@ -49,7 +49,8 @@ public class Alimento {
   public void setPrecioEstimado(Double precio) {
     this.precioEstimado = precio;
   }
-/*
+
+  /*
   public String getTipoComida() {
     return tipoComida;
   }
@@ -106,27 +107,11 @@ public class Alimento {
     infoNutricional.setCarbohidratosX100g(carbohidratosX100g);
   }
 
-  public Double getGrasasX100() {
-    return infoNutricional.getGrasasX100();
+  public Double getGrasasX100g() {
+    return infoNutricional.getGrasasX100g();
   }
 
-  public void setGrasasX100(Double grasasX) {
-    infoNutricional.setGrasasX100(grasasX);
+  public void setGrasasX100g(Double grasasX100g) {
+    infoNutricional.setGrasasX100g(grasasX100g);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

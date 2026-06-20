@@ -14,8 +14,10 @@ public class Ingrediente {
   private Long id;
 
   private Double cantidadGramos;
+
   @ManyToOne
   private Alimento alimento;
+
   @ManyToOne
   private Comida comida;
 
