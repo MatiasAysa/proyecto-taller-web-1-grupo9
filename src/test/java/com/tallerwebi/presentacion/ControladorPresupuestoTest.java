@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.ServicioPresupuesto;
 import com.tallerwebi.dominio.ServicioPresupuestoImpl;
+import com.tallerwebi.dominio.excepcion.MontoPresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
 import java.time.LocalDate;
@@ -156,6 +157,24 @@ public class ControladorPresupuestoTest {
 
     ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
     mensaje = controladorPresupuesto.getMENSAJE_MONTO_OBLIGATORIO();
+    thenNoSeCreaElPresupuesto(mav, mensaje);
+  }
+
+  @Test
+  public void siIngresoUnPresupuestoInsuficienteElPresupuestoFalla() {
+    givenUsuarioExiste();
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(1);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(fecha);
+    MontoPresupuestoInsuficienteException e = new MontoPresupuestoInsuficienteException(
+      ServicioPresupuestoImpl.getPresupuestoMinimoDiario(),
+      intervalo
+    );
+    doThrow(e).when(servicioPresupuesto).crearPresupuesto(1, intervalo, fecha, email);
+
+    ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
+    mensaje = e.getMensaje();
     thenNoSeCreaElPresupuesto(mav, mensaje);
   }
 

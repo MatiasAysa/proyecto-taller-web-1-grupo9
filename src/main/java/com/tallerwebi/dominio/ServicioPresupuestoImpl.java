@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.MontoPresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
 import com.tallerwebi.presentacion.DatosPresupuesto;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServicioPresupuestoImpl implements ServicioPresupuesto {
 
+  private static final double PRESUPUESTO_MINIMO_DIARIO = 6000.0;
   private RepositorioPresupuesto repositorioPresupuesto;
   private RepositorioUsuario repositorioUsuario;
 
@@ -29,7 +31,9 @@ public class ServicioPresupuestoImpl implements ServicioPresupuesto {
     if (monto <= 0) {
       throw new PresupuestoNoPositivoException();
     }
-
+    if (monto / (double) intervalo < PRESUPUESTO_MINIMO_DIARIO) {
+      throw new MontoPresupuestoInsuficienteException(PRESUPUESTO_MINIMO_DIARIO, intervalo);
+    }
     Presupuesto presupuesto = new Presupuesto();
     presupuesto.setMonto(monto);
     presupuesto.setIntervalo(intervalo);
@@ -52,5 +56,9 @@ public class ServicioPresupuestoImpl implements ServicioPresupuesto {
     datosPresupuesto.setIntervalo(presupuesto.getIntervalo());
     datosPresupuesto.setFecha(presupuesto.getFecha());
     return datosPresupuesto;
+  }
+
+  public static double getPresupuestoMinimoDiario() {
+    return PRESUPUESTO_MINIMO_DIARIO;
   }
 }

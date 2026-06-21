@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioPresupuesto;
+import com.tallerwebi.dominio.excepcion.MontoPresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
 import java.time.format.DateTimeFormatter;
@@ -63,6 +64,8 @@ public class ControladorPresupuesto {
       model.put("fecha", datosPresupuesto.getFecha());
     } catch (PresupuestoNoPositivoException e) {
       return fallarPresupuesto(MENSAJE_MONTO_OBLIGATORIO);
+    } catch (MontoPresupuestoInsuficienteException e) {
+      return fallarPresupuesto(e.getMensaje());
     }
     return new ModelAndView("mi-presupuesto", model);
   }

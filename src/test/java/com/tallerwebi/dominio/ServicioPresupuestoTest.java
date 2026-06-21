@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.tallerwebi.dominio.excepcion.MontoPresupuestoInsuficienteException;
+import com.tallerwebi.dominio.excepcion.PresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
 import com.tallerwebi.infraestructura.RepositorioPresupuestoImpl;
@@ -59,6 +61,14 @@ public class ServicioPresupuestoTest {
     usuario.setEmail("a@a.com");
 
     assertThrows(UsuarioSinPresupuestoException.class, () -> whenBuscoPresupuesto(usuario, null));
+  }
+
+  @Test
+  public void elServicioDebeAlcanzarElMinimoDiario() {
+    assertThrows(
+      MontoPresupuestoInsuficienteException.class,
+      () -> whenUsuarioIngresaMontoEIntervalo(100, 1, fecha)
+    );
   }
 
   private void thenSeEncuentraElPresupuesto(
