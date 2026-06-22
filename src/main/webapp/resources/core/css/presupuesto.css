@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700&display=swap');
+
+body {
+    background-color: #F9F6EF !important; /* Fondo off-white de la guía */
+    font-family: 'Lato', sans-serif !important; /* Tipografía base */
+    color: #4C4847 !important; /* Gris oscuro para textos */
+    font-size: 16px;
+}
+
+/* Tipografías para títulos (Montserrat Bold) */
+.font-title, .card-custom h4 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+.form-container {
+    max-width: 500px;
+    /* No agregamos margin-top aquí para respetar el padding-top del body de main.css */
+}
+
+/* Tarjeta contenedora con bordes redondeados a 10px */
+.card-custom {
+    border: none !important;
+    border-radius: 10px !important;
+    overflow: hidden; /* Evita que el fondo del header tape las esquinas redondeadas */
+}
+
+/* Header de la tarjeta con el Verde Principal */
+.bg-custom-header {
+    background-color: #03A62C !important;
+    color: #FFFFFF !important;
+}
+
+.btn-custom-green {
+    background-color: #03A62C !important;
+    border-color: #03A62C !important;
+    color: #FFFFFF !important; /* Texto blanco como en la imagen */
+    border-radius: 10px !important; /* El radio de 10px crucial */
+
+    /* Forzamos la tipografía de la guía */
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important; /* Montserrat Bold */
+    font-size: 16px !important; /* Tamaño estándar de texto de la guía */
+
+    /* Ajustamos el padding interno para que tenga la forma alargada de tu muestra */
+    padding: 0.6rem 1.5rem !important;
+
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    letter-spacing: 0.5px; /* Le da un aire más limpio al texto */
+}
+
+/* Estado Hover (Verde más oscuro de la guía) */
+.btn-custom-green:hover,
+.btn-custom-green:focus {
+    background-color: #007B37 !important; /* #659911 de la imagen */
+    border-color: #007B37 !important;
+    color: #FFFFFF !important;
+}
+
+/* Efecto opcional para cuando se hace click (active) */
+.btn-custom-green:active {
+    transform: scale(0.98);
+}
+
+/* Inputs adaptados al gris de la guía */
+.form-control-custom, .form-select-custom {
+    border-color: #4C4847 !important;
+    color: #4C4847 !important;
+}
+
+.form-control-custom:focus, .form-select-custom:focus {
+    border-color: #03A62C !important;
+    box-shadow: 0 0 0 0.25rem rgba(3, 166, 44) !important;
+}
+
+/* Botón Secundario (Amarillo/Dorado de la guía) */
+.btn-custom-yellow {
+    background-color: #F29F05 !important;
+    border-color: #F29F05 !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    padding: 0.6rem 1.5rem !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-custom-yellow:hover,
+.btn-custom-yellow:focus {
+    background-color: #D88107 !important; /* Hover dorado oscuro */
+    border-color: #D88107 !important;
+    color: #FFFFFF !important;
+}
+
+.btn-custom-yellow:active {
+    transform: scale(0.98);
+}
+
+/* Color para los íconos y textos atenuados adaptados al gris oscuro */
+.text-custom-muted {
+    color: #4C4847 !important;
+    opacity: 0.7;
+}
+
+/* Botón Volver al Home (Gris oscuro de la guía con hover sutil) */
+.btn-back-home {
+    color: #4C4847 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 14px !important; /* <p> header de 14px de la guía */
+    text-decoration: none !important;
+    transition: opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-back-home:hover {
+    opacity: 0.7;
+    color: #4C4847 !important;
+}

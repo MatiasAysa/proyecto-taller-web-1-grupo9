@@ -96,6 +96,15 @@ public class ControladorPresupuesto {
     }
   }
 
+  @RequestMapping("/volver-a-mi-presupuesto")
+  public ModelAndView volverAMiPresupuesto(HttpSession session) {
+    ModelAndView mav = irAMiPresupuesto(session);
+    if ("redirect:/configurar-presupuesto".equals(mav.getViewName())) return new ModelAndView(
+      "redirect:/home"
+    );
+    return mav;
+  }
+
   public String getMENSAJE_PRESUPUESTO_EXITOSO() {
     return MENSAJE_PRESUPUESTO_EXITOSO;
   }
