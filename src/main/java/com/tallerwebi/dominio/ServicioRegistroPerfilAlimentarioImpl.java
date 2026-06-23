@@ -135,19 +135,34 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
     // despues con las restricciones del dto creo PerfilRestriccion y lo relaciono
     // con el perfil
 
+    RestriccionAlimentaria restriccionAlimentaria;
+
     Set<String> restriccionesAlimentarias = perfilAlimentarioDTO.getRestriccionesAlimentarias();
+    if (restriccionesAlimentarias.contains(RestriccionAlimentariaTipo.NINGUNO.name())) {
+      restriccionAlimentaria =
+        repositorioRestriccionAlimentaria.buscarPorNombre(
+          RestriccionAlimentariaTipo.NINGUNO.name()
+        );
+
+      PerfilRestriccion perfilRestriccion = new PerfilRestriccion(
+        nuevoPerfil,
+        restriccionAlimentaria
+      );
+      repositorioPerfilRestriccion.guardar(perfilRestriccion);
+      return;
+    }
     if (restriccionesAlimentarias != null && !restriccionesAlimentarias.isEmpty()) {
       for (String restriccion : restriccionesAlimentarias) {
-        RestriccionAlimentaria restriccionAlimentaria =
-          repositorioRestriccionAlimentaria.buscarPorNombre(restriccion);
-        PerfilRestriccion perfilRestriccion = new PerfilRestriccion();
-        perfilRestriccion.setRestriccion(restriccionAlimentaria);
-        perfilRestriccion.setPerfil(nuevoPerfil);
+        restriccionAlimentaria = repositorioRestriccionAlimentaria.buscarPorNombre(restriccion);
+        PerfilRestriccion perfilRestriccion = new PerfilRestriccion(
+          nuevoPerfil,
+          restriccionAlimentaria
+        );
         repositorioPerfilRestriccion.guardar(perfilRestriccion);
       }
     } else {
       // Si no hay restricciones se agrega la restriccion de "NINGUNO"
-      RestriccionAlimentaria restriccionAlimentaria =
+      restriccionAlimentaria =
         repositorioRestriccionAlimentaria.buscarPorNombre(
           RestriccionAlimentariaTipo.NINGUNO.name()
         );
@@ -185,6 +200,19 @@ public class ServicioRegistroPerfilAlimentarioImpl implements ServicioRegistroPe
       );
       return;
     }
+    if (nuevaRestriccionesAlimentarias.contains(RestriccionAlimentariaTipo.NINGUNO.name())) {
+      restriccionesActuales.clear();
+      restriccionesActuales.add(
+        new PerfilRestriccion(
+          pefiAlimentarioUsuario,
+          repositorioRestriccionAlimentaria.buscarPorNombre(
+            RestriccionAlimentariaTipo.NINGUNO.name()
+          )
+        )
+      );
+      return;
+    }
+
     // se actualizan las restricciones alimentarias
     restriccionesActuales.clear();
     for (String nuevaRestriccion : nuevaRestriccionesAlimentarias) {

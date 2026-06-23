@@ -10,119 +10,123 @@
 
 <body>
 
-<main>
-    <section class="container">
-        <form action="" method="post" th:action="@{/Registro-perfil-alimentario}" th:object="${perfilAlimentario}">
+    <main>
+        <section class="container">
+            <form action="" method="post" th:action="@{/Registro-perfil-alimentario}" th:object="${perfilAlimentario}">
 
-            <h1 class="titulo">Registro de perfil alimentario</h1>
+                <h1 class="titulo">Registro de perfil alimentario</h1>
 
 
-            <div class="form-group">
-                <h3 class="subtitulo">Datos personales</h3>
+                <div class="form-group">
+                    <h3 class="subtitulo">Datos personales</h3>
 
-                <div class="campo">
-                    <label for="peso">Peso (kg)</label>
-                    <input type="number" id="peso" name="peso" required th:field="*{peso}">
+                    <div class="campo">
+                        <label for="peso">Peso (kg)</label>
+                        <input type="number" id="peso" name="peso" required th:field="*{peso}">
+                    </div>
+                    <p class="error" th:if="${PesoInvalidoException}" th:text="${PesoInvalidoException}">Error en el
+                        peso</p>
+
+                    <div class="campo">
+                        <label for="altura">Altura (cm)</label>
+                        <input type="number" id="altura" name="altura" required th:field="*{altura}">
+                    </div>
+                    <p class="error" th:if="${AlturaInvalidaException}" th:text="${AlturaInvalidaException}">Error en la
+                        altura</p>
+
+                    <div class="campo">
+                        <label for="edad">Edad</label>
+                        <input type="number" id="edad" name="edad" required th:field="*{edad}">
+                    </div>
+                    <p class="error" th:if="${EdadInvalidaException}" th:text="${EdadInvalidaException}">Error en la
+                        edad</p>
                 </div>
-                <p class="error" th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}">Error en el peso</p>
 
-                <div class="campo">
-                    <label for="altura">Altura (cm)</label>
-                    <input type="number" id="altura" name="altura" required th:field="*{altura}">
+
+                <div class="form-group">
+                    <h3 class="subtitulo" style="margin-top: 1.5em;">Sexo</h3>
+
+                    <label for="sexoM" class="opcion-radio">
+                        <input type="radio" name="sexo" id="sexoM" value="M" th:field="*{sexo}">
+                        Masculino
+                    </label>
+
+                    <label for="sexoF" class="opcion-radio">
+                        <input type="radio" name="sexo" id="sexoF" value="F" th:field="*{sexo}">
+                        Femenino
+                    </label>
+
+                    <label for="otro" class="opcion-radio">
+                        <input type="radio" name="sexo" id="otro" value="O" required th:field="*{sexo}">
+                        Otro
+                    </label>
+                    <p class="error" th:if="${SexoInvalidoException}" th:text="${SexoInvalidoException}">Error en la
+                        selección de sexo</p>
                 </div>
-                <p class="error" th:if="${#fields.hasErrors('altura')}" th:errors="*{altura}">Error en la
-                    altura</p>
 
-                <div class="campo">
-                    <label for="edad">Edad</label>
-                    <input type="number" id="edad" name="edad" required th:field="*{edad}">
+
+
+                <div class="form-group">
+                    <h3 class="subtitulo">Actividad física</h3>
+                    <label for="actividadFisica"></label>
+                    <select class="opciones" name="actividadFisica" id="actividadFisica" th:field="*{actividadFisica}">
+                        <option value="SEDENTARIA">Sedentaria</option>
+                        <option value="MODERADA" th:selected="true">Moderada</option>
+                        <option value="ACTIVA">Activa</option>
+                    </select>
+                    <p class="error" th:if="${ActividadFisicaInvalidaException}"
+                        th:text="${ActividadFisicaInvalidaException}">
+                        Error en actividad física</p>
                 </div>
-                <p class="error" th:if="${#fields.hasErrors('edad')}" th:errors="*{edad}">Error en la edad</p>
-            </div>
 
 
-            <div class="form-group">
-                <h3 class="subtitulo" style="margin-top: 1.5em;">Sexo</h3>
-
-                <label for="sexoM" class="opcion-radio">
-                    <input type="radio" name="sexo" id="sexoM" value="M" th:field="*{sexo}">
-                    Masculino
-                </label>
-
-                <label for="sexoF" class="opcion-radio">
-                    <input type="radio" name="sexo" id="sexoF" value="F" th:field="*{sexo}">
-                    Femenino
-                </label>
-
-                <label for="otro" class="opcion-radio">
-                    <input type="radio" name="sexo" id="otro" value="O" required th:field="*{sexo}">
-                    Otro
-                </label>
-                <p class="error" th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}">Error en la
-                    selección de sexo</p>
-            </div>
-
-
-
-            <div class="form-group">
-                <h3 class="subtitulo">Actividad física</h3>
-                <label for="actividadFisica"></label>
-                <select class="opciones" name="actividadFisica" id="actividadFisica" th:field="*{actividadFisica}">
-                    <option value="SEDENTARIA">Sedentaria</option>
-                    <option value="MODERADA" th:selected="true">Moderada</option>
-                    <option value="ACTIVA">Activa</option>
-                </select>
-                <p class="error" th:if="${#fields.hasErrors('actividadFisica')}" th:errors="*{actividadFisica}">
-                    Error en actividad física</p>
-            </div>
-
-
-            <div class="form-group">
-                <h3 class="subtitulo">Restricciones alimentarias</h3>
-                <p>Seleccione si tiene alguna restricción alimentaria, puede seleccionar más de una.</p>
-                <label for="restriccionesAlimentarias"></label>
-                <select class="opciones" name="restriccionesAlimentarias" id="restriccionesAlimentarias" multiple
+                <div class="form-group">
+                    <h3 class="subtitulo">Restricciones alimentarias</h3>
+                    <p>Seleccione si tiene alguna restricción alimentaria, puede seleccionar más de una.</p>
+                    <label for="restriccionesAlimentarias"></label>
+                    <select class="opciones" name="restriccionesAlimentarias" id="restriccionesAlimentarias" multiple
                         th:field="*{restriccionesAlimentarias}">
-                    <option value="CELIACO">Celiaco</option>
-                    <option value="DIABETICO">Diabetico</option>
-                    <option value="INTOLERANCIA_LACTOSA">Intolerancia Lactosa</option>
-                    <option value="VEGETARIANO">Vegetariano</option>
-                    <option value="VEGANO">Vegano</option>
-                    <option value="NINGUNO" th:selected="true">Ninguna</option>
-                </select>
-                <p class="error" th:if="${#fields.hasErrors('restriccionesAlimentarias')}"
-                   th:errors="*{restriccionesAlimentarias}">Error en restricciones</p>
-            </div>
+                        <option value="CELIACO">Celiaco</option>
+                        <option value="DIABETICO">Diabetico</option>
+                        <option value="INTOLERANCIA_LACTOSA">Intolerancia Lactosa</option>
+                        <option value="VEGETARIANO">Vegetariano</option>
+                        <option value="VEGANO">Vegano</option>
+                        <option value="NINGUNO" th:selected="true">Ninguna</option>
+                    </select>
+                    <p class="error" th:if="${RestriccionesAlimentariasInvalidasException}"
+                        th:text="${RestriccionesAlimentariasInvalidasException}">Error en restricciones</p>
+                </div>
 
 
 
-            <div class="form-group">
-                <h3 class="subtitulo">Objetivo</h3>
+                <div class="form-group">
+                    <h3 class="subtitulo">Objetivo</h3>
 
-                <label for="mantenerPeso" class="opcion-radio">
-                    <input type="radio" name="objetivo" id="mantenerPeso" value="MANTENER_PESO" required
-                           th:field="*{objetivo}">
-                    Mantener Peso
-                </label>
+                    <label for="mantenerPeso" class="opcion-radio">
+                        <input type="radio" name="objetivo" id="mantenerPeso" value="MANTENER_PESO" required
+                            th:field="*{objetivo}">
+                        Mantener Peso
+                    </label>
 
-                <label for="perderPeso" class="opcion-radio">
-                    <input type="radio" name="objetivo" id="perderPeso" value="PERDER_PESO" th:field="*{objetivo}">
-                    Perder Peso
-                </label>
+                    <label for="perderPeso" class="opcion-radio">
+                        <input type="radio" name="objetivo" id="perderPeso" value="PERDER_PESO" th:field="*{objetivo}">
+                        Perder Peso
+                    </label>
 
-                <label for="ganarPeso" class="opcion-radio">
-                    <input type="radio" name="objetivo" id="ganarPeso" value="GANAR_PESO" th:field="*{objetivo}">
-                    Ganar Peso
-                </label>
-                <p class="error" th:if="${#fields.hasErrors('objetivo')}" th:errors="*{objetivo}">Error en el
-                    objetivo</p>
-            </div>
+                    <label for="ganarPeso" class="opcion-radio">
+                        <input type="radio" name="objetivo" id="ganarPeso" value="GANAR_PESO" th:field="*{objetivo}">
+                        Ganar Peso
+                    </label>
+                    <p class="error" th:if="${ObjetivoInvalidaException}" th:text="${ObjetivoInvalidaException}">Error
+                        en el
+                        objetivo</p>
+                </div>
 
-            <button class="submit-btn" type="submit">Guardar</button>
+                <button class="submit-btn" type="submit">Guardar</button>
 
-        </form>
-    </section>
-</main>
+            </form>
+        </section>
+    </main>
 
 </body>
 
