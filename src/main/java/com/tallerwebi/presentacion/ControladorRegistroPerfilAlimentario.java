@@ -51,9 +51,7 @@ public class ControladorRegistroPerfilAlimentario {
 
   @PostMapping("/Registro-perfil-alimentario")
   public ModelAndView procesarFormulario(
-    @ModelAttribute("perfilAlimentario") PerfilAlimentarioDTO perfilAlimentarioDTO,
-    HttpSession session
-  ) {
+    @ModelAttribute("perfilAlimentario") PerfilAlimentarioDTO perfilAlimentarioDTO,HttpSession session) {
     String email = session.getAttribute(ATT_USUARIO_LOGUEADO_EMAIL).toString();
     if (email == null) {
       return new ModelAndView(REDIRECT_LOGIN);
