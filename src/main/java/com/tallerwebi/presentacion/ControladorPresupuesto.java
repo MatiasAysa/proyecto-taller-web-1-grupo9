@@ -102,7 +102,7 @@ public class ControladorPresupuesto {
     if ("redirect:/configurar-presupuesto".equals(mav.getViewName())) return new ModelAndView(
       "redirect:/home"
     );
-    return mav;
+    return new ModelAndView("redirect:/mi-presupuesto");
   }
 
   public String getMENSAJE_PRESUPUESTO_EXITOSO() {
