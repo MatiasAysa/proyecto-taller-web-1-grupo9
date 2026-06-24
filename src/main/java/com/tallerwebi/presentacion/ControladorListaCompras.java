@@ -7,10 +7,12 @@ import com.tallerwebi.dominio.ItemCompra;
 import com.tallerwebi.dominio.ServicioListaCompras;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -23,83 +25,51 @@ public class ControladorListaCompras {
     this.servicioListaCompras = servicioListaCompras;
   }
 
-  @RequestMapping("/lista-compras")
-  public ModelAndView mostrarListaCompras() {
+  @PostMapping("/lista-compras")
+  public ModelAndView mostrarListaCompras(
+    @RequestParam(required = false) Map<String, String> todasLasSelecciones
+  ) {
     ModelMap modelo = new ModelMap();
 
-    Alimento alimento1 = new Alimento();
-    alimento1.setNombre("Pollo");
-    alimento1.setPrecioEstimado(1000.0);
-    Alimento alimento2 = new Alimento();
-    alimento2.setNombre("Arroz");
-    alimento2.setPrecioEstimado(2000.0);
-    Alimento alimento3 = new Alimento();
-    alimento3.setNombre("Tomate");
-    alimento3.setPrecioEstimado(3000.0);
-    Alimento alimento4 = new Alimento();
-    alimento4.setNombre("Zapallo");
-    alimento4.setPrecioEstimado(3000.0);
-    Alimento alimento5 = new Alimento();
-    alimento5.setNombre("Papa");
-    alimento5.setPrecioEstimado(3000.0);
-    Alimento alimento6 = new Alimento();
-    alimento6.setNombre("Banana");
-    alimento6.setPrecioEstimado(3000.0);
+    if (todasLasSelecciones == null || todasLasSelecciones.isEmpty()) {
+      modelo.put("error", "No seleccionaste ningún alimento de tu plan.");
+      return new ModelAndView("redirect:/planificador", modelo);
+    }
 
-    ItemComida itemComida1 = new ItemComida(100.0, alimento1);
-    ItemComida itemComida2 = new ItemComida(200.0, alimento2);
-    ItemComida itemComida3 = new ItemComida(100.0, alimento3);
-    ItemComida itemComida4 = new ItemComida(500.0, alimento4);
-    ItemComida itemComida5 = new ItemComida(240.0, alimento5);
-    ItemComida itemComida6 = new ItemComida(1000.0, alimento6);
+    List<Comida> comidasDelPlan = new ArrayList<>();
+    for (Map.Entry<String, String> entrada : todasLasSelecciones.entrySet()) {
+      String key = entrada.getKey();
 
-    Comida comida1 = new Comida();
-    comida1.setNombre("Arroz Con Pollo y Tomate");
-    comida1.getItems().add(itemComida1);
-    comida1.getItems().add(itemComida2);
-    comida1.getItems().add(itemComida3);
+      if (key.startsWith("alimentosSeleccionados")) {
+        String numeroDiaStr = key.substring(key.indexOf("[") + 1, key.indexOf("]"));
+        Integer numeroDia = Integer.parseInt(numeroDiaStr);
 
-    Comida comida2 = new Comida();
-    comida2.setNombre("Tomate Con Pollo");
-    comida2.getItems().add(itemComida1);
-    comida2.getItems().add(itemComida3);
+        String[] idsArray = entrada.getValue().split(",");
 
-    Comida comida3 = new Comida();
-    comida3.setNombre("Tomate Con Arroz ");
-    comida3.getItems().add(itemComida2);
-    comida3.getItems().add(itemComida3);
+        Comida comidaDia = new Comida();
+        comidaDia.setNombre("DÍA " + numeroDia + " - Alimentos Seleccionados");
 
-    Comida comida4 = new Comida();
-    comida4.setNombre("Pollo con Zapallo ");
-    comida4.getItems().add(itemComida1);
-    comida4.getItems().add(itemComida4);
+        for (String idStr : idsArray) {
+          Long idAlimento = Long.parseLong(idStr);
+          Alimento alimentoReal = servicioListaCompras.buscarAlimentoPorId(idAlimento);
 
-    Comida comida5 = new Comida();
-    comida5.setNombre("Pollo con tomate y papa ");
-    comida5.getItems().add(itemComida2);
-    comida5.getItems().add(itemComida5);
-    comida5.getItems().add(itemComida3);
+          if (alimentoReal != null) {
+            ItemComida item = new ItemComida(150.0, alimentoReal);
+            comidaDia.getItems().add(item);
+          }
+        }
 
-    Comida comida6 = new Comida();
-    comida6.setNombre("Banana ");
-    comida6.getItems().add(itemComida6);
-
-    List<Comida> comidas = new ArrayList<>();
-    comidas.add(comida1);
-    comidas.add(comida2);
-    comidas.add(comida3);
-    comidas.add(comida4);
-    comidas.add(comida5);
-    comidas.add(comida6);
-
-    List<ItemCompra> listaDeCompras = servicioListaCompras.generarListaCompras(comidas);
+        comidasDelPlan.add(comidaDia);
+      }
+    }
+    List<ItemCompra> listaDeCompras = servicioListaCompras.generarListaCompras(comidasDelPlan);
     servicioListaCompras.calcularPrecios(listaDeCompras);
-
     Double total = servicioListaCompras.calcularTotalListaCompras(listaDeCompras);
 
-    modelo.put("comidas", comidas);
+    modelo.put("comidas", comidasDelPlan);
     modelo.put("listaDeCompras", listaDeCompras);
     modelo.put("totalLista", total);
+
     return new ModelAndView("lista-compras", modelo);
   }
 }

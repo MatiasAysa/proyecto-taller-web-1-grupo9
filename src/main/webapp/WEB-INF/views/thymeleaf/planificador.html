@@ -13,7 +13,7 @@
 
     <header class="encabezado">
         <h1>Generador de Menú Económico Inteligente</h1>
-        <p>Optimizando tu nutrición en base a tu presupuesto real.</p>
+        <p>Optimizando tu nutrition en base a tu presupuesto real.</p>
     </header>
 
     <div th:if="${error}" class="alerta-error">
@@ -104,7 +104,7 @@
                              th:data-grasas="${des.grasas != null ? des.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="checkbox" name="alimentosSeleccionados" th:value="${des.id}" class="check-consumo-js">
+                                    <input type="checkbox" th:name="'alimentosSeleccionados[' + ${dia.numeroDia} + ']'" th:value="${des.id}" class="check-consumo-js">
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${des.nombre}">Avena</span>
@@ -123,7 +123,7 @@
                              th:data-grasas="${alm.grasas != null ? alm.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="checkbox" name="alimentosSeleccionados" th:value="${alm.id}" class="check-consumo-js">
+                                    <input type="checkbox" th:name="'alimentosSeleccionados[' + ${dia.numeroDia} + ']'" th:value="${alm.id}" class="check-consumo-js">
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${alm.nombre}">Pollo</span>
@@ -142,7 +142,7 @@
                              th:data-grasas="${cen.grasas != null ? cen.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="checkbox" name="alimentosSeleccionados" th:value="${cen.id}" class="check-consumo-js">
+                                    <input type="checkbox" th:name="'alimentosSeleccionados[' + ${dia.numeroDia} + ']'" th:value="${cen.id}" class="check-consumo-js">
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${cen.nombre}">Merluza</span>

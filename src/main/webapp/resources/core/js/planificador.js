@@ -86,6 +86,7 @@ function initCheckboxesPresupuesto() {
 
     actualizarTotalesPorSeleccion();
 }
+
 function initTabsSemanas() {
     const contenedorTabs = document.getElementById("contenedor-bloques-semanas");
     const tarjetasDias = document.querySelectorAll(".tarjeta-dia-kanban");

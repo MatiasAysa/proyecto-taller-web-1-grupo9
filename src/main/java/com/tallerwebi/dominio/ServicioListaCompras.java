@@ -7,4 +7,5 @@ public interface ServicioListaCompras {
   ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, ItemComida itemComida);
   void calcularPrecios(List<ItemCompra> listaCompra);
   Double calcularTotalListaCompras(List<ItemCompra> listaCompra);
+  Alimento buscarAlimentoPorId(Long id);
 }

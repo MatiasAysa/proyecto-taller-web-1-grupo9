@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +12,24 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
 
   private final double CANTIDAD_KILO_A_GRAMOS = 1000.0;
 
+  private RepositorioAlimento repositorioAlimento;
+
+  @Autowired
+  public ServicioListaComprasImpl(RepositorioAlimento repositorioAlimento) {
+    this.repositorioAlimento = repositorioAlimento;
+  }
+
+  @Override
+  public Alimento buscarAlimentoPorId(Long id) {
+    return this.repositorioAlimento.buscarPorId(id);
+  }
+
   @Override
   public List<ItemCompra> generarListaCompras(List<Comida> Comidas) {
     List<ItemCompra> listaFinalCompra = new ArrayList<>();
 
     for (Comida comida : Comidas) {
+      if (comida.getItems() == null) continue;
       for (ItemComida itemComida : comida.getItems()) {
         ItemCompra itemExistente = buscarItemCompra(listaFinalCompra, itemComida);
 
