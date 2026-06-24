@@ -5,43 +5,483 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Taller Web I</title>
-
-  <!-- Boostrap core css -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-  <!-- custom style -->
+  <title>Home</title>
   <link rel="stylesheet" th:href="@{/css/main.css}" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+    :root {
+      --color-principal: #03A62C;
+      --color-principal-hover: #007B37;
+      --color-complementario: #F29F05;
+      --color-complementario-hover: #D88107;
+      --fuente-titulos: 'Montserrat', sans-serif;
+      --fuente-cuerpo: 'Lato', sans-serif;
+      --color-titulo: #000000;
+      --color-subtitulo: #4C4847;
+      --color-error: #db1c65;
+
+      --font-size-titulo: 24px;
+      --font-size-subtitulo: 20px;
+      --font-size-texto: 16px;
+      --font-size-textos-pequenos: 14px;
+
+      --color-grupo: #f8f8f8;
+      --color-grupo-borde: #d4d4d4;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      list-style: none;
+    }
+
+    body {
+      font-family: var(--fuente-cuerpo);
+      background-color: #ffffff;
+      color: #000000;
+      width: 100%;
+      min-height: 100vh;
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      margin: 1em;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .sub-container {
+      margin-top: 5em;
+    }
+
+    .btn-1 {
+      background-color: var(--color-principal);
+      color: white;
+      padding: 0.5em 1em;
+      border-radius: 0.5em;
+    }
+
+    .btn-2 {
+      background-color: var(--color-complementario);
+      font-size: var(--font-size-texto);
+      color: white;
+      padding: 1.1em 2em;
+      border-radius: 1.4em;
+    }
+
+    /* =================== HEADER =================== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 1em;
+      color: var(--color-subtitulo);
+    }
+
+
+    a {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      color: var(--color-subtitulo);
+    }
+
+    a:hover {
+      transform: scale(1.1);
+    }
+
+    .navbar .logotipo {
+      font-weight: 400;
+      font-size: 25px;
+      letter-spacing: 2px;
+      color: var(--color-subtitulo);
+      font-family: "Bebas Neue", sans-serif;
+    }
+
+    .navbar .logotipo:active {
+      color: var(--color-complementario);
+    }
+
+    .navbar a:hover {
+      cursor: pointer;
+    }
+
+    .navbar a:hover:not(.logotipo) {
+      color: var(--color-principal);
+    }
+
+    .navbar a:active:not(.logotipo) {
+      color: var(--color-principal-hover);
+    }
+
+    .navbar__enlaces {
+      display: flex;
+      gap: 3em;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+
+
+    .navbar .navbar__perfil .btn-1:hover {
+      transform: scale(1.04);
+      color: white;
+    }
+
+    .btn-1:active {
+      background-color: var(--color-principal-hover);
+    }
+
+
+    /* =================== MAIN =================== */
+    main {
+      flex: 1;
+    }
+
+    /* ------call to action-----  */
+    .call-to-action {
+      margin-top: 8em;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      align-items: center;
+    }
+
+    .call-to-action__text {
+      width: 60%;
+      position: relative;
+    }
+
+    .call-to-action__titulo {
+      font-size: 40px;
+      color: var(--color-titulo);
+      margin-bottom: 1em;
+    }
+
+    .call-to-action__parrafo {
+      font-size: var(--font-size-textos-pequenos);
+      color: var(--color-subtitulo);
+      margin-bottom: 2em;
+    }
+
+    .call-to-action-img {
+      z-index: 1;
+      width: 40%;
+      max-width: 450px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .features-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      width: 100%;
+      margin-bottom: 4em;
+      margin-top: 7em;
+      justify-content: space-around;
+    }
+
+    .feature-card {
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.11);
+      border-top: 4px solid var(--color-principal);
+      max-width: 300px;
+      min-width: 280px;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 1em;
+      font-size: var(--font-size-texto);
+    }
+
+    .feature-card p {
+      font-size: var(--font-size-textos-pequenos);
+    }
+
+    /* COMO FUNCIONA */
+    .como-funciona {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .como-funciona__titulo {
+      font-size: var(--font-size-titulo);
+      margin-bottom: 2em;
+      text-align: center;
+    }
+
+    .como-funciona__item {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      margin: 1.5em;
+    }
+
+    .como-funciona__item h3 {
+      font-size: var(--font-size-subtitulo);
+      margin-bottom: 1em;
+    }
+
+    .como-funciona__item p {
+      font-size: var(--font-size-texto);
+    }
+
+    /* TESTIMONIOS */
+    .testimonials-section {
+      margin-bottom: 5em;
+      margin-top: 5em;
+    }
+
+    .testimonials-section h2 {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+
+    .testimonials-section__container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 0.5em;
+      width: 100%;
+    }
+
+    .testimonial-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      max-width: 400px;
+      min-width: 300px;
+    }
+
+    .testimonial-card .comment {
+      font-style: italic;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .testimonial-card .user-info {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .testimonial-card .user-info span {
+      color: #777;
+    }
+
+    /* =================== FOOTER =================== */
+    .footer {
+      width: 100%;
+      height: 14em;
+      background-color: var(--color-principal);
+      color: white;
+      font-size: var(--font-size-textos-pequenos);
+      position: relative;
+    }
+
+    .footer a {
+      color: white;
+    }
+
+    .footer .container {
+      padding-top: 2em;
+      display: flex;
+      align-items: start;
+      width: 100%;
+      height: 100%;
+    }
+
+    .footer ul {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+    }
+
+    .footer__subtitulos {
+      font-size: var(--font-size-texto);
+      margin-bottom: 1em;
+    }
+
+    .sobre-nosotros__intrgantes {
+      margin-top: 0.3em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3em;
+      width: 100%;
+    }
+
+    .footer__copyright {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: var(--font-size-textos-pequenos);
+      color: #000000;
+      margin-bottom: 1em;
+    }
+  </style>
 
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
-  </nav>
+  <!-- ================== HEADER ================== -->
+  <header>
 
-  <main role="main" class="container">
-    <div class="container">
-      <h1>Bienvenidos a Taller Web 1</h1>
+    <!-- ================== NAV ============== -->
+    <nav class="navbar">
+      <a th:href="@{/home}" class="logotipo">GRUPO 9</a>
+      <div class="navbar__enlaces">
+        <a th:href="@{/sobre-nosotros}">Sobre nosotros</a>
+        <a href="#como-funciona" class="link-como-funciona">Cómo funciona</a>
+      </div>
+      <div class="navbar__perfil">
+        <a th:href="@{/login}" class="btn-1">Iniciar sesión</a>
+      </div>
+    </nav>
 
-      <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
-      <a th:href="@{Registro-perfil-alimentario/}" class="btn btn-lg btn-primary btn-block" >Perfil Alimentario</a>
-      <a th:href="@{/mi-presupuesto}" class="btn btn-lg btn-primary btn-block" >Presupuesto</a>
-      <a th:href="@{/planificador}" class="btn btn-lg btn-primary btn-block" >Planificador</a>
-      <a th:href="@{/lista-compras}" class="btn btn-lg btn-primary btn-block" >Lista de Compras</a>
+  </header>
 
 
-    </div>
+  <!-- ================== MAIN ================== -->
+  <main class="container">
+    <section class="call-to-action sub-container">
+      <div class="call-to-action__text">
+        <h1 class="call-to-action__titulo"> ¿Presupuesto ajustado para tu alimentación?</h1>
+        <p class="call-to-action__parrafo">Diseñamos un planificador inteligente que analiza tus objetivos nutricionales
+          y
+          tus restricciones médicas para adaptarlos a tu presupuesto.
+          Comer bien y ahorrar sí es posible.</p>
+        <a href="" class="btn-2">Empezar a planificar gratis</a>
+      </div>
+      <img th:src="@{/img/canasta.png}" class="call-to-action-img" alt="Canasta de alimentos">
+    </section>
+
+    <section class="features-section sub-container">
+      <div class="feature-card">
+        <h3>Planificador Inteligente</h3>
+        <p>Distribuye tus calorías diarias en 4 comidas (Desayuno, Almuerzo, Merienda y Cena) respetando tu objetivo de
+          peso.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Presupuesto Bajo Control</h3>
+        <p>Calculamos el gasto por día. Si el presupuesto es ajustado, el sistema prioriza alimentos económicos y te
+          avisa qué nutrientes debés cuidar.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Desperdicio Cero</h3>
+        <p>¿Te sobró arroz el lunes? El sistema lo detecta y lo reutiliza en una receta diferente para el miércoles.
+          Cuidamos tu plata.</p>
+      </div>
+    </section>
+
+
+    <section id="como-funciona" class="como-funciona sub-container">
+
+      <h2 class="como-funciona__titulo">¿Cómo funciona?</h2>
+
+      <div class="como-funciona__item">
+        <h3>Paso 1: Completar el Perfil Alimentario</h3>
+        <p>Al iniciar en la plataforma, ingresarás tus datos básicos esenciales como edad, peso,
+          altura, sexo y nivel de actividad física (sedentario, moderado o activo). Además,
+          en esta instancia configurarás tus objetivos de peso y tus restricciones alimenticias no negociables
+          (como celiaquía, diabetes, veganismo o vegetarianismo) para que el sistema aprenda a filtrar automáticamente
+          cualquier receta incompatible con tu salud.
+        </p>
+      </div>
+
+      <div class="como-funciona__item">
+        <h3>Paso 2: Definir el Presupuesto</h3>
+        <p>En esta etapa deberás indicar el monto total de dinero disponible que querés destinar a tu alimentación y el
+          período correspondiente,
+          por ejemplo, $70.000 pesos semanales. Para simplificar el cálculo y permitir un control de gastos más
+          transparente,
+          el algoritmo fraccionará automáticamente este dinero para obtener un presupuesto exacto por día.
+        </p>
+      </div>
+
+      <div class="como-funciona__item">
+        <h3>Paso 3: Presionar el botón "Generar Plan"</h3>
+        <p>Al hacer clic en el botón de generación, el núcleo del sistema se activa y realiza un cálculo calórico
+          aproximado
+          adaptado
+          a tu metabolismo basal. Inmediatamente después, el algoritmo cruza tus necesidades con nuestro catálogo de
+          comidas
+          predefinidas,
+          seleccionando opciones viables y distribuyendo la energía recomendada en cuatro comidas diarias: desayuno,
+          almuerzo, merienda y cena.
+        </p>
+      </div>
+
+      <div class="como-funciona__item">
+        <h3>Paso 4: Seleccionar alimentos y ajustar al presupuesto</h3>
+        <p>Una vez procesada la información, el sistema te mostrará la propuesta de menú donde tendrás el control final.
+          En esta pantalla podrás revisar el catálogo de ingredientes asignados y elegir específicamente qué alimentos
+          de los seleccionados por la app vas a agregar a tu presupuesto definitivo, permitiendo que el sistema reajuste
+          dinámicamente las cantidades en gramos para no pasarte de tu límite económico.
+        </p>
+      </div>
+    </section>
+
+
+    <section class="testimonials-section sub-container">
+      <h2>Lo que dicen nuestros usuarios</h2>
+      <div class="testimonials-section__container">
+        <div class="testimonial-card">
+          <p class="comment">"Como entreno, necesitaba cubrir mis proteínas pero los suplementos y la carne están
+            carísimos. La app me armó un plan con legumbres y huevo que se ajusta exacto a lo que puedo gastar por
+            semana."</p>
+          <p class="user-info"><strong>Martín, 24 años</strong> <br> <span>Activo</span></p>
+        </div>
+        <div class="testimonial-card">
+          <p class="comment">"Comer sin TACC siempre es más caro. Con la función de replanificación, si me paso del
+            presupuesto a mitad de semana, la app me recalcula los días restantes para que no termine gastando de más."
+          </p>
+          <p class="user-info"><strong>Laura, 31 años</strong> <br> <span>Activa (Celíaca)</span></p>
+        </div>
+      </div>
+    </section>
+
   </main>
-  <!-- /.container -->
 
-  <!-- Boostrap core js -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"></script>
+  <footer class="footer">
+    <div class="container">
+      <ul>
+        <li>
+          <a th:href="@{/sobre-nosotros}" class="footer__subtitulos">Integrantes</a>
+          <ul class="sobre-nosotros__intrgantes">
+            <li><a th:href="@{/sobre-nosotros}">Aquino Santiago</a></li>
+            <li><a th:href="@{/sobre-nosotros}">Aysa Pereira Matias</a></li>
+            <li><a th:href="@{/sobre-nosotros}">Maida Santos Eric</a></li>
+            <li><a th:href="@{/sobre-nosotros}">Osorio Lucas Ezequiel</a></li>
+          </ul>
+        </li>
+        <li><a href="#como-funciona" class="footer__subtitulos">Cómo funciona</a></li>
+        <li><a th:href="@{/home}" class="footer__subtitulos">Home</a></li>
+      </ul>
+    </div>
 
+    <p class="footer__copyright">@2026 Grupo 9</p>
+  </footer>
+
+  <script th:src="@{/core/js/home.js}"></script>
 </body>
 
 </html>
