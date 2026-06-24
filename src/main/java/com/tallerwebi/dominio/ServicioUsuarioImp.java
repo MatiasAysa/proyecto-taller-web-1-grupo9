@@ -38,9 +38,6 @@ public class ServicioUsuarioImp implements ServicioUsuario {
     if (usuario == null) {
       return false;
     }
-    if (usuario.getPresupuestoSemanal() != null && usuario.getPresupuestoSemanal() > 0) {
-      return true;
-    }
-    return false;
+    return usuario.getPresupuestoSemanal() != null && usuario.getPresupuestoSemanal() > 0;
   }
 }

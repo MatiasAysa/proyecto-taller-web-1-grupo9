@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorLogin {
 
-  private ServicioLogin servicioLogin;
+  private final ServicioLogin servicioLogin;
 
   @Autowired
   public ControladorLogin(ServicioLogin servicioLogin) {

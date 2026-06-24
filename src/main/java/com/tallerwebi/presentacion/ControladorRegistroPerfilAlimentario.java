@@ -20,7 +20,7 @@ public class ControladorRegistroPerfilAlimentario {
   private static final String ATT_USUARIO_LOGUEADO_EMAIL = "usuarioLogueadoEmail";
   private static final String VISTA_REGISTRO = "registroPerfilAlimentario";
   private static final String REDIRECT_LOGIN = "redirect:/login";
-  private static final String HOME = "redirect:/home";
+  //  private static final String HOME = "redirect:/home";
 
   private final ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentario;
 

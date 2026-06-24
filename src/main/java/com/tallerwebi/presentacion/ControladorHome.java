@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorHome {
 
-  private ServicioUsuario servicioUsuario;
+  private final ServicioUsuario servicioUsuario;
 
   @Autowired
   public ControladorHome(ServicioUsuario servicioUsuario) {
