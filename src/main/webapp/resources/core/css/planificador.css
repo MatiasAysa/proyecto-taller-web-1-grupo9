@@ -630,7 +630,7 @@ body {
     width: 100%;
 }
 .contenedor-botones-flujo .btn-secundario {
-    margin-top: 0; /* Elimina el margen viejo */
+    margin-top: 0;
     padding: 0.9rem 2rem;
     white-space: nowrap;
 }
