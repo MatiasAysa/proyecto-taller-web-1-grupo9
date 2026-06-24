@@ -27,7 +27,7 @@
         </form>
     </div>
 
-    <div th:if="${planGenerado != null}" class="resultado-plan">
+    <form th:if="${planGenerado != null}" th:action="@{/lista-compras}" method="POST" class="resultado-plan">
 
         <div th:if="${not #lists.isEmpty(planGenerado.advertencias)}" class="bloque-advertencias">
             <h3>RECOMENDACIONES Y VENTANA TEMPORAL</h3>
@@ -104,7 +104,7 @@
                              th:data-grasas="${des.grasas != null ? des.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="checkbox" th:name="'dia-' + ${dia.numeroDia} + '-desayuno'" class="check-consumo-js">
+                                    <input type="checkbox" name="alimentosSeleccionados" th:value="${des.id}" class="check-consumo-js">
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${des.nombre}">Avena</span>
@@ -123,7 +123,7 @@
                              th:data-grasas="${alm.grasas != null ? alm.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="checkbox" th:name="'dia-' + ${dia.numeroDia} + '-almuerzo'" class="check-consumo-js">
+                                    <input type="checkbox" name="alimentosSeleccionados" th:value="${alm.id}" class="check-consumo-js">
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${alm.nombre}">Pollo</span>
@@ -142,7 +142,7 @@
                              th:data-grasas="${cen.grasas != null ? cen.grasas : 0.0}">
                             <div class="linea-superior-comida">
                                 <label class="contenedor-checkbox">
-                                    <input type="checkbox" th:name="'dia-' + ${dia.numeroDia} + '-cena'" class="check-consumo-js">
+                                    <input type="checkbox" name="alimentosSeleccionados" th:value="${cen.id}" class="check-consumo-js">
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${cen.nombre}">Merluza</span>
@@ -155,10 +155,11 @@
 
         </div>
 
-        <div style="text-align: center; margin-top: 2rem;">
+        <div class="contenedor-botones-flujo">
             <a th:href="@{/configurar-presupuesto}" class="btn-secundario">Volver a ajustar presupuesto</a>
+            <button type="submit" class="btn-principal-flujo">Confirmar Selección y Ver Lista de Compras</button>
         </div>
-    </div>
+    </form>
 </div>
 
 <script th:src="@{/js/planificador.js}"></script>

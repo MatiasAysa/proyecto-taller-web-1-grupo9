@@ -619,3 +619,56 @@ body {
     color: #ffffff;
     box-shadow: 0 4px 10px rgba(3, 166, 44, 0.2);
 }
+.contenedor-botones-flujo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #edf2f7;
+    width: 100%;
+}
+.contenedor-botones-flujo .btn-secundario {
+    margin-top: 0; /* Elimina el margen viejo */
+    padding: 0.9rem 2rem;
+    white-space: nowrap;
+}
+.btn-principal-flujo {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-principal);
+    color: white;
+    border: none;
+    padding: 0.9rem 2.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(3, 166, 44, 0.1);
+    white-space: nowrap;
+}
+
+.btn-principal-flujo:hover {
+    background-color: var(--color-principal-hover);
+    transform: translateY(-1px);
+}
+
+.btn-principal-flujo:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 680px) {
+    .contenedor-botones-flujo {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    .contenedor-botones-flujo .btn-secundario,
+    .btn-principal-flujo {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
