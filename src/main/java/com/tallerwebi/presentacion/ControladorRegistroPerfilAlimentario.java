@@ -20,7 +20,7 @@ public class ControladorRegistroPerfilAlimentario {
   private static final String ATT_USUARIO_LOGUEADO_EMAIL = "usuarioLogueadoEmail";
   private static final String VISTA_REGISTRO = "registroPerfilAlimentario";
   private static final String REDIRECT_LOGIN = "redirect:/login";
-  private static final String HOME = "redirect:/home";
+  //  private static final String HOME = "redirect:/home";
 
   private final ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentario;
 
@@ -31,7 +31,7 @@ public class ControladorRegistroPerfilAlimentario {
     this.servicioRegistroPerfilAlimentario = servicioRegistroPerfilAlimentario;
   }
 
-  @GetMapping("Registro-perfil-alimentario/")
+  @GetMapping("/Registro-perfil-alimentario")
   public ModelAndView mostrarFormulario(HttpSession session) {
     if (session.getAttribute(ATT_USUARIO_LOGUEADO_EMAIL) == null) {
       return new ModelAndView(REDIRECT_LOGIN);
@@ -51,11 +51,12 @@ public class ControladorRegistroPerfilAlimentario {
       return new ModelAndView(REDIRECT_LOGIN);
     }
 
-    ModelMap modelo = new ModelMap();
+    ModelMap modelo;
     try {
       servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilAlimentarioDTO, email);
-      return new ModelAndView(HOME, modelo);
+      return new ModelAndView("redirect:/configurar-presupuesto");
     } catch (UsuarioInexistenteException exeption) {
+      modelo = new ModelMap();
       modelo.put(ATT_ERROR, "Error: Usuario inexistente");
       modelo.put(ATT_PERFIL_ALIMENTARIO, perfilAlimentarioDTO);
     } catch (Exception exception) {

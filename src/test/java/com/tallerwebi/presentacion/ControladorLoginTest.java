@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorLoginTest {
 
   private ControladorLogin controladorLogin;
+  private ControladorHome controladorHome;
   private Usuario usuarioMock;
   private DatosLogin datosLoginMock;
   private HttpServletRequest requestMock;
@@ -136,7 +137,7 @@ public class ControladorLoginTest {
   @Test
   public void irAHomeDeberiaRetornarVistaHome() {
     // ejecucion
-    ModelAndView modelAndView = controladorLogin.irAHome();
+    ModelAndView modelAndView = controladorHome.irAHome(sessionMock);
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
