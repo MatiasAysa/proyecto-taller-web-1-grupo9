@@ -31,8 +31,8 @@ public class PlanAlimenticio {
 
   @Transient
   private List<Alimento> alimentosAsignados = new ArrayList<>();
-//comidas
 
+  //comidas
 
   public PlanAlimenticio() {}
 

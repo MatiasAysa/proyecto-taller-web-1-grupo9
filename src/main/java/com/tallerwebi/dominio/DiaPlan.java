@@ -29,7 +29,6 @@ public class DiaPlan {
     joinColumns = @JoinColumn(name = "dia_plan_id"),
     inverseJoinColumns = @JoinColumn(name = "alimento_id")
   )
-
   //comidas
   private List<Alimento> opcionesAlimentos = new ArrayList<>();
 
