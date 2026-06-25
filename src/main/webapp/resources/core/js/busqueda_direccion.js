@@ -1,6 +1,13 @@
+//NOTA : IMPLEMENTACION DE LEAFLET --> libreria de js (api)
+// Y OPENstrepMap para proveer imagenes
 let map = null;
 
 const boton = document.getElementById("btnUbicacion");
+
+
+
+//Evento que se dispara cuanod termina de cargar la pagina --> despues refactorizar este evento
+
 
 
 window.addEventListener("load",() => {
@@ -34,7 +41,6 @@ document.getElementById("btnUbicacion").addEventListener("click",() => {
             const longitud = position.coords.longitude;
             boton.style.display = "none";
             mostrarMapa(latitud,longitud);
-            console.log(L);
         },
         (error) => {
             console.error(error);
@@ -56,6 +62,7 @@ function mostrarMapa(lat,lon){
 
     L.marker([lat, lon]).addTo(map).bindPopup("Estás acá 📍").openPopup();
 
+    /*
     supermercados.forEach(supermercado => {
 
         L.marker([
@@ -66,6 +73,8 @@ function mostrarMapa(lat,lon){
             .bindPopup(supermercado.nombre);
 
     });
+
+     */
 }
 
 
