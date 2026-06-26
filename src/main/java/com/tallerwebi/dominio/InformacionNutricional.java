@@ -5,40 +5,40 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class InformacionNutricional {
 
-  private Integer calorias;
-  private Double proteinas;
-  private Double carbohidratos;
-  private Double grasas;
+  private Integer caloriasX100g;
+  private Double proteinasX100g;
+  private Double carbohidratosX100g;
+  private Double grasasX100g;
 
-  public Integer getCalorias() {
-    return calorias;
+  public Integer getCaloriasX100g() {
+    return caloriasX100g;
   }
 
-  public void setCalorias(Integer calorias) {
-    this.calorias = calorias;
+  public void setCaloriasX100g(Integer calorias) {
+    this.caloriasX100g = calorias;
   }
 
-  public Double getProteinas() {
-    return proteinas;
+  public Double getProteinasX100g() {
+    return proteinasX100g;
   }
 
-  public void setProteinas(Double proteinas) {
-    this.proteinas = proteinas;
+  public void setProteinasX100g(Double proteinas) {
+    this.proteinasX100g = proteinas;
   }
 
-  public Double getCarbohidratos() {
-    return carbohidratos;
+  public Double getCarbohidratosX100g() {
+    return carbohidratosX100g;
   }
 
-  public void setCarbohidratos(Double carbohidratos) {
-    this.carbohidratos = carbohidratos;
+  public void setCarbohidratosX100g(Double carbohidratos) {
+    this.carbohidratosX100g = carbohidratos;
   }
 
-  public Double getGrasas() {
-    return grasas;
+  public Double getGrasasX100g() {
+    return grasasX100g;
   }
 
-  public void setGrasas(Double grasas) {
-    this.grasas = grasas;
+  public void setGrasasX100g(Double grasas) {
+    this.grasasX100g = grasas;
   }
 }

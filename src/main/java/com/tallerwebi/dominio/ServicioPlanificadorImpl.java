@@ -235,13 +235,14 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       if (alim.getUrlSupermercado() != null && !alim.getUrlSupermercado().trim().isEmpty()) {
         Double pr = scraperService.obtenerPrecioReal(alim.getUrlSupermercado());
         if (pr != null && pr > 0) {
-          alim.setPrecioEstimado(pr);
+          alim.setPrecioPorKilo(pr);
         }
       }
     }
     plan.setAlimentosAsignados(alimentos);
     plan.setCostoTotalPlan((double) monto);
-
+    //OJO ACA
+    /*
     List<Alimento> des = alimentos
       .stream()
       .filter(a -> COMIDA_DESAYUNO.equalsIgnoreCase(a.getTipoComida()))
@@ -254,7 +255,12 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       .stream()
       .filter(a -> COMIDA_CENA.equalsIgnoreCase(a.getTipoComida()))
       .collect(Collectors.toList());
-
+*/
+    //BORRAR ESTAS 3 LISTAS EN UN FUTURO,SOLO SE CREARON PARA EVITAR ERRORES
+    List<Alimento> des = alimentos;
+    List<Alimento> alm = alimentos;
+    List<Alimento> cen = alimentos;
+//---------------
     if (des.isEmpty()) {
       des.addAll(alimentos);
     }

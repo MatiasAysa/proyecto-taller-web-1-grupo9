@@ -1,14 +1,25 @@
 package com.tallerwebi.dominio;
 
-public class ItemComida {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class Ingrediente {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   private Double cantidadGramos;
+
+  @ManyToOne
   private Alimento alimento;
 
-  public ItemComida(Double cantidadGramos, Alimento alimento) {
-    this.cantidadGramos = cantidadGramos;
-    this.alimento = alimento;
-  }
+  @ManyToOne
+  private Comida comida;
 
   public Double getCantidadGramos() {
     return cantidadGramos;

@@ -1,6 +1,5 @@
 package com.tallerwebi.dominio;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -12,10 +11,26 @@ public class Comida {
   private Long id;
 
   private String nombre;
+
+  @Enumerated(EnumType.STRING)
   private TipoDeComida tipo;
 
-  @Transient
-  private List<ItemComida> items = new ArrayList<ItemComida>();
+  private Boolean celiaco;
+  private Boolean diabetico;
+  private Boolean intoleranciaLactosa;
+  private Boolean vegetariano;
+  private Boolean vegano;
+
+  @OneToMany(mappedBy = "comida")
+  private List<Ingrediente> ingredientes;
+
+  public List<Ingrediente> getIngredientes() {
+    return this.ingredientes;
+  }
+
+  public void setIngredientes(List<Ingrediente> ingredientes) {
+    this.ingredientes = ingredientes;
+  }
 
   public String getNombre() {
     return nombre;
@@ -31,13 +46,5 @@ public class Comida {
 
   public void setTipo(TipoDeComida tipo) {
     this.tipo = tipo;
-  }
-
-  public List<ItemComida> getItems() {
-    return items;
-  }
-
-  public void setItems(List<ItemComida> items) {
-    this.items = items;
   }
 }

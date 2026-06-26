@@ -10,9 +10,11 @@ public class Alimento {
   private Long id;
 
   private String nombre;
-  private String tipoComida;
-  private Double precioEstimado;
 
+  //private String tipoComida;
+  //PRECIO POR KILO DEL ALIMENTO
+  private Double precioPorKilo;
+  //SE DEBERIA ELIMITAR ESTOS ATRIBUTOS BOOLEAN Y PASARLOS A LA COMIDA
   private Boolean esVegetariano;
   private Boolean esCeliaco;
   private Boolean contieneLactosa = false;
@@ -47,14 +49,15 @@ public class Alimento {
     this.nombre = nombre;
   }
 
-  public Double getPrecioEstimado() {
-    return precioEstimado;
+  public Double getPrecioPorKilo() {
+    return precioPorKilo;
   }
 
-  public void setPrecioEstimado(Double precio) {
-    this.precioEstimado = precio;
+  public void setPrecioPorKilo(Double precio) {
+    this.precioPorKilo = precio;
   }
 
+  /*
   public String getTipoComida() {
     return tipoComida;
   }
@@ -62,7 +65,7 @@ public class Alimento {
   public void setTipoComida(String tipoComida) {
     this.tipoComida = tipoComida;
   }
-
+  */
   public Boolean getEsVegetariano() {
     return esVegetariano;
   }
@@ -88,34 +91,34 @@ public class Alimento {
   }
 
   public Integer getCalorias() {
-    return infoNutricional.getCalorias();
+    return infoNutricional.getCaloriasX100g();
   }
 
   public void setCalorias(Integer calorias) {
-    infoNutricional.setCalorias(calorias);
+    infoNutricional.setCaloriasX100g(calorias);
   }
 
   public Double getProteinas() {
-    return infoNutricional.getProteinas();
+    return infoNutricional.getProteinasX100g();
   }
 
   public void setProteinas(Double proteinas) {
-    infoNutricional.setProteinas(proteinas);
+    infoNutricional.setProteinasX100g(proteinas);
   }
 
   public Double getCarbohidratos() {
-    return infoNutricional.getCarbohidratos();
+    return infoNutricional.getCarbohidratosX100g();
   }
 
   public void setCarbohidratos(Double carbohidratos) {
-    infoNutricional.setCarbohidratos(carbohidratos);
+    infoNutricional.setCarbohidratosX100g(carbohidratos);
   }
 
   public Double getGrasas() {
-    return infoNutricional.getGrasas();
+    return infoNutricional.getGrasasX100g();
   }
 
   public void setGrasas(Double grasas) {
-    infoNutricional.setGrasas(grasas);
+    infoNutricional.setGrasasX100g(grasas);
   }
 }

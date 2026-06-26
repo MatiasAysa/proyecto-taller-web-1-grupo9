@@ -1,18 +1,13 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Alimento;
 import com.tallerwebi.dominio.Comida;
-import com.tallerwebi.dominio.ItemComida;
 import com.tallerwebi.dominio.ItemCompra;
 import com.tallerwebi.dominio.ServicioListaCompras;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -25,6 +20,23 @@ public class ControladorListaCompras {
     this.servicioListaCompras = servicioListaCompras;
   }
 
+  @RequestMapping("/lista-compras")
+  public ModelAndView mostrarListaCompras() {
+    ModelMap modelo = new ModelMap();
+
+    List<Comida> comidas = servicioListaCompras.obtenerComidas();
+
+    List<ItemCompra> listaDeCompras = servicioListaCompras.generarListaCompras(comidas);
+    servicioListaCompras.calcularPreciosParaCadaAlimento(listaDeCompras);
+
+    Double total = servicioListaCompras.calcularTotalListaCompras(listaDeCompras);
+
+    modelo.addAttribute("comidas", comidas);
+    modelo.put("listaDeCompras", listaDeCompras);
+    modelo.put("totalLista", total);
+    return new ModelAndView("lista-compras", modelo);
+  }
+  /*
   @PostMapping("/lista-compras")
   public ModelAndView mostrarListaCompras(
     @RequestParam(required = false) Map<String, String> todasLasSelecciones
@@ -54,7 +66,7 @@ public class ControladorListaCompras {
           Alimento alimentoReal = servicioListaCompras.buscarAlimentoPorId(idAlimento);
 
           if (alimentoReal != null) {
-            ItemComida item = new ItemComida(150.0, alimentoReal);
+            Ingrediente item = new Ingrediente(150.0, alimentoReal);
             comidaDia.getItems().add(item);
           }
         }
@@ -72,4 +84,5 @@ public class ControladorListaCompras {
 
     return new ModelAndView("lista-compras", modelo);
   }
+   */
 }

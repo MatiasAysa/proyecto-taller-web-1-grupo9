@@ -215,7 +215,7 @@ public class ServicioPlanificadorTest {
   ) {
     Alimento alimento = new Alimento();
     alimento.setNombre(nombre);
-    alimento.setPrecioEstimado(precio);
+    alimento.setPrecioPorKilo(precio);
     alimento.setEsVegetariano(esVegetariano);
     alimento.setContieneLactosa(contieneLactosa);
     alimento.setEsCeliaco(false);

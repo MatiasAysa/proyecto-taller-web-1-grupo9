@@ -3,7 +3,7 @@ package com.tallerwebi.dominio;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 import javax.persistence.*;
 
 @Entity
@@ -41,24 +41,35 @@ public class DiaPlan {
   }
 
   public List<Alimento> getOpcionesDesayuno() {
+    /*
     return opcionesAlimentos
       .stream()
       .filter(a -> "DESAYUNO".equals(a.getTipoComida().toString()))
       .collect(Collectors.toList());
+    */
+
+    return opcionesAlimentos;
   }
 
   public List<Alimento> getOpcionesAlmuerzo() {
+    /*
     return opcionesAlimentos
       .stream()
       .filter(a -> "ALMUERZO".equals(a.getTipoComida().toString()))
       .collect(Collectors.toList());
+  */
+    return opcionesAlimentos;
   }
 
   public List<Alimento> getOpcionesCena() {
+    /*
     return opcionesAlimentos
       .stream()
       .filter(a -> "CENA".equals(a.getTipoComida().toString()))
       .collect(Collectors.toList());
+
+     */
+    return opcionesAlimentos;
   }
 
   public Long getId() {

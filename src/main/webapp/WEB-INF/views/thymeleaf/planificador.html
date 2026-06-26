@@ -97,7 +97,7 @@
                     <div class="grupo-momento-comida">
                         <span class="badge-momento momento-desayuno">DESAYUNOS DISPONIBLES</span>
                         <div class="comida-bloque" th:each="des : ${dia.opcionesDesayuno}"
-                             th:data-precio="${des.precioEstimado}"
+                             th:data-precio="${des.precioPorKilo}"
                              th:data-calorias="${des.calorias != null ? des.calorias : 0}"
                              th:data-proteinas="${des.proteinas != null ? des.proteinas : 0.0}"
                              th:data-carbohidratos="${des.carbohidratos != null ? des.carbohidratos : 0.0}"
@@ -108,7 +108,7 @@
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${des.nombre}">Avena</span>
-                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(des.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(des.precioPorKilo, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                     <div class="grupo-momento-comida">
                         <span class="badge-momento momento-almuerzo">ALMUERZOS DISPONIBLES</span>
                         <div class="comida-bloque" th:each="alm : ${dia.opcionesAlmuerzo}"
-                             th:data-precio="${alm.precioEstimado}"
+                             th:data-precio="${alm.precioPorKilo}"
                              th:data-calorias="${alm.calorias != null ? alm.calorias : 0}"
                              th:data-proteinas="${alm.proteinas != null ? alm.proteinas : 0.0}"
                              th:data-carbohidratos="${alm.carbohidratos != null ? alm.carbohidratos : 0.0}"
@@ -127,7 +127,7 @@
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${alm.nombre}">Pollo</span>
-                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(alm.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(alm.precioPorKilo, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                     <div class="grupo-momento-comida">
                         <span class="badge-momento momento-cena">CENAS DISPONIBLES</span>
                         <div class="comida-bloque" th:each="cen : ${dia.opcionesCena}"
-                             th:data-precio="${cen.precioEstimado}"
+                             th:data-precio="${cen.precioPorKilo}"
                              th:data-calorias="${cen.calorias != null ? cen.calorias : 0}"
                              th:data-proteinas="${cen.proteinas != null ? cen.proteinas : 0.0}"
                              th:data-carbohidratos="${cen.carbohidratos != null ? cen.carbohidratos : 0.0}"
@@ -146,7 +146,7 @@
                                     <span class="custom-check"></span>
                                 </label>
                                 <span class="nombre-alimento-kanban" th:text="${cen.nombre}">Merluza</span>
-                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(cen.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(cen.precioPorKilo, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
                             </div>
                         </div>
                     </div>
