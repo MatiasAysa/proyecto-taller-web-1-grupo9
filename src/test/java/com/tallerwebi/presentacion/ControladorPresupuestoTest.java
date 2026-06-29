@@ -62,7 +62,7 @@ public class ControladorPresupuestoTest {
     datosPresupuesto.setIntervalo(intervalo);
     datosPresupuesto.setFecha(fecha);
     ModelAndView mav = whenVolverAMiPresupuesto(datosPresupuesto);
-    thenVoyAMiPresupuesto(mav);
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/mi-presupuesto"));
   }
 
   @Test

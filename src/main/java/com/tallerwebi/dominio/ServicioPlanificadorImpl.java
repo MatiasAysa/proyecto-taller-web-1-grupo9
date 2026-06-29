@@ -74,6 +74,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     int diasTotales = determinarDiasPorDuracion(
       obtenerDuracionSegura(tipoDuracion, presupuestoEntity)
     );
+
     validarPresupuestoMinimoNuevo(presupuestoEntity.getMonto(), diasTotales);
 
     List<Alimento> alimentosAptos = ordenarAlimentosPorObjetivo(

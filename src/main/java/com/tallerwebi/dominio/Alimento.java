@@ -12,6 +12,7 @@ public class Alimento {
   private String nombre;
   private String tipoComida;
   private Double precioEstimado;
+
   private Boolean esVegetariano;
   private Boolean esCeliaco;
   private Boolean contieneLactosa = false;
