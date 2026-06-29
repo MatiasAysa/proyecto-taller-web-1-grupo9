@@ -4,6 +4,12 @@ DELETE FROM RestriccionAlimentaria;
 DELETE FROM Usuario;
 
 INSERT INTO Usuario(id, email, password, rol, activo) VALUES(null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('NINGUNO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('CELIACO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('DIABETICO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('VEGETARIANO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('VEGANO');
+INSERT INTO RestriccionAlimentaria (nombre) VALUES ('INTOLERANCIA_LACTOSA');
 
 /*
 LEER TODO SE PLANTEO DE LA SIGUIENTE FORMA , EL PRECIO ES POR KILO,OSEA LA AVENA ESTA 2200 EL KILO,AHORA TODO LO QUE ES

@@ -24,6 +24,46 @@ public class Comida {
   @OneToMany(mappedBy = "comida")
   private List<Ingrediente> ingredientes;
 
+  public Boolean getCeliaco() {
+    return celiaco;
+  }
+
+  public void setCeliaco(Boolean celiaco) {
+    this.celiaco = celiaco;
+  }
+
+  public Boolean getDiabetico() {
+    return diabetico;
+  }
+
+  public void setDiabetico(Boolean diabetico) {
+    this.diabetico = diabetico;
+  }
+
+  public Boolean getIntoleranciaLactosa() {
+    return intoleranciaLactosa;
+  }
+
+  public void setIntoleranciaLactosa(Boolean intoleranciaLactosa) {
+    this.intoleranciaLactosa = intoleranciaLactosa;
+  }
+
+  public Boolean getVegetariano() {
+    return vegetariano;
+  }
+
+  public void setVegetariano(Boolean vegetariano) {
+    this.vegetariano = vegetariano;
+  }
+
+  public Boolean getVegano() {
+    return vegano;
+  }
+
+  public void setVegano(Boolean vegano) {
+    this.vegano = vegano;
+  }
+
   public List<Ingrediente> getIngredientes() {
     return this.ingredientes;
   }

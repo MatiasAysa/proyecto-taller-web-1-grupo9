@@ -33,6 +33,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
   private static final String RESTRICCION_VEGANO = "VEGANO";
   private static final String RESTRICCION_LACTOSA = "INTOLERANCIA_LACTOSA";
   private static final String RESTRICCION_CELIACO = "CELIACO";
+  private static final String RESTRICCION_DIABETICO = "DIABETICO";
   private static final String COMIDA_DESAYUNO = "DESAYUNO";
   private static final String COMIDA_ALMUERZO = "ALMUERZO";
   private static final String COMIDA_CENA = "CENA";
@@ -41,18 +42,21 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
   private final RepositorioPresupuesto repositorioPresupuesto;
   private final RepositorioUsuario repositorioUsuario;
   private final ScraperService scraperService;
+  private  RepositorioListaDeCompras repositorioListaDeCompras;
 
   @Autowired
   public ServicioPlanificadorImpl(
     RepositorioPlanificador repositorioPlanificador,
     RepositorioPresupuesto repositorioPresupuesto,
     RepositorioUsuario repositorioUsuario,
-    ScraperService scraperService
+    ScraperService scraperService,
+    RepositorioListaDeCompras repositorioListaDeCompras
   ) {
     this.repositorioPlanificador = repositorioPlanificador;
     this.repositorioPresupuesto = repositorioPresupuesto;
     this.repositorioUsuario = repositorioUsuario;
     this.scraperService = scraperService;
+    this.repositorioListaDeCompras = repositorioListaDeCompras;
   }
 
   @Override
@@ -74,9 +78,14 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     int diasTotales = determinarDiasPorDuracion(
       obtenerDuracionSegura(tipoDuracion, presupuestoEntity)
     );
-
+//MODIFICAR????-----------
     validarPresupuestoMinimoNuevo(presupuestoEntity.getMonto(), diasTotales);
 
+    List <Comida> listaComidas = repositorioListaDeCompras.obtenerListaComidas();
+
+    List <Comida> listaComidasFiltradosPorPerfil = obtenerComidasFiltradasPorPerfil(listaComidas,usuario.getPerfilAlimentario());
+
+    //EL METODO DE ACA YA NO ENTRARIA,----------------------
     List<Alimento> alimentosAptos = ordenarAlimentosPorObjetivo(
       obtenerAlimentosFiltradosPorPerfil(
         repositorioPlanificador.obtenerAlimentosDisponibles(),
@@ -84,6 +93,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       ),
       usuario.getPerfilAlimentario()
     );
+//------------------------
 
     PlanAlimenticio plan = new PlanAlimenticio();
     List<String> advertencias = generarAdvertenciasPorObjetivo(usuario.getPerfilAlimentario());
@@ -167,6 +177,56 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     if ((double) monto < (PRESUPUESTO_MINIMO_DIARIO * (double) dias)) {
       throw new PresupuestoInsuficienteException("El monto es insuficiente.");
     }
+  }
+
+  //NUEVOS METODOA ---------------------------------------
+  private List<Comida> obtenerComidasFiltradasPorPerfil(List<Comida> comidas , PerfilAlimentarioUsuario perfil){
+    if (perfil == null || perfil.getPerfilRestricciones() == null || perfil.getPerfilRestricciones().isEmpty()) {
+      return comidas;
+    }
+
+    List<Comida> aptas = new ArrayList<>();
+
+    for (Comida comida : comidas) {
+      if (verificarComidaApta(comida, perfil.getPerfilRestricciones())) {
+        aptas.add(comida);
+      }
+    }
+    return aptas;
+  }
+
+  private boolean verificarComidaApta(Comida comida, Set<PerfilRestriccion> restricciones) {
+
+    for (PerfilRestriccion pr : restricciones) {
+      if (pr.getRestriccion() == null || pr.getRestriccion().getNombre() == null) {
+        continue;
+      }
+
+      String restriccion = pr.getRestriccion().getNombre().toUpperCase(Locale.ROOT);
+
+      switch (restriccion) {
+        case RESTRICCION_CELIACO:
+          if (comida.getCeliaco() == null || !comida.getCeliaco()) {return false;}
+          break;
+
+        case RESTRICCION_DIABETICO:
+          if (comida.getDiabetico() == null || !comida.getDiabetico()) {return false;}
+          break;
+
+        case RESTRICCION_VEGETARIANO:
+          if (comida.getVegetariano() == null || !comida.getVegetariano()) {return false;}
+          break;
+
+        case RESTRICCION_VEGANO:
+          if (comida.getVegano() == null || !comida.getVegano()) {return false;}
+          break;
+
+        case RESTRICCION_LACTOSA:
+          if (comida.getIntoleranciaLactosa() == null || !comida.getIntoleranciaLactosa()) {return false;}
+          break;
+      }
+    }
+    return true;
   }
 
   private List<Alimento> obtenerAlimentosFiltradosPorPerfil(
@@ -260,7 +320,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     List<Alimento> des = alimentos;
     List<Alimento> alm = alimentos;
     List<Alimento> cen = alimentos;
-//---------------
+    //---------------
     if (des.isEmpty()) {
       des.addAll(alimentos);
     }
@@ -329,4 +389,5 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     }
     return ads;
   }
+
 }
