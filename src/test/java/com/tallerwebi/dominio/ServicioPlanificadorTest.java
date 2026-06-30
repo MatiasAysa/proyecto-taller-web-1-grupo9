@@ -20,6 +20,7 @@ public class ServicioPlanificadorTest {
   private RepositorioPresupuesto repositorioPresupuestoMock;
   private RepositorioUsuario repositorioUsuarioMock;
   private ScraperService scraperServiceMock;
+  private RepositorioListaDeCompras repositorioListaDeComprasMock;
 
   private List<Alimento> alimentosEnStock;
 
@@ -35,12 +36,14 @@ public class ServicioPlanificadorTest {
     this.repositorioPresupuestoMock = mock(RepositorioPresupuesto.class);
     this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
     this.scraperServiceMock = mock(ScraperService.class);
+    this.repositorioListaDeComprasMock = mock(RepositorioListaDeCompras.class);
     this.servicioPlanificador =
       new ServicioPlanificadorImpl(
         this.repositorioPlanificadorMock,
         this.repositorioPresupuestoMock,
         this.repositorioUsuarioMock,
-        this.scraperServiceMock
+        this.scraperServiceMock,
+              this.repositorioListaDeComprasMock
       );
 
     this.alimentosEnStock = new ArrayList<>();
