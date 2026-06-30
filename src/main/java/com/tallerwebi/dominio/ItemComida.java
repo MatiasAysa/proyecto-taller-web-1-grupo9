@@ -1,9 +1,17 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.*;
+
+@Embeddable
 public class ItemComida {
 
   private Double cantidadGramos;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "alimento_id")
   private Alimento alimento;
+
+  public ItemComida() {}
 
   public ItemComida(Double cantidadGramos, Alimento alimento) {
     this.cantidadGramos = cantidadGramos;

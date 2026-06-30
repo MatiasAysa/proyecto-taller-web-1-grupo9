@@ -10,6 +10,7 @@ function initCheckboxesPresupuesto() {
 
     const contenedorPrincipal = document.querySelector(".contenedor-principal");
     const contenedorCostoBase = document.getElementById("contenedor-costo-base");
+
     const diasPlan = parseInt(contenedorPrincipal?.getAttribute("data-dias")) || 7;
     const presupuestoTotalBruto = parseFloat(contenedorCostoBase?.getAttribute("data-presupuesto-total")) || 0;
     const presupuestoPorDiaReal = presupuestoTotalBruto / diasPlan;
@@ -58,7 +59,7 @@ function initCheckboxesPresupuesto() {
                 txtBalanceEstadoDiario.innerText = "Sin Alimentos";
                 txtBalanceEstadoDiario.style.backgroundColor = "#7f8c8d";
                 txtBalanceEstadoDiario.style.color = "#ffffff";
-            } else if (costoAlimentosSeleccionados <= presupuestoTotalBruto) {
+            } else if (costoAlimentosSeleccionados <= presupuestoPorDiaReal) {
                 txtBalanceEstadoDiario.innerText = "Dentro del Presupuesto";
                 txtBalanceEstadoDiario.style.backgroundColor = "#03A62C";
                 txtBalanceEstadoDiario.style.color = "#ffffff";
@@ -96,10 +97,12 @@ function initTabsSemanas() {
     const diasPorSemana = 7;
     const totalDias = tarjetasDias.length;
     const totalSemanas = Math.ceil(totalDias / diasPorSemana);
+
     if (totalSemanas <= 1) {
         document.querySelector(".seccion-navegacion-semanas")?.remove();
         return;
     }
+
     for (let i = 1; i <= totalSemanas; i++) {
         const botonTab = document.createElement("button");
         botonTab.type = "button";
@@ -117,6 +120,7 @@ function initTabsSemanas() {
 
         contenedorTabs.appendChild(botonTab);
     }
+
     function filtrarDiasPorSemana(numSemana) {
         const diaInicio = ((numSemana - 1) * diasPorSemana) + 1;
         const diaFin = numSemana * diasPorSemana;
