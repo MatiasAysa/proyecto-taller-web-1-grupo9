@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(classes = { HibernateInfraestructuraTestConfig.class })
 @Transactional
 public class RepositorioPlanificadorTest {
-  /*
+
   @Autowired
   private SessionFactory sessionFactory;
 
@@ -141,5 +141,4 @@ public class RepositorioPlanificadorTest {
     assertThat(recuperado.getEsCeliaco(), is(true));
     assertThat(recuperado.getContieneLactosa(), is(true));
   }
-  */
 }

@@ -22,7 +22,7 @@ public class PerfilAlimentarioUsuario {
   private String actividadFisica;
 
   @OneToMany(mappedBy = "perfil", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<RestriccionAlimentaria> restriccionesAlimentarias;
+  private Set<PerfilRestriccion> perfilRestricciones;
 
   private String objetivo;
 
@@ -92,12 +92,12 @@ public class PerfilAlimentarioUsuario {
     this.objetivo = objetivo;
   }
 
-  public Set<RestriccionAlimentaria> getRestriccionesAlimentarias() {
-    return restriccionesAlimentarias;
+  public Set<PerfilRestriccion> getPerfilRestricciones() {
+    return perfilRestricciones;
   }
 
-  public void setRestriccionesAlimentarias(Set<RestriccionAlimentaria> restriccionesAlimentarias) {
-    this.restriccionesAlimentarias = restriccionesAlimentarias;
+  public void setPerfilRestricciones(Set<PerfilRestriccion> perfilRestricciones) {
+    this.perfilRestricciones = perfilRestricciones;
   }
 
   public Long getId() {

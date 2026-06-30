@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.ServicioPresupuesto;
 import com.tallerwebi.dominio.ServicioPresupuestoImpl;
+import com.tallerwebi.dominio.excepcion.MontoPresupuestoInsuficienteException;
 import com.tallerwebi.dominio.excepcion.PresupuestoNoPositivoException;
 import com.tallerwebi.dominio.excepcion.UsuarioSinPresupuestoException;
 import java.time.LocalDate;
@@ -52,6 +53,43 @@ public class ControladorPresupuestoTest {
   public void sePuedeIrAConfigurarPresupuesto() {
     ModelAndView mav = whenIrAConfigurarPresupuesto();
     thenVoyAConfigurarPresupuesto(mav);
+  }
+
+  @Test
+  public void sePuedeVolverAMiPresupuestoDesdeConfigurarPresupuesto() {
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(monto);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(fecha);
+    ModelAndView mav = whenVolverAMiPresupuesto(datosPresupuesto);
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/mi-presupuesto"));
+  }
+
+  @Test
+  public void siVuelvoAMiPresupuestoSinPresupuestoRedirigeAHome() {
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    ModelAndView mav = whenVolverAMiPresupuestoSinPresupuesto();
+    thenVoyAlHome(mav);
+  }
+
+  private ModelAndView whenVolverAMiPresupuestoSinPresupuesto() {
+    when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
+    when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
+    doThrow(UsuarioSinPresupuestoException.class)
+      .when(servicioPresupuesto)
+      .buscarPresupuesto(email);
+    return controladorPresupuesto.volverAMiPresupuesto(session);
+  }
+
+  private void thenVoyAlHome(ModelAndView mav) {
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/home"));
+  }
+
+  private ModelAndView whenVolverAMiPresupuesto(DatosPresupuesto datosPresupuesto) {
+    when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
+    when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
+    when(servicioPresupuesto.buscarPresupuesto(email)).thenReturn(datosPresupuesto);
+    return controladorPresupuesto.volverAMiPresupuesto(session);
   }
 
   private ModelAndView whenIrAConfigurarPresupuesto() {
@@ -156,6 +194,24 @@ public class ControladorPresupuestoTest {
 
     ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
     mensaje = controladorPresupuesto.getMENSAJE_MONTO_OBLIGATORIO();
+    thenNoSeCreaElPresupuesto(mav, mensaje);
+  }
+
+  @Test
+  public void siIngresoUnPresupuestoInsuficienteElPresupuestoFalla() {
+    givenUsuarioExiste();
+    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
+    datosPresupuesto.setMonto(1);
+    datosPresupuesto.setIntervalo(intervalo);
+    datosPresupuesto.setFecha(fecha);
+    MontoPresupuestoInsuficienteException e = new MontoPresupuestoInsuficienteException(
+      ServicioPresupuestoImpl.getPresupuestoMinimoDiario(),
+      intervalo
+    );
+    doThrow(e).when(servicioPresupuesto).crearPresupuesto(1, intervalo, fecha, email);
+
+    ModelAndView mav = whenIngresoMontoEIntervalo(datosPresupuesto);
+    mensaje = e.getMensaje();
     thenNoSeCreaElPresupuesto(mav, mensaje);
   }
 

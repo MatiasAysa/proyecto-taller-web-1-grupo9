@@ -32,6 +32,8 @@ public class PlanAlimenticio {
   @Transient
   private List<Alimento> alimentosAsignados = new ArrayList<>();
 
+  //comidas
+
   public PlanAlimenticio() {}
 
   public List<DiaPlan> getCronogramaDias() {

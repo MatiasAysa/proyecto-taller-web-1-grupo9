@@ -27,7 +27,7 @@
         </form>
     </div>
 
-    <div th:if="${planGenerado != null}" class="resultado-plan">
+    <form th:if="${planGenerado != null}" th:action="@{/lista-compras}" method="POST" class="resultado-plan">
 
         <div th:if="${not #lists.isEmpty(planGenerado.advertencias)}" class="bloque-advertencias">
             <h3>RECOMENDACIONES Y VENTANA TEMPORAL</h3>
@@ -47,11 +47,11 @@
             <h3>&#128722; Resumen de Selección Actual</h3>
             <div class="grilla-seleccion-dinamica">
                 <div class="tarjeta-seleccion-precio">
-                    <span class="macro-etiqueta">Costo de alimentos seleccionados</span>
+                    <span class="macro-etiqueta">Costo diario seleccionado</span>
                     <strong id="txt-costo-seleccion-acumulado">$0.00</strong>
                 </div>
                 <div class="tarjeta-seleccion-precio">
-                    <span class="macro-etiqueta">Estado del Presupuesto Total</span>
+                    <span class="macro-etiqueta">Estado del Presupuesto Diario</span>
                     <span id="txt-balance-estado-diario" class="badge-alerta-js">Sin Alimentos</span>
                 </div>
             </div>
@@ -79,77 +79,87 @@
             </div>
         </div>
 
-        <h3 class="titulo-seccion-cronograma">Cronograma Diario Planificado</h3>
-        <div class="grilla-menu-kanban">
+        <div class="seccion-navegacion-semanas">
+            <h3 class="titulo-seccion-cronograma">Cronograma Planificado</h3>
+            <div class="barra-tabs-semanas" id="contenedor-bloques-semanas">
+            </div>
+        </div>
 
-            <div class="tarjeta-dia-kanban" th:each="dia : ${planGenerado.cronogramaDias}">
+        <div class="grilla-menu-kanban" id="contenedor-grilla-dias">
+
+            <div class="tarjeta-dia-kanban" th:each="dia : ${planGenerado.cronogramaDias}" th:data-numero-dia="${dia.numeroDia}">
                 <div class="cabecera-tarjeta-dia">
                     <h4 th:text="'DÍA ' + ${dia.numeroDia}">DÍA 1</h4>
                     <span class="fecha-tarjeta" th:text="${#dates.format(dia.fechaCalendario, 'dd/MM/yyyy')}">10/06/2026</span>
                 </div>
 
                 <div class="bloque-comidas-dia">
-
-                    <div class="comida-bloque"
-                         th:data-precio="${dia.desayuno.precioEstimado}"
-                         th:data-calorias="${dia.desayuno.calorias != null ? dia.desayuno.calorias : 0}"
-                         th:data-proteinas="${dia.desayuno.proteinas != null ? dia.desayuno.proteinas : 0.0}"
-                         th:data-carbohidratos="${dia.desayuno.carbohidratos != null ? dia.desayuno.carbohidratos : 0.0}"
-                         th:data-grasas="${dia.desayuno.grasas != null ? dia.desayuno.grasas : 0.0}">
-                        <div class="linea-superior-comida">
-                            <label class="contenedor-checkbox">
-                                <input type="checkbox" class="check-consumo-js">
-                                <span class="custom-check"></span>
-                            </label>
-                            <span class="badge-momento momento-desayuno">DESAYUNO</span>
-                            <span class="nombre-alimento-kanban" th:text="${dia.desayuno.nombre}">Avena</span>
-                            <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(dia.desayuno.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                    <div class="grupo-momento-comida">
+                        <span class="badge-momento momento-desayuno">DESAYUNOS DISPONIBLES</span>
+                        <div class="comida-bloque" th:each="des : ${dia.opcionesDesayuno}"
+                             th:data-precio="${des.precioEstimado != null ? des.precioEstimado : 0.0}"
+                             th:data-calorias="${des.calorias != null ? des.calorias : 0}"
+                             th:data-proteinas="${des.proteinas != null ? des.proteinas : 0.0}"
+                             th:data-carbohidratos="${des.carbohidratos != null ? des.carbohidratos : 0.0}"
+                             th:data-grasas="${des.grasas != null ? des.grasas : 0.0}">
+                            <div class="linea-superior-comida">
+                                <label class="contenedor-checkbox">
+                                    <input type="checkbox" th:name="'comidasSeleccionadas[' + ${dia.numeroDia} + ']'" th:value="${des.id}" class="check-consumo-js">
+                                    <span class="custom-check"></span>
+                                </label>
+                                <span class="nombre-alimento-kanban" th:text="${des.nombre}">Desayuno Armado</span>
+                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(des.precioEstimado != null ? des.precioEstimado : 0.0, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="comida-bloque"
-                         th:data-precio="${dia.almuerzo.precioEstimado}"
-                         th:data-calorias="${dia.almuerzo.calorias != null ? dia.almuerzo.calorias : 0}"
-                         th:data-proteinas="${dia.almuerzo.proteinas != null ? dia.almuerzo.proteinas : 0.0}"
-                         th:data-carbohidratos="${dia.almuerzo.carbohidratos != null ? dia.almuerzo.carbohidratos : 0.0}"
-                         th:data-grasas="${dia.almuerzo.grasas != null ? dia.almuerzo.grasas : 0.0}">
-                        <div class="linea-superior-comida">
-                            <label class="contenedor-checkbox">
-                                <input type="checkbox" class="check-consumo-js">
-                                <span class="custom-check"></span>
-                            </label>
-                            <span class="badge-momento momento-almuerzo">ALMUERZO</span>
-                            <span class="nombre-alimento-kanban" th:text="${dia.almuerzo.nombre}">Pollo</span>
-                            <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(dia.almuerzo.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                    <div class="grupo-momento-comida">
+                        <span class="badge-momento momento-almuerzo">ALMUERZOS DISPONIBLES</span>
+                        <div class="comida-bloque" th:each="alm : ${dia.opcionesAlmuerzo}"
+                             th:data-precio="${alm.precioEstimado != null ? alm.precioEstimado : 0.0}"
+                             th:data-calorias="${alm.calorias != null ? alm.calorias : 0}"
+                             th:data-proteinas="${alm.proteinas != null ? alm.proteinas : 0.0}"
+                             th:data-carbohidratos="${alm.carbohidratos != null ? alm.carbohidratos : 0.0}"
+                             th:data-grasas="${alm.grasas != null ? alm.grasas : 0.0}">
+                            <div class="linea-superior-comida">
+                                <label class="contenedor-checkbox">
+                                    <input type="checkbox" th:name="'comidasSeleccionadas[' + ${dia.numeroDia} + ']'" th:value="${alm.id}" class="check-consumo-js">
+                                    <span class="custom-check"></span>
+                                </label>
+                                <span class="nombre-alimento-kanban" th:text="${alm.nombre}">Almuerzo Armado</span>
+                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(alm.precioEstimado != null ? alm.precioEstimado : 0.0, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="comida-bloque"
-                         th:data-precio="${dia.cena.precioEstimado}"
-                         th:data-calorias="${dia.cena.calorias != null ? dia.cena.calorias : 0}"
-                         th:data-proteinas="${dia.cena.proteinas != null ? dia.cena.proteinas : 0.0}"
-                         th:data-carbohidratos="${dia.cena.carbohidratos != null ? dia.cena.carbohidratos : 0.0}"
-                         th:data-grasas="${dia.cena.grasas != null ? dia.cena.grasas : 0.0}">
-                        <div class="linea-superior-comida">
-                            <label class="contenedor-checkbox">
-                                <input type="checkbox" class="check-consumo-js">
-                                <span class="custom-check"></span>
-                            </label>
-                            <span class="badge-momento momento-cena">CENA</span>
-                            <span class="nombre-alimento-kanban" th:text="${dia.cena.nombre}">Merluza</span>
-                            <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(dia.cena.precioEstimado, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                    <div class="grupo-momento-comida">
+                        <span class="badge-momento momento-cena">CENAS DISPONIBLES</span>
+                        <div class="comida-bloque" th:each="cen : ${dia.opcionesCena}"
+                             th:data-precio="${cen.precioEstimado != null ? cen.precioEstimado : 0.0}"
+                             th:data-calorias="${cen.calorias != null ? cen.calorias : 0}"
+                             th:data-proteinas="${cen.proteinas != null ? cen.proteinas : 0.0}"
+                             th:data-carbohidratos="${cen.carbohidratos != null ? cen.carbohidratos : 0.0}"
+                             th:data-grasas="${cen.grasas != null ? cen.grasas : 0.0}">
+                            <div class="linea-superior-comida">
+                                <label class="contenedor-checkbox">
+                                    <input type="checkbox" th:name="'comidasSeleccionadas[' + ${dia.numeroDia} + ']'" th:value="${cen.id}" class="check-consumo-js">
+                                    <span class="custom-check"></span>
+                                </label>
+                                <span class="nombre-alimento-kanban" th:text="${cen.nombre}">Cena Armada</span>
+                                <span class="precio-alimento-kanban" th:text="'$' + ${#numbers.formatDecimal(cen.precioEstimado != null ? cen.precioEstimado : 0.0, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
         </div>
 
-        <div style="text-align: center; margin-top: 2rem;">
+        <div class="contenedor-botones-flujo">
             <a th:href="@{/configurar-presupuesto}" class="btn-secundario">Volver a ajustar presupuesto</a>
+            <button type="submit" class="btn-principal-flujo">Confirmar Selección y Ver Lista de Compras</button>
         </div>
-    </div>
+    </form>
 </div>
 
 <script th:src="@{/js/planificador.js}"></script>

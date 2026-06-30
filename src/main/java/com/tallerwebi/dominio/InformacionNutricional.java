@@ -5,41 +5,40 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class InformacionNutricional {
 
-  //TODO EN FUNCION A 100 GRAMOS , CALORIAS CADA 100 GRAMOS DE UN ALIMENTO
-  private Integer caloriasX100g;
-  private Double proteinasX100g;
-  private Double carbohidratosX100g;
-  private Double grasasX100g;
+  private Integer calorias;
+  private Double proteinas;
+  private Double carbohidratos;
+  private Double grasas;
 
-  public Integer getCaloriasX100g() {
-    return caloriasX100g;
+  public Integer getCalorias() {
+    return calorias;
   }
 
-  public void setCaloriasX100g(Integer caloriasX100g) {
-    this.caloriasX100g = caloriasX100g;
+  public void setCalorias(Integer calorias) {
+    this.calorias = calorias;
   }
 
-  public Double getProteinasX100g() {
-    return proteinasX100g;
+  public Double getProteinas() {
+    return proteinas;
   }
 
-  public void setProteinasX100g(Double proteinasX100g) {
-    this.proteinasX100g = proteinasX100g;
+  public void setProteinas(Double proteinas) {
+    this.proteinas = proteinas;
   }
 
-  public Double getCarbohidratosX100g() {
-    return carbohidratosX100g;
+  public Double getCarbohidratos() {
+    return carbohidratos;
   }
 
-  public void setCarbohidratosX100g(Double carbohidratosX100g) {
-    this.carbohidratosX100g = carbohidratosX100g;
+  public void setCarbohidratos(Double carbohidratos) {
+    this.carbohidratos = carbohidratos;
   }
 
-  public Double getGrasasX100g() {
-    return this.grasasX100g;
+  public Double getGrasas() {
+    return grasas;
   }
 
-  public void setGrasasX100g(Double grasasX100g) {
-    this.grasasX100g = grasasX100g;
+  public void setGrasas(Double grasas) {
+    this.grasas = grasas;
   }
 }

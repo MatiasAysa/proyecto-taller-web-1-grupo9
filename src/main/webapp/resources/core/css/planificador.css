@@ -24,11 +24,12 @@ body {
 .contenedor-principal {
     background-color: #ffffff;
     width: 100%;
-    max-width: 650px;
+    max-width: 1200px;
     padding: 2.5rem;
     margin: 2rem;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
 .encabezado {
@@ -97,13 +98,15 @@ body {
     color: white;
     text-decoration: none;
     text-align: center;
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 2.5rem;
     font-size: 0.9rem;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     margin-top: 1.5rem;
-    width: calc(100% - 3rem);
+    width: auto;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .btn-secundario:hover {
@@ -228,27 +231,22 @@ body {
 .nombre-alimento {
     font-weight: 500;
 }
+
 .tip-combinacion-js {
     display: block;
-    font-size: 0.78rem;
-    color: #555;
+    font-size: 0.85rem;
+    color: #718096 !important;
     font-style: italic;
-    margin-top: 0.6rem;
-    padding: 0.5rem 0.75rem;
-    background-color: #f0f5f1;
-    border-left: 3px solid var(--color-principal);
-    border-radius: 4px;
-    clear: both;
+    line-height: 1.3;
 }
+
 .precio-alimento-txt {
-    float: right;
-    font-size: 0.9rem;
-    color: var(--color-texto);
-    font-weight: bold;
-    background-color: #eef1ee;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-top: -2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2f855a;
+    margin-left: auto;
+    padding-left: 10px;
 }
 
 .resumen-nutricional {
@@ -302,21 +300,10 @@ body {
     display: block;
 }
 
-.item-calorias .macro-valor {
-    color: #e67e22;
-}
-
-.item-proteinas .macro-valor {
-    color: var(--color-principal-hover);
-}
-
-.item-carbohidratos .macro-valor {
-    color: #2980b9;
-}
-
-.item-grasas .macro-valor {
-    color: #c0392b;
-}
+.item-calorias .macro-valor { color: #e67e22; }
+.item-proteinas .macro-valor { color: var(--color-principal-hover); }
+.item-carbohidratos .macro-valor { color: #2980b9; }
+.item-grasas .macro-valor { color: #c0392b; }
 
 .barra-filtros-js {
     display: flex;
@@ -349,6 +336,7 @@ body {
     border-color: var(--color-principal);
     color: #ffffff;
 }
+
 .fila-interactiva {
     display: flex;
     align-items: center;
@@ -372,24 +360,6 @@ body {
     width: 0;
 }
 
-.custom-check {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    background-color: #eee;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    border: 2px solid #ccc;
-}
-
-.contenedor-checkbox:hover input ~ .custom-check {
-    background-color: #e0e0e0;
-}
-
-.contenedor-checkbox input:checked ~ .custom-check {
-    background-color: var(--color-principal);
-    border-color: var(--color-principal);
-}
 .panel-control-seleccion {
     background-color: #ffffff;
     border: 2px solid #eaeaea;
@@ -427,6 +397,7 @@ body {
     display: block;
     margin-top: 0.2rem;
 }
+
 .comida.fila-interactiva {
     padding: 16px;
     margin-bottom: 12px;
@@ -435,6 +406,7 @@ body {
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
 }
+
 .bloque-alimento-linea-superior {
     display: flex;
     align-items: center;
@@ -453,21 +425,6 @@ body {
     min-width: 90px;
     text-align: center;
 }
-.nombre-alimento {
-    font-family: 'Lato', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #2d3748;
-    flex-grow: 1;
-}
-.precio-alimento-txt {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #2f855a;
-    margin-left: auto;
-    padding-left: 10px;
-}
 
 .contenedor-tip-alimento {
     margin-left: 36px;
@@ -476,24 +433,17 @@ body {
     border-top: 1px dashed #edf2f7;
 }
 
-.tip-combinacion-js {
-    font-size: 0.85rem;
-    color: #718096 !important;
-    font-style: italic;
-    line-height: 1.3;
-}
 .titulo-seccion-cronograma {
-    margin-top: 2rem;
+    margin-top: 0;
     color: #2d3748;
     font-family: 'Montserrat', sans-serif;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 8px;
+    padding-bottom: 4px;
 }
 
 .grilla-menu-kanban {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
     margin-top: 1.5rem;
 }
 
@@ -536,11 +486,17 @@ body {
 }
 
 .comida-bloque {
-    padding: 10px;
+    padding: 12px;
     background: #f7fafc;
     border: 1px solid #edf2f7;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.comida-bloque:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e0;
 }
 
 .linea-superior-comida {
@@ -548,6 +504,7 @@ body {
     align-items: center;
     gap: 10px;
 }
+
 .badge-momento {
     font-size: 0.65rem;
     font-weight: bold;
@@ -556,6 +513,7 @@ body {
     text-align: center;
     min-width: 75px;
 }
+
 .momento-desayuno { background: #feebc8; color: #c05621; }
 .momento-almuerzo { background: #e2f0d9; color: #38a169; }
 .momento-cena { background: #e2e8f0; color: #4a5568; }
@@ -573,4 +531,144 @@ body {
     font-size: 0.95rem;
     font-weight: bold;
     color: #2f855a;
+}
+
+.grupo-momento-comida {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.grupo-momento-comida .badge-momento {
+    align-self: flex-start;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.custom-check {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 2px solid #cbd5e0;
+    position: relative;
+}
+
+.contenedor-checkbox:hover input ~ .custom-check {
+    background-color: #edf2f7;
+    border-color: var(--color-principal);
+}
+
+.contenedor-checkbox input:checked ~ .custom-check {
+    background-color: var(--color-principal);
+    border-color: var(--color-principal);
+}
+
+.contenedor-checkbox input:checked ~ .custom-check::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+.seccion-navegacion-semanas {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 12px;
+}
+
+.barra-tabs-semanas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tab-semana-btn {
+    font-family: var(--fuente-titulos);
+    background-color: #ffffff;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.tab-semana-btn:hover {
+    border-color: var(--color-principal);
+    color: var(--color-principal);
+    background-color: #f7fafc;
+}
+
+.tab-semana-btn.tab-activa {
+    background-color: var(--color-principal);
+    border-color: var(--color-principal);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(3, 166, 44, 0.2);
+}
+.contenedor-botones-flujo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #edf2f7;
+    width: 100%;
+}
+.contenedor-botones-flujo .btn-secundario {
+    margin-top: 0;
+    padding: 0.9rem 2rem;
+    white-space: nowrap;
+}
+.btn-principal-flujo {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-principal);
+    color: white;
+    border: none;
+    padding: 0.9rem 2.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(3, 166, 44, 0.1);
+    white-space: nowrap;
+}
+
+.btn-principal-flujo:hover {
+    background-color: var(--color-principal-hover);
+    transform: translateY(-1px);
+}
+
+.btn-principal-flujo:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 680px) {
+    .contenedor-botones-flujo {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    .contenedor-botones-flujo .btn-secundario,
+    .btn-principal-flujo {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
 }

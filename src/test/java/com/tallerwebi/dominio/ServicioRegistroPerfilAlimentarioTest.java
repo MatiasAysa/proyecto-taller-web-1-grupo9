@@ -19,6 +19,7 @@ class ServicioRegistroPerfilAlimentarioTest {
   private RepositorioPerfilAlimentarioUsuario repositorioPerfilAlimentarioUsuarioMock;
   private RepositorioUsuario repositorioUsuario;
   private RepositorioRestriccionAlimentaria repositorioRestriccionAlimentaria;
+  private RepositorioPerfilRestriccion repositorioPerfilRestriccion;
   private ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentario;
 
   @BeforeEach
@@ -26,11 +27,13 @@ class ServicioRegistroPerfilAlimentarioTest {
     this.repositorioPerfilAlimentarioUsuarioMock = mock(RepositorioPerfilAlimentarioUsuario.class);
     this.repositorioUsuario = mock(RepositorioUsuario.class);
     this.repositorioRestriccionAlimentaria = mock(RepositorioRestriccionAlimentaria.class);
+    this.repositorioPerfilRestriccion = mock(RepositorioPerfilRestriccion.class);
     this.servicioRegistroPerfilAlimentario =
       new ServicioRegistroPerfilAlimentarioImpl(
         repositorioPerfilAlimentarioUsuarioMock,
         repositorioUsuario,
-        repositorioRestriccionAlimentaria
+        repositorioRestriccionAlimentaria,
+        repositorioPerfilRestriccion
       );
   }
 

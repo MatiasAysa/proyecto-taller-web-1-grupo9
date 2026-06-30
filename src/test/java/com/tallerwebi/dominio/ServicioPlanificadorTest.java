@@ -14,11 +14,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ServicioPlanificadorTest {
-  /*
+
   private ServicioPlanificador servicioPlanificador;
   private RepositorioPlanificador repositorioPlanificadorMock;
   private RepositorioPresupuesto repositorioPresupuestoMock;
   private RepositorioUsuario repositorioUsuarioMock;
+  private ScraperService scraperServiceMock;
 
   private List<Alimento> alimentosEnStock;
 
@@ -33,11 +34,13 @@ public class ServicioPlanificadorTest {
     this.repositorioPlanificadorMock = mock(RepositorioPlanificador.class);
     this.repositorioPresupuestoMock = mock(RepositorioPresupuesto.class);
     this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
+    this.scraperServiceMock = mock(ScraperService.class);
     this.servicioPlanificador =
       new ServicioPlanificadorImpl(
         this.repositorioPlanificadorMock,
         this.repositorioPresupuestoMock,
-        this.repositorioUsuarioMock
+        this.repositorioUsuarioMock,
+        this.scraperServiceMock
       );
 
     this.alimentosEnStock = new ArrayList<>();
@@ -70,10 +73,14 @@ public class ServicioPlanificadorTest {
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
     Usuario usuarioVegetariano = new Usuario();
     PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
-    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    perfil.setPerfilRestricciones(new HashSet<>());
+
     RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
     restriccion.setNombre("VEGETARIANO");
-    perfil.getRestriccionesAlimentarias().add(restriccion);
+
+    PerfilRestriccion perfilRestriccion = new PerfilRestriccion(perfil, restriccion);
+    perfil.getPerfilRestricciones().add(perfilRestriccion);
+
     usuarioVegetariano.setPerfilAlimentario(perfil);
 
     Presupuesto presupuesto = new Presupuesto();
@@ -102,7 +109,7 @@ public class ServicioPlanificadorTest {
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
     Usuario usuarioPremium = new Usuario();
     PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
-    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    perfil.setPerfilRestricciones(new HashSet<>());
     usuarioPremium.setPerfilAlimentario(perfil);
 
     Presupuesto presupuesto = new Presupuesto();
@@ -130,11 +137,14 @@ public class ServicioPlanificadorTest {
     throws PresupuestoInsuficienteException, UsuarioInexistenteException {
     Usuario usuarioIntolerante = new Usuario();
     PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
-    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    perfil.setPerfilRestricciones(new HashSet<>());
 
     RestriccionAlimentaria lactosa = new RestriccionAlimentaria();
     lactosa.setNombre("INTOLERANCIA_LACTOSA");
-    perfil.getRestriccionesAlimentarias().add(lactosa);
+
+    PerfilRestriccion perfilRestriccion = new PerfilRestriccion(perfil, lactosa);
+    perfil.getPerfilRestricciones().add(perfilRestriccion);
+
     usuarioIntolerante.setPerfilAlimentario(perfil);
 
     Presupuesto presupuesto = new Presupuesto();
@@ -142,7 +152,6 @@ public class ServicioPlanificadorTest {
     presupuesto.setIntervalo(7);
 
     when(repositorioUsuarioMock.buscar(EMAIL_INTOLERANTE)).thenReturn(usuarioIntolerante);
-    // 💡 SOLUCIÓN: Cambiamos EMAIL_INTOLERANTE por el objeto usuarioIntolerante
     when(repositorioPresupuestoMock.buscarPresupuesto(usuarioIntolerante)).thenReturn(presupuesto);
     when(repositorioPlanificadorMock.obtenerAlimentosDisponibles()).thenReturn(alimentosEnStock);
 
@@ -163,7 +172,7 @@ public class ServicioPlanificadorTest {
   public void queLancePresupuestoInsuficienteExceptionSiElDineroNoCubreElMinimoEconomico() {
     Usuario usuarioEvadido = new Usuario();
     PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
-    perfil.setRestriccionesAlimentarias(new HashSet<>());
+    perfil.setPerfilRestricciones(new HashSet<>());
     usuarioEvadido.setPerfilAlimentario(perfil);
 
     Presupuesto presupuestoBajo = new Presupuesto();
@@ -216,6 +225,4 @@ public class ServicioPlanificadorTest {
     alimento.setGrasas(grasas);
     return alimento;
   }
-
- */
 }

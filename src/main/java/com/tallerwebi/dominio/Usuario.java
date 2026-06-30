@@ -14,13 +14,12 @@ public class Usuario {
   private String password;
   private String rol;
   private Boolean activo = false;
-
-  //private Double presupuestoSemanal;
-  //private Double peso;
-  //private String actividadFisica;
-  //private Boolean esVegetariano = false;
-  //private Boolean esIntoleranteLactosa = false;
-  //private String objetivo;
+  private Double presupuestoSemanal;
+  private Double peso;
+  private String actividadFisica;
+  private Boolean esVegetariano = false;
+  private Boolean esIntoleranteLactosa = false;
+  private String objetivo;
 
   //Sincroniza las acciones del Usuario en su Perfil (Guardar/Borrar)
   // y elimina automáticamente el Perfil viejo de la base de datos si deja de estar asociado al Usuario.
@@ -72,7 +71,6 @@ public class Usuario {
     this.activo = true;
   }
 
-  /*
   public Double getPresupuestoSemanal() {
     return presupuestoSemanal;
   }
@@ -124,7 +122,7 @@ public class Usuario {
   public void setContieneLactosa(Boolean contieneLactosa) {
     this.esIntoleranteLactosa = !contieneLactosa;
   }
-*/
+
   public PerfilAlimentarioUsuario getPerfilAlimentario() {
     return perfilAlimentario;
   }

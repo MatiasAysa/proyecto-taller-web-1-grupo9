@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     initCheckboxesPresupuesto();
     initFiltrosMenuAlternativo();
+    initTabsSemanas();
 });
 
 function initCheckboxesPresupuesto() {
@@ -9,10 +10,9 @@ function initCheckboxesPresupuesto() {
 
     const contenedorPrincipal = document.querySelector(".contenedor-principal");
     const contenedorCostoBase = document.getElementById("contenedor-costo-base");
+
     const diasPlan = parseInt(contenedorPrincipal?.getAttribute("data-dias")) || 7;
     const presupuestoTotalBruto = parseFloat(contenedorCostoBase?.getAttribute("data-presupuesto-total")) || 0;
-
-    // Presupuesto diario real
     const presupuestoPorDiaReal = presupuestoTotalBruto / diasPlan;
 
     const txtPresupuestoDiarioPuro = document.getElementById("txt-presupuesto-diario-puro");
@@ -51,6 +51,7 @@ function initCheckboxesPresupuesto() {
                 comida.style.opacity = "0.65";
             }
         });
+
         if (txtCostoSelection) txtCostoSelection.innerText = "$" + costoAlimentosSeleccionados.toFixed(2);
 
         if (txtBalanceEstadoDiario) {
@@ -58,7 +59,7 @@ function initCheckboxesPresupuesto() {
                 txtBalanceEstadoDiario.innerText = "Sin Alimentos";
                 txtBalanceEstadoDiario.style.backgroundColor = "#7f8c8d";
                 txtBalanceEstadoDiario.style.color = "#ffffff";
-            } else if (costoAlimentosSeleccionados <= presupuestoTotalBruto) {
+            } else if (costoAlimentosSeleccionados <= presupuestoPorDiaReal) {
                 txtBalanceEstadoDiario.innerText = "Dentro del Presupuesto";
                 txtBalanceEstadoDiario.style.backgroundColor = "#03A62C";
                 txtBalanceEstadoDiario.style.color = "#ffffff";
@@ -74,6 +75,7 @@ function initCheckboxesPresupuesto() {
         if (txtCarbohidratos) txtCarbohidratos.innerText = carbohidratosAcumulados.toFixed(1) + "g";
         if (txtGrasas) txtGrasas.innerText = grasasAcumuladas.toFixed(1) + "g";
     }
+
     comidas.forEach(comida => {
         const checkbox = comida.querySelector(".check-consumo-js");
         if (checkbox) {
@@ -82,7 +84,58 @@ function initCheckboxesPresupuesto() {
             });
         }
     });
+
     actualizarTotalesPorSeleccion();
+}
+
+function initTabsSemanas() {
+    const contenedorTabs = document.getElementById("contenedor-bloques-semanas");
+    const tarjetasDias = document.querySelectorAll(".tarjeta-dia-kanban");
+
+    if (!contenedorTabs || tarjetasDias.length === 0) return;
+
+    const diasPorSemana = 7;
+    const totalDias = tarjetasDias.length;
+    const totalSemanas = Math.ceil(totalDias / diasPorSemana);
+
+    if (totalSemanas <= 1) {
+        document.querySelector(".seccion-navegacion-semanas")?.remove();
+        return;
+    }
+
+    for (let i = 1; i <= totalSemanas; i++) {
+        const botonTab = document.createElement("button");
+        botonTab.type = "button";
+        botonTab.classList.add("tab-semana-btn");
+        botonTab.innerText = `Semana ${i}`;
+        botonTab.setAttribute("data-semana", i);
+
+        if (i === 1) botonTab.classList.add("tab-activa");
+
+        botonTab.addEventListener("click", () => {
+            document.querySelectorAll(".tab-semana-btn").forEach(btn => btn.classList.remove("tab-activa"));
+            botonTab.classList.add("tab-activa");
+            filtrarDiasPorSemana(i);
+        });
+
+        contenedorTabs.appendChild(botonTab);
+    }
+
+    function filtrarDiasPorSemana(numSemana) {
+        const diaInicio = ((numSemana - 1) * diasPorSemana) + 1;
+        const diaFin = numSemana * diasPorSemana;
+
+        tarjetasDias.forEach(tarjeta => {
+            const numeroDiaAttr = parseInt(tarjeta.getAttribute("th:data-numero-dia") || tarjeta.getAttribute("data-numero-dia"));
+
+            if (numeroDiaAttr >= diaInicio && numeroDiaAttr <= diaFin) {
+                tarjeta.style.display = "flex";
+            } else {
+                tarjeta.style.display = "none";
+            }
+        });
+    }
+    filtrarDiasPorSemana(1);
 }
 
 function initFiltrosMenuAlternativo() {

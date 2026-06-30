@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorLogin {
 
-  private ServicioLogin servicioLogin;
+  private final ServicioLogin servicioLogin;
 
   @Autowired
   public ControladorLogin(ServicioLogin servicioLogin) {
@@ -40,12 +40,15 @@ public class ControladorLogin {
     );
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
-      //Se guarda el email usario logueado
+      // Se guarda el email usario logueado
       request.getSession().setAttribute("usuarioLogueadoEmail", usuarioBuscado.getEmail());
 
       return new ModelAndView("redirect:/home");
     } else {
-      /* Se instancia el ModelMap solo cuando es necesario (en el flujo de error) para evitar anomalías en el flujo de datos (DU-anomaly de PMD) */
+      /*
+       * Se instancia el ModelMap solo cuando es necesario (en el flujo de error) para
+       * evitar anomalías en el flujo de datos (DU-anomaly de PMD)
+       */
       ModelMap model = new ModelMap();
       model.put("error", "Usuario o clave incorrecta");
       return new ModelAndView("login", model);
@@ -72,11 +75,6 @@ public class ControladorLogin {
     ModelMap model = new ModelMap();
     model.put("usuario", new Usuario());
     return new ModelAndView("nuevo-usuario", model);
-  }
-
-  @RequestMapping(path = "/home", method = RequestMethod.GET)
-  public ModelAndView irAHome() {
-    return new ModelAndView("home");
   }
 
   @RequestMapping(path = "/", method = RequestMethod.GET)

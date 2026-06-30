@@ -1,10 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Alimento {
@@ -14,17 +10,26 @@ public class Alimento {
   private Long id;
 
   private String nombre;
-  //private String tipoComida;
+  private String tipoComida;
   private Double precioEstimado;
+
+  private Boolean esVegetariano;
+  private Boolean esCeliaco;
+  private Boolean contieneLactosa = false;
 
   @Embedded
   private InformacionNutricional infoNutricional = new InformacionNutricional();
 
-  //el precio estimado es el precio del alimento por kg
-  //tal vez en caso de frutas,es mejor usar un precio por la una unidad del alimento,tipo una banana
-  //private Boolean esVegetariano;
-  // private Boolean esCeliaco;
-  //private Boolean contieneLactosa = false;
+  @Column(name = "url_supermercado", length = 500)
+  private String urlSupermercado;
+
+  public String getUrlSupermercado() {
+    return urlSupermercado;
+  }
+
+  public void setUrlSupermercado(String urlSupermercado) {
+    this.urlSupermercado = urlSupermercado;
+  }
 
   public Long getId() {
     return id;
@@ -50,7 +55,6 @@ public class Alimento {
     this.precioEstimado = precio;
   }
 
-  /*
   public String getTipoComida() {
     return tipoComida;
   }
@@ -82,36 +86,36 @@ public class Alimento {
   public void setContieneLactosa(Boolean contieneLactosa) {
     this.contieneLactosa = contieneLactosa;
   }
-*/
-  public Integer getCaloriasX100g() {
-    return infoNutricional.getCaloriasX100g();
+
+  public Integer getCalorias() {
+    return infoNutricional.getCalorias();
   }
 
-  public void setCaloriasX100g(Integer caloriasX100g) {
-    infoNutricional.setCaloriasX100g(caloriasX100g);
+  public void setCalorias(Integer calorias) {
+    infoNutricional.setCalorias(calorias);
   }
 
-  public Double getProteinasX100g() {
-    return infoNutricional.getProteinasX100g();
+  public Double getProteinas() {
+    return infoNutricional.getProteinas();
   }
 
-  public void setProteinasX100g(Double proteinasX100g) {
-    infoNutricional.setProteinasX100g(proteinasX100g);
+  public void setProteinas(Double proteinas) {
+    infoNutricional.setProteinas(proteinas);
   }
 
-  public Double getCarbohidratosX100g() {
-    return infoNutricional.getCarbohidratosX100g();
+  public Double getCarbohidratos() {
+    return infoNutricional.getCarbohidratos();
   }
 
-  public void setCarbohidratosX100g(Double carbohidratosX100g) {
-    infoNutricional.setCarbohidratosX100g(carbohidratosX100g);
+  public void setCarbohidratos(Double carbohidratos) {
+    infoNutricional.setCarbohidratos(carbohidratos);
   }
 
-  public Double getGrasasX100g() {
-    return infoNutricional.getGrasasX100g();
+  public Double getGrasas() {
+    return infoNutricional.getGrasas();
   }
 
-  public void setGrasasX100g(Double grasasX100g) {
-    infoNutricional.setGrasasX100g(grasasX100g);
+  public void setGrasas(Double grasas) {
+    infoNutricional.setGrasas(grasas);
   }
 }

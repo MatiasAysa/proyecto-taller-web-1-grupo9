@@ -3,39 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validar Presupuesto</title>
+    <title>Configurar Presupuesto</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .form-container {
-            max-width: 500px;
-            margin-top: 5rem;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../resources/core/css/main.css" th:href="@{/css/main.css}">
+
+    <link rel="stylesheet" href="../../../resources/core/css/presupuesto.css" th:href="@{/css/presupuesto.css}">
 </head>
 <body>
 
-<div class="container d-flex justify-content-center">
-    <div class="card shadow-sm form-container w-100">
-        <div class="card-header bg-primary text-white text-center py-3">
+<div class="container justify-content-center">
+    <div class="mx-auto mb-3 d-flex justify-content-start" style="max-width: 500px;">
+        <a th:href="@{/volver-a-mi-presupuesto}" class="btn-back-home">
+            <i class="bi bi-arrow-left me-2" style="-webkit-text-stroke: 0.5px;"></i> Volver atrás
+        </a>
+    </div>
+
+    <div class="card shadow-sm form-container card-custom mx-auto w-100">
+
+        <div class="card-header bg-custom-header text-center py-3">
             <h4 class="mb-0">Configuración de Presupuesto</h4>
         </div>
-        <div class="card-body p-4">
-            <div th:if="${mensaje}" class="alert alert-danger mb-3" role="alert" th:text="${mensaje}">
-            </div>
-            <!-- Tu formulario intacto (con agregados mínimos de layout Bootstrap) -->
+
+        <div class="card-body p-4 bg-white">
+            <div th:if="${mensaje}" class="alert alert-danger mb-3" role="alert" th:text="${mensaje}"></div>
+
             <form action="#" th:action="@{/mi-presupuesto}" method="post" th:object="${datosPresupuesto}">
 
                 <div class="mb-3">
-                    <label for="monto" class="form-label">Monto de dinero ($):</label>
-                    <input type="number" id="monto" name="monto" th:field="*{monto}" class="form-control" placeholder="Ej: 50000" step="0.01" min="0" required />
+                    <label for="monto" class="form-label fw-bold">Monto de dinero ($):</label>
+                    <input type="number" id="monto" name="monto" th:field="*{monto}" class="form-control form-control-custom" placeholder="Ej: 50000" step="0.01" min="0" required />
                 </div>
 
                 <div class="mb-3">
-                    <label for="intervalo" class="form-label">Período de tiempo:</label>
-                    <select id="intervalo" name="intervalo" th:field="*{intervalo}" class="form-select" required>
+                    <label for="intervalo" class="form-label fw-bold">Período de tiempo:</label>
+                    <select id="intervalo" name="intervalo" th:field="*{intervalo}" class="form-select form-select-custom" required>
                         <option value="0" selected>Seleccione un intervalo de tiempo...</option>
                         <option value="1">1 día</option>
                         <option value="7">7 días</option>
@@ -45,19 +49,42 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="fecha" class="form-label">Fecha de inicio:</label>
-                    <!-- Se agregó la clase 'form-control' al input de fecha para unificar el diseño -->
-                    <input type="date" name="fecha" id="fecha" th:field="*{fecha}" class="form-control" required>
+                    <label for="fecha" class="form-label fw-bold">Fecha de inicio:</label>
+                    <input type="date" name="fecha" id="fecha" th:field="*{fecha}" class="form-control form-control-custom" required>
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
+                    <button type="submit" class="btn btn-custom-green btn-lg py-2 shadow-sm">Confirmar</button>
                 </div>
 
             </form>
-
         </div>
     </div>
 </div>
+
+<script>
+    const inputMonto = document.getElementById('monto');
+
+    inputMonto.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            let valorLimpio = this.value.replace(',', '.');
+            let valorActual = parseFloat(valorLimpio) || 0;
+            let incremento = 100;
+
+            if (e.key === 'ArrowUp') {
+                this.value = (valorActual + incremento).toFixed(2);
+            } else if (e.key === 'ArrowDown') {
+                let nuevoValor = valorActual - incremento;
+                this.value = (nuevoValor >= 0 ? nuevoValor : 0).toFixed(2);
+            }
+            this.dispatchEvent(new Event('input'));
+        }
+    });
+
+    inputMonto.addEventListener('mousedown', function() { this.step = "100"; });
+    inputMonto.addEventListener('blur', function() { this.step = "0.01"; });
+    inputMonto.addEventListener('change', function() { this.step = "0.01"; });
+</script>
 </body>
 </html>
