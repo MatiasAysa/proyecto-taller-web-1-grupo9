@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Busqueda de Supermercados</title>
+    <title>Panel-Busqueda de Supermercados</title>
 
     <!-- LINK PARA LA LIBRERIA LEAFLET-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -29,7 +29,7 @@
     <main class="sub-container">
 
         <div class="container">
-            <form action="#" th:action="@{/ingreso-direccion}" method="POST" th:object="${direccion}">
+            <form action="#" th:action="@{/panel-cliente/supermercados}" method="POST" th:object="${direccion}">
 
                 <input th:field="*{ubicacion}" type="text" id="ubicacion" placeholder="Calle" required />
                 <input th:field="*{numero}" type="number" id="numero" placeholder="Calle" required />

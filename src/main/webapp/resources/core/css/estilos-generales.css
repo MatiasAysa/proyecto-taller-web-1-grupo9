@@ -93,7 +93,7 @@ a:hover {
 
 .navbar .logotipo {
     font-weight: 400;
-    font-size: 25px;
+    font-size: var(--font-size-titulo);
     letter-spacing: 2px;
     color: var(--color-principal);
     font-family: "Bebas Neue", sans-serif;

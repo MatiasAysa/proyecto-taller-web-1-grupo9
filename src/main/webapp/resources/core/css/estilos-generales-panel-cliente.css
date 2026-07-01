@@ -48,7 +48,7 @@
 
  .container {
      width: 100%;
-     padding: 1em 1em;
+     padding: 1em 2em;
  }
 
  .sub-container {
@@ -82,7 +82,7 @@
 
  .navbar .logotipo {
      font-weight: 400;
-     font-size: 25px;
+     font-size: var(--font-size-titulo);
      letter-spacing: 2px;
      color: var(--color-principal);
      font-family: "Bebas Neue", sans-serif;
@@ -115,7 +115,7 @@
  .header-panel {
      background-color: var(--color-principal);
      width: 100%;
-     height: 5.2em;
+     height: 4m;
      display: flex;
      flex-direction: row;
      align-items: center;
@@ -147,7 +147,7 @@
      flex-direction: rows;
      align-items: center;
      cursor: pointer;
-     padding: 0.4em 1em 0.4em 1em;
+     padding: 0.3em 1em 0.3em 1em;
      border-radius: 10px;
      transition: transform 0.2s ease;
      border: none;
@@ -158,8 +158,8 @@
  }
 
  .btn-perfil img {
-     width: 50px;
-     height: 50px;
+     width: 40px;
+     height: 40px;
      object-fit: cover;
      border-radius: 50%;
  }
@@ -193,14 +193,14 @@
      height: 100vh;
      border-right: 1px solid var(--color-grupo-borde);
      font-size: var(--font-size-subtitulo);
-     width: 265px;
+     width: 250px;
  }
 
  .aside__enlaces {
      display: flex;
      flex-direction: column;
      gap: 1em;
-     padding: 0.5em 2em 1em 0.7em;
+     padding: 1.5em 2em 1em 0.7em;
      width: 100%;
      margin-left: 0.8em;
  }
@@ -212,6 +212,7 @@
      width: 100%;
      cursor: pointer;
      border-radius: 5px;
+     font-size: var(--font-size-subtitulo);
  }
 
  .aside__enlaces a:hover {
