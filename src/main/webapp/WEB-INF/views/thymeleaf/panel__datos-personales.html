@@ -6,6 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>a</title>
     <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" />
+
+    <style>
+        /* ========== MAIN ========== */
+        .sub-container h1 {
+            font-size: var(--font-size-titulo);
+            margin-bottom: 0.4em;
+        }
+
+        .sub-container p {
+            font-size: var(--font-size-texto);
+            margin-bottom: 2em;
+        }
+
+        .info-group {
+            background-color: var(--color-grupo);
+            padding: 1em;
+            border-radius: 10px;
+            margin-bottom: 1em;
+            border: 1px solid var(--color-grupo-borde);
+            padding: 1.5em 2em;
+        }
+
+        .info-group h3 {
+            font-size: var(--font-size-subtitulo);
+            margin-top: -0.3em;
+            margin-bottom: 1em;
+            padding-bottom: 0.3em;
+            border-bottom: 2px solid var(--color-principal);
+        }
+
+        .info-group .grid-datos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 10em;
+            row-gap: 1.4em;
+        }
+
+        .info-group .dato-item {
+            display: flex;
+            flex-direction: row;
+            font-size: var(--font-size-texto);
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .info-group .dato-item .dato-label {
+            font-size: var(--font-size-texto);
+            font-weight: 700;
+        }
+
+        .info-group .dato-item .dato-valor {
+            font-size: var(--font-size-texto);
+        }
+
+        .lista-restricciones {
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+        }
+
+        .restriccion {
+            padding: 0.5em;
+            background-color: var(--color-complementario);
+            border-radius: 5px;
+            font-size: var(--font-size-texto);
+        }
+    </style>
 </head>
 
 <body>
@@ -83,7 +150,7 @@
     </main> -->
 
     <main>
-        <section class="container">
+        <section class="sub-container">
             <h1 class="titulo">Tu Perfil Alimentario</h1>
             <p class="descripcion-intro">Aquí tienes un resumen de la información registrada en tu perfil médico y
                 nutricional.</p>
@@ -136,7 +203,7 @@
             <a class="btn-1" th:href="@{/Registro-perfil-alimentario}">Modificar datos del perfil</a>
         </section>
 
-        <section class="container">
+        <section class="sub-container">
             <h1 class="titulo">Presupuesto</h1>
             <div class="info-group">
                 <div class="grid-datos">

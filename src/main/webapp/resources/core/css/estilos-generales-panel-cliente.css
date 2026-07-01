@@ -52,7 +52,7 @@
  }
 
  .sub-container {
-     padding: 2em 3em;
+     padding: 1em 10em;
  }
 
  .btn-1 {
@@ -220,5 +220,6 @@
  }
 
  main {
+     margin-top: 2.5em;
      flex: 1;
  }
