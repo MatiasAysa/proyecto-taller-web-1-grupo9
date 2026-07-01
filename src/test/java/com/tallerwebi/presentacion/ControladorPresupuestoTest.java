@@ -56,40 +56,46 @@ public class ControladorPresupuestoTest {
   }
 
   @Test
-  public void sePuedeVolverAMiPresupuestoDesdeConfigurarPresupuesto() {
+  public void sePuedeVolverAtrasDesdeConfigurarPresupuesto() {
     DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
     datosPresupuesto.setMonto(monto);
     datosPresupuesto.setIntervalo(intervalo);
     datosPresupuesto.setFecha(fecha);
-    ModelAndView mav = whenVolverAMiPresupuesto(datosPresupuesto);
+    ModelAndView mav = whenVolverAtrasDesdeConfigurarPresupuesto(datosPresupuesto);
     assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/mi-presupuesto"));
   }
 
   @Test
-  public void siVuelvoAMiPresupuestoSinPresupuestoRedirigeAHome() {
+  public void siVuelvoAMiPresupuestoSinPresupuestoRedirigePerfilAlimentario() {
     DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
-    ModelAndView mav = whenVolverAMiPresupuestoSinPresupuesto();
-    thenVoyAlHome(mav);
+    ModelAndView mav = whenVolverAtrasDesdeConfigurarPresupuestoSinPresupuesto();
+    thenVoyAPerfilAlimentario(mav);
   }
 
-  private ModelAndView whenVolverAMiPresupuestoSinPresupuesto() {
+  private void thenVoyAPerfilAlimentario(ModelAndView mav) {
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:Registro-perfil-alimentario/"));
+  }
+
+  private ModelAndView whenVolverAtrasDesdeConfigurarPresupuestoSinPresupuesto() {
     when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
     when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
     doThrow(UsuarioSinPresupuestoException.class)
       .when(servicioPresupuesto)
       .buscarPresupuesto(email);
-    return controladorPresupuesto.volverAMiPresupuesto(session);
+    return controladorPresupuesto.volverAtrasDesdeConfigurarPresupuesto(session);
   }
 
   private void thenVoyAlHome(ModelAndView mav) {
     assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/home"));
   }
 
-  private ModelAndView whenVolverAMiPresupuesto(DatosPresupuesto datosPresupuesto) {
+  private ModelAndView whenVolverAtrasDesdeConfigurarPresupuesto(
+    DatosPresupuesto datosPresupuesto
+  ) {
     when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
     when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
     when(servicioPresupuesto.buscarPresupuesto(email)).thenReturn(datosPresupuesto);
-    return controladorPresupuesto.volverAMiPresupuesto(session);
+    return controladorPresupuesto.volverAtrasDesdeConfigurarPresupuesto(session);
   }
 
   private ModelAndView whenIrAConfigurarPresupuesto() {
