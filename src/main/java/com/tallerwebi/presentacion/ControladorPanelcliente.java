@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Cordenandas;
+import com.tallerwebi.dominio.DatosClientePanel;
 import com.tallerwebi.dominio.Direccion;
 import com.tallerwebi.dominio.ServicioBuscarSupermercado;
 import com.tallerwebi.dominio.ServicioUsuario;
@@ -40,6 +41,7 @@ public class ControladorPanelcliente {
     //
     // return new ModelAndView("panel-cliente", model);
     // }
+
     return new ModelAndView("panel-cliente");
   }
 
@@ -57,16 +59,15 @@ public class ControladorPanelcliente {
   }
 
   @GetMapping("/panel-cliente/datos-personales")
-  public ModelAndView irAPerfilAlimentario(HttpSession session) {
-    // if (session.getAttribute("usuarioLogueadoEmail") != null) {
-    // String email = session.getAttribute("usuarioLogueadoEmail").toString();
-    // DatosPerfilUsuario datos = servicioUsuario.obtenerDatosPerfilUsuario(email);
-    // ModelMap model = new ModelMap();
-    // model.put("datosPerfilUsuario", datos);
-    //
-    // return new ModelAndView("panel-cliente", model);
-    // }
-    return new ModelAndView("panel__datos-personales");
+  public ModelAndView irAPanelDatosPersonales(HttpSession session) {
+    String email = obtenerEmail(session);
+    if (email != null) {
+      ModelMap modelo = new ModelMap();
+      DatosClientePanel datos = servicioUsuario.obtenerDatosClientePanel(email);
+      modelo.put("datosClientePanel", datos);
+      return new ModelAndView("panel__datos-personales", modelo);
+    }
+    return new ModelAndView("redirect:/login");
   }
 
   @GetMapping("/panel-cliente/supermercados")
@@ -95,5 +96,11 @@ public class ControladorPanelcliente {
 
     modelo.put("direccion", direccion);
     return new ModelAndView("panel__busqueda-supermercados", modelo);
+  }
+
+  private String obtenerEmail(HttpSession session) {
+    return session.getAttribute("usuarioLogueadoEmail") != null
+      ? session.getAttribute("usuarioLogueadoEmail").toString()
+      : null;
   }
 }

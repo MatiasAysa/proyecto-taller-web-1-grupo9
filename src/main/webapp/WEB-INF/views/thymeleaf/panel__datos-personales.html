@@ -160,19 +160,19 @@
                 <div class="grid-datos">
                     <div class="dato-item">
                         <span class="dato-label">Peso actual:</span>
-                        <span class="dato-valor">70 kg</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.peso}">peso</span>
                     </div>
                     <div class="dato-item">
                         <span class="dato-label">Altura:</span>
-                        <span class="dato-valor">175 cm</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.altura}">altura</span>
                     </div>
                     <div class="dato-item">
                         <span class="dato-label">Edad:</span>
-                        <span class="dato-valor">25 años</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.edad}">edad</span>
                     </div>
                     <div class="dato-item">
-                        <span class="dato-label">Sexo biológico:</span>
-                        <span class="dato-valor">Masculino</span>
+                        <span class="dato-label">Sexo:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.sexo}">sexo</span>
                     </div>
                 </div>
             </div>
@@ -182,11 +182,11 @@
                 <div class="grid-datos">
                     <div class="dato-item">
                         <span class="dato-label">Actividad Física:</span>
-                        <span class="dato-valor">MODERADA</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.actividadFisica}">actividad</span>
                     </div>
                     <div class="dato-item">
                         <span class="dato-label">Objetivo Principal:</span>
-                        <span class="dato-valor">MANTENER PESO</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.objetivo}">objetivo</span>
                     </div>
                 </div>
             </div>
@@ -195,8 +195,8 @@
                 <h3>Restricciones Alimentarias</h3>
                 <div>
                     <ul class="lista-restricciones">
-                        <li class="restriccion">Celiaco</li>
-                        <li class="restriccion">Intolerante a la Lactosa</li>
+                        <li th:each="perfilRestriccion : ${datosClientePanel.perfilRestricciones}"
+                            th:text="${perfilRestriccion.restriccion.nombre}" class="restriccion"></li>
                     </ul>
                 </div>
             </div>
@@ -209,15 +209,15 @@
                 <div class="grid-datos">
                     <div class="dato-item">
                         <span class="dato-label">Fecha de inicio: </span>
-                        <span class="dato-valor">10/10/2024</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.presupuestoFechaInicio}">0/0/0</span>
                     </div>
                     <div class="dato-item">
                         <span class="dato-label">Intervalo: </span>
-                        <span class="dato-valor">7 dias</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.intervalo}">Intervalo</span>
                     </div>
                     <div class="dato-item">
                         <span class="dato-label">Monto: </span>
-                        <span class="dato-valor">$ 500</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.monto}">$0</span>
                     </div>
                 </div>
             </div>
