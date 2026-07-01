@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Estilos específicos para la vista de Crear Recetas (Segunda Guía)
+   ========================================================================== */
+
+body {
+    background-color: #F9F6EF !important; /* Fondo off-white de la guía */
+    font-family: 'Lato', sans-serif !important;
+    color: #4C4847 !important; /* Gris oscuro principal */
+}
+
+/* Contenedor y Tarjeta */
+.form-container-receta {
+    max-width: 700px;
+    margin-top: 5rem;
+}
+
+.card-custom {
+    border: none !important;
+    border-radius: 10px !important; /* Radio estricto de la guía */
+    overflow: hidden;
+}
+
+.bg-custom-header {
+    background-color: #03A62C !important; /* Verde césped brillante */
+    color: #FFFFFF !important;
+}
+
+h4 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+/* Botón de Regresar (Gris oscuro con tipografía Montserrat de 14px) */
+.btn-back-home {
+    color: #4C4847 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-back-home:hover {
+    opacity: 0.7;
+    color: #4C4847 !important;
+}
+
+/* Botón Principal (Verde de la guía) */
+.btn-custom-green {
+    background-color: #03A62C !important;
+    border-color: #03A62C !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    padding: 0.6rem 1.5rem !important;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-custom-green:hover,
+.btn-custom-green:focus {
+    background-color: #007B37 !important; /* Verde pino (Hover) */
+    border-color: #007B37 !important;
+}
+
+/* Botón Secundario (Amarillo/Dorado de la guía) */
+.btn-custom-yellow {
+    background-color: #F29F05 !important;
+    border-color: #F29F05 !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-custom-yellow:hover,
+.btn-custom-yellow:focus {
+    background-color: #D88107 !important; /* Dorado oscuro (Hover) */
+    border-color: #D88107 !important;
+}
+
+/* Inputs y Selects */
+.form-control-custom,
+.form-select-custom {
+    border-color: #4C4847 !important;
+    color: #4C4847 !important;
+}
+
+.form-control-custom:focus,
+.form-select-custom:focus {
+    border-color: #03A62C !important;
+    box-shadow: 0 0 0 0.25rem #03A62C !important;
+}
+
+
+/* Indicador de Unidad (Fijo en gramos) */
+.unit-badge {
+    background-color: #4C4847;
+    color: #FFFFFF;
+    min-width: 60px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}

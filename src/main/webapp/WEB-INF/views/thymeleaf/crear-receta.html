@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Receta</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/crear-recetas.css}">
+</head>
+<body>
+
+<div class="container justify-content-center">
+
+    <div class="mx-auto mb-3 d-flex justify-content-start" style="max-width: 700px;">
+        <a href="#" th:href="@{/home}" class="btn-back-home">
+            <i class="bi bi-arrow-left me-2" style="-webkit-text-stroke: 0.5px;"></i> Volver
+        </a>
+    </div>
+
+    <div class="card shadow-sm mx-auto form-container-receta card-custom w-100">
+        <div class="card-header bg-custom-header text-center py-3">
+            <h4 class="mb-0">Crear Nueva Receta</h4>
+        </div>
+
+        <div class="card-body p-4 bg-white">
+
+            <div th:if="${mensaje}" class="alert alert-danger mb-3" role="alert" th:text="${mensaje}">
+                Ejemplo de error: El alimento ingresado no existe en la base de datos.
+            </div>
+
+            <form action="#" th:action="@{/validar-receta}" method="post" th:object="${datosReceta}">
+
+                <div class="mb-3">
+                    <label for="nombreReceta" class="form-label fw-bold">Nombre de la receta:</label>
+                    <input type="text" id="nombreReceta" th:field="*{nombre}" class="form-control form-control-custom" placeholder="Ej: Pastel de Papa" required />
+                </div>
+
+                <div class="mb-4">
+                    <label for="tipoReceta" class="form-label fw-bold">Momento del día:</label>
+                    <select id="tipoReceta" th:field="*{tipo}" class="form-select form-select-custom" required>
+                        <option value="" selected disabled>Seleccione una opción...</option>
+                        <option value="DESAYUNO">Desayuno</option>
+                        <option value="ALMUERZO_CENA">Almuerzo / Cena</option>
+                        <option value="AMBOS">Ambos</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold d-block border-bottom pb-2">Ingredientes de la receta:</label>
+
+                    <div id="contenedor-ingredientes">
+                        <div class="row g-2 mb-3 ingrediente-row" th:each="ingrediente, iterStat : ${datosReceta.ingredientes}">
+
+                            <div class="col-md-6 col-sm-12">
+                                <label class="small text-muted mb-1">Seleccionar Alimento:</label>
+                                <input list="alimentos-list"
+                                       th:name="'ingredientes[' + ${iterStat.index} + '].nombre'"
+                                       th:value="${ingrediente.nombre}"
+                                       class="form-control form-control-custom"
+                                       th:classappend="${ingredientesInvalidos != null && #lists.contains(ingredientesInvalidos, iterStat.index)} ? 'is-invalid' : ''"
+                                       placeholder="Escriba para buscar..." required>
+
+                                <div class="invalid-feedback">
+                                    El alimento ingresado no es válido o no existe.
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5 col-sm-10">
+                                <label class="small text-muted mb-1">Cantidad:</label>
+                                <div class="input-group">
+                                    <input type="number"
+                                           th:name="'ingredientes[' + ${iterStat.index} + '].cantidad'"
+                                           th:value="${ingrediente.cantidad != null && ingrediente.cantidad > 0 ? #numbers.formatInteger(ingrediente.cantidad, 0) : ''}"
+                                           class="form-control form-control-custom"
+                                           placeholder="0" step="1" min="0" required>
+                                    <span class="input-group-text unit-badge">gramos</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-1 col-sm-2 d-flex align-items-end justify-content-center">
+                                <button type="button" class="btn btn-outline-danger w-100 btn-remove-ingrediente"
+                                        style="height: 38px;" title="Eliminar ingrediente"
+                                        th:disabled="${#lists.size(datosReceta.ingredientes) <= 2}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <button type="button" id="btn-agregar-ingrediente" class="btn btn-custom-yellow btn-sm py-2 px-3 shadow-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Agregar otro ingrediente
+                    </button>
+                </div>
+
+                <div class="d-grid gap-2 mt-5">
+                    <button type="submit" class="btn btn-custom-green btn-lg py-2 shadow-sm">Guardar Receta</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<datalist id="alimentos-list">
+    <option th:each="alimento : ${listaAlimentos}"
+            th:value="${alimento}"
+            th:text="${alimento}">
+    </option>
+</datalist>
+
+<script th:src="@{/js/crear-receta.js}"></script>
+</body>
+</html>
