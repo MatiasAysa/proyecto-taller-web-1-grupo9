@@ -97,6 +97,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
     return plan;
   }
+
   private PlanAlimenticio inicializarPlanBase(
     PerfilAlimentarioUsuario perfil,
     int diasTotales,
@@ -138,7 +139,6 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     );
   }
 
-  // 🌟 HELPER NUEVO: Filtra y asegura fallback
   private List<Comida> filtrarComidasPorTipo(List<Comida> comidasAptas, String tipo) {
     List<Comida> filtradas = comidasAptas
       .stream()
