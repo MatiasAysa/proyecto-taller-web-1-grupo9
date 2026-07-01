@@ -96,11 +96,11 @@ public class ControladorPresupuesto {
     }
   }
 
-  @RequestMapping("/volver-a-mi-presupuesto")
-  public ModelAndView volverAMiPresupuesto(HttpSession session) {
+  @RequestMapping("/volver-atras-desde-configurar-presupuesto")
+  public ModelAndView volverAtrasDesdeConfigurarPresupuesto(HttpSession session) {
     ModelAndView mav = irAMiPresupuesto(session);
     if ("redirect:/configurar-presupuesto".equals(mav.getViewName())) return new ModelAndView(
-      "redirect:/home"
+      "redirect:Registro-perfil-alimentario/"
     );
     return new ModelAndView("redirect:/mi-presupuesto");
   }
