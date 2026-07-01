@@ -106,7 +106,7 @@
       font-weight: 400;
       font-size: 25px;
       letter-spacing: 2px;
-      color: var(--color-subtitulo);
+      color: var(--color-principal);
       font-family: "Bebas Neue", sans-serif;
     }
 
@@ -133,16 +133,37 @@
       align-items: center;
     }
 
+    /* --- NAV PERFIL registro y login --- */
+    .navbar .navbar__perfil .btn-1 {
+      margin-left: 0.3em;
+    }
 
+    .navbar .navbar__perfil .btn-1:first-child {
+      background-color: var(--color-principal);
+    }
+
+    .navbar .navbar__perfil .btn-1:not(:first-child) {
+      background-color: var(--color-grupo);
+      color: var(--color-titulo);
+      border: 2px solid var(--color-grupo-borde);
+    }
 
     .navbar .navbar__perfil .btn-1:hover {
+      transform: scale(1.04);
+    }
+
+    .navbar .navbar__perfil .btn-1:first-child:hover {
       transform: scale(1.04);
       color: white;
     }
 
+    /* NAV PERFIL*/
+
+
     .btn-1:active {
       background-color: var(--color-principal-hover);
     }
+
 
 
     /* =================== MAIN =================== */
@@ -285,7 +306,7 @@
     }
 
     /* =================== FOOTER =================== */
-    .footer {
+    footer {
       width: 100%;
       height: 14em;
       background-color: var(--color-principal);
@@ -294,11 +315,11 @@
       position: relative;
     }
 
-    .footer a {
+    footer a {
       color: white;
     }
 
-    .footer .container {
+    footer .container {
       padding-top: 2em;
       display: flex;
       align-items: start;
@@ -306,7 +327,7 @@
       height: 100%;
     }
 
-    .footer ul {
+    footer ul {
       display: flex;
       justify-content: space-between;
       width: 100%;
@@ -342,30 +363,8 @@
 
 <body>
 
-  <!-- ================== HEADER ================== -->
-  <header>
-
-    <!-- ================== NAV ============== -->
-    <nav class="navbar">
-      <a th:href="@{/home}" class="logotipo">GRUPO 9</a>
-      <div class="navbar__enlaces">
-        <a th:href="@{/sobre-nosotros}">Sobre nosotros</a>
-        <a href="#como-funciona" class="link-como-funciona">Cómo funciona</a>
-      </div>
-      <div class="navbar__perfil">
-        <a th:href="@{/login}" class="btn-1">Iniciar sesión</a>
-      </div>
-
-      <div class="navbar__perfil">
-        <a th:href="@{/busqueda-supermercados}" class="btn-1">Buscar Supermercados</a>
-      </div>
-
-      <div class="navbar__perfil">
-        <a th:href="@{/lista-compras}" class="btn-1">Lista de Compras</a>
-      </div>
-    </nav>
-
-  </header>
+  <!-- ================== HEADER a================== -->
+  <header th:replace="fragments :: header"></header>
 
   <!-- ================== MAIN ================== -->
   <main class="container">
@@ -468,25 +467,8 @@
 
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <ul>
-        <li>
-          <a th:href="@{/sobre-nosotros}" class="footer__subtitulos">Integrantes</a>
-          <ul class="sobre-nosotros__intrgantes">
-            <li><a th:href="@{/sobre-nosotros}">Aquino Santiago</a></li>
-            <li><a th:href="@{/sobre-nosotros}">Aysa Pereira Matias</a></li>
-            <li><a th:href="@{/sobre-nosotros}">Maida Santos Eric</a></li>
-            <li><a th:href="@{/sobre-nosotros}">Osorio Lucas Ezequiel</a></li>
-          </ul>
-        </li>
-        <li><a href="#como-funciona" class="footer__subtitulos">Cómo funciona</a></li>
-        <li><a th:href="@{/home}" class="footer__subtitulos">Home</a></li>
-      </ul>
-    </div>
-
-    <p class="footer__copyright">@2026 Grupo 9</p>
-  </footer>
+  <!-- ============= FOOTER ================ -->
+  <footer th:replace="fragments :: footer"></footer>
 
   <script th:src="@{/core/js/home.js}"></script>
 </body>
