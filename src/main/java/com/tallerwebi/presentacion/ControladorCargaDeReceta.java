@@ -75,20 +75,34 @@ public class ControladorCargaDeReceta {
 
   @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
   private List<Integer> buscarIngredientesInvalidos(List<IngredienteDTO> ingredientes) {
-    if (ingredientes.isEmpty()) return new ArrayList<Integer>();
+    if (ingredientes == null || ingredientes.isEmpty()) return new ArrayList<Integer>();
     List<Integer> ingredientesInvalidos = new ArrayList<Integer>();
     List<String> ingredientesValidados = new ArrayList<String>();
     List<String> nombresDeAlimentosExistentes =
-      servicioCargaDeReceta.obtenerNombresDeAlimentosExistentes();
-    for (IngredienteDTO i : ingredientes) {
+      servicioCargaDeReceta.obtenerNombresDeAlimentosExistentes() != null
+        ? servicioCargaDeReceta.obtenerNombresDeAlimentosExistentes()
+        : new ArrayList<String>();
+    for (IngredienteDTO ingrediente : ingredientes) {
       if (
-        !nombresDeAlimentosExistentes.contains(i.getNombre()) ||
-        i.getCantidad() <= 0D ||
-        ingredientesValidados.contains(i.getNombre())
-      ) ingredientesInvalidos.add(ingredientes.indexOf(i));
-      ingredientesValidados.add(i.getNombre());
+        ingredienteEsInvalido(ingrediente, nombresDeAlimentosExistentes, ingredientesValidados)
+      ) ingredientesInvalidos.add(ingredientes.indexOf(ingrediente));
+      ingredientesValidados.add(ingrediente.getNombre());
     }
 
     return ingredientesInvalidos;
+  }
+
+  private boolean ingredienteEsInvalido(
+    IngredienteDTO ingrediente,
+    List<String> nombresDeAlimentosExistentes,
+    List<String> ingredientesValidados
+  ) {
+    if (ingrediente == null || ingrediente.getNombre() == null) return true;
+
+    return (
+      !nombresDeAlimentosExistentes.contains(ingrediente.getNombre()) ||
+      ingrediente.getCantidad() <= 0D ||
+      ingredientesValidados.contains(ingrediente.getNombre())
+    );
   }
 }
