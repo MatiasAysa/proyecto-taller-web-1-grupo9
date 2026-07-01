@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Panel-Busqueda de Supermercados</title>
+
+    <!-- LINK PARA LA LIBRERIA LEAFLET-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}">
+
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header th:replace="~{fragments-panel-cliente::header-panel}"></header>
+    <aside th:replace="~{fragments-panel-cliente::aside-panel}"></aside>
+
+    <main class="sub-container">
+
+        <div class="container">
+            <form action="#" th:action="@{/panel-cliente/supermercados}" method="POST" th:object="${direccion}">
+
+                <input th:field="*{ubicacion}" type="text" id="ubicacion" placeholder="Calle" required />
+                <input th:field="*{numero}" type="number" id="numero" placeholder="Calle" required />
+
+                <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit">Buscar
+                    supermercados</button>
+
+            </form>
+
+        </div>
+        <p th:text="${latitud}" id="latitud"></p>
+        <p th:text="${longitud}" id="longitud"></p>
+
+        <button id="btnUbicacion">Usar mi ubicacion</button>
+
+        <div id="map"></div>
+
+        <div th:each="supermercado : ${supermercados}">
+            <p th:text="${supermercado.nombre}"></p>
+        </div>
+    </main>
+    <script type="module" th:src="@{js/busqueda_direccion.js}"></script>
+    <!-- LINK PARA LA LIBRERIA LEAFLET-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+
+</html>

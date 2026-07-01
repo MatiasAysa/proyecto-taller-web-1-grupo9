@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,5 +40,33 @@ public class ServicioUsuarioImp implements ServicioUsuario {
       return false;
     }
     return usuario.getPresupuestoSemanal() != null && usuario.getPresupuestoSemanal() > 0;
+  }
+
+  @Override
+  public DatosClientePanel obtenerDatosClientePanel(String email) {
+    Usuario usuario = repositorioUsuario.buscar(email);
+    if (usuario == null) {
+      return null;
+    }
+    DatosClientePanel datosClientePanel = new DatosClientePanel();
+    PerfilAlimentarioUsuario perfilAlimentario = usuario.getPerfilAlimentario();
+    Set<PerfilRestriccion> restricciones = perfilAlimentario.getPerfilRestricciones();
+    if (restricciones != null) {
+      restricciones.size();
+    }
+
+    datosClientePanel.setPeso(perfilAlimentario.getPeso());
+    datosClientePanel.setAltura(perfilAlimentario.getAltura());
+    datosClientePanel.setObjetivo(perfilAlimentario.getObjetivo());
+    datosClientePanel.setSexo(perfilAlimentario.getSexo());
+    datosClientePanel.setEdad(perfilAlimentario.getEdad());
+    datosClientePanel.setActividadFisica(perfilAlimentario.getActividadFisica());
+    datosClientePanel.setPerfilRestricciones(restricciones);
+
+    Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(usuario);
+    datosClientePanel.setPresupuestoFechaInicio(presupuesto.getFecha());
+    datosClientePanel.setIntervalo(presupuesto.getIntervalo());
+    datosClientePanel.setMonto(presupuesto.getMonto());
+    return datosClientePanel;
   }
 }

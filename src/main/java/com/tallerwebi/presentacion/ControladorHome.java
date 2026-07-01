@@ -19,10 +19,14 @@ public class ControladorHome {
 
   @GetMapping(path = "/home")
   public ModelAndView irAHome(HttpSession session) {
-    // if (session.getAttribute("usuarioLogueadoEmail") == null) {
-    // // DatosUsuario datosUsuario = new DatosUsuario();
-    // return new ModelAndView("redirect:/login");
-    // }
+    //    if (session.getAttribute("usuarioLogueadoEmail") != null) {
+    //      String email = session.getAttribute("usuarioLogueadoEmail").toString();
+    //      DatosPerfilUsuario datos = servicioUsuario.obtenerDatosPerfilUsuario(email);
+    //      ModelMap model = new ModelMap();
+    //      model.put("datosPerfilUsuario", datos);
+    //
+    //      return new ModelAndView("home", model);
+    //    }
     return new ModelAndView("home");
   }
 

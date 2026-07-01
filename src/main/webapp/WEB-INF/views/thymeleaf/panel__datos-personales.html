@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" />
+
+    <style>
+        /* ========== MAIN ========== */
+        .sub-container h1 {
+            font-size: var(--font-size-titulo);
+            margin-bottom: 0.4em;
+        }
+
+        .sub-container p {
+            font-size: var(--font-size-texto);
+            margin-bottom: 2em;
+        }
+
+        .info-group {
+            background-color: var(--color-grupo);
+            padding: 1em;
+            border-radius: 10px;
+            margin-bottom: 1em;
+            border: 1px solid var(--color-grupo-borde);
+            padding: 1.5em 2em;
+        }
+
+        .info-group h3 {
+            font-size: var(--font-size-subtitulo);
+            margin-top: -0.3em;
+            margin-bottom: 1em;
+            padding-bottom: 0.3em;
+            border-bottom: 2px solid var(--color-principal);
+        }
+
+        .info-group .grid-datos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 10em;
+            row-gap: 1.4em;
+        }
+
+        .info-group .dato-item {
+            display: flex;
+            flex-direction: row;
+            font-size: var(--font-size-texto);
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .info-group .dato-item .dato-label {
+            font-size: var(--font-size-texto);
+            font-weight: 700;
+        }
+
+        .info-group .dato-item .dato-valor {
+            font-size: var(--font-size-texto);
+        }
+
+        .lista-restricciones {
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+        }
+
+        .restriccion {
+            padding: 0.5em;
+            background-color: var(--color-complementario);
+            border-radius: 5px;
+            font-size: var(--font-size-texto);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header th:replace="~{fragments-panel-cliente :: header-panel}"></header>
+    <aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
+
+    <!-- <main>
+        <section class="container">
+            <h1>Tu Perfil Alimentario</h1>
+            <p class="descripcion-intro">Aquí tienes un resumen de la información registrada en tu perfil médico y
+                nutricional.</p>
+
+            <hr class="divisor">
+
+            <div class="info-group">
+                <h3 class="subtitulo-vista">Datos Personales</h3>
+                <div class="grid-datos">
+                    <div class="dato-item">
+                        <span class="dato-label">Peso actual:</span>
+                        <span class="dato-valor" th:text="${datosUsuario.peso} + ' kg'">70 kg</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Altura:</span>
+                        <span class="dato-valor" th:text="${datosUsuario.altura} + ' cm'">175 cm</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Edad:</span>
+                        <span class="dato-valor" th:text="${datosUsuario.edad} + ' años'">25 años</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Sexo biológico:</span>
+                        <span class="dato-valor" th:if="${datosUsuario.sexo == 'M'}">Masculino</span>
+                        <span class="dato-valor" th:if="${datosUsuario.sexo == 'F'}">Femenino</span>
+                        <span class="dato-valor" th:if="${datosUsuario.sexo == 'O'}">Otro</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-group">
+                <h3 class="subtitulo-vista">Estilo de Vida y Objetivos</h3>
+                <div class="grid-datos">
+                    <div class="dato-item">
+                        <span class="dato-label">Actividad Física:</span>
+                        <span class="dato-valor etiqueta-resaltada"
+                            th:text="${datosUsuario.actividadFisica}">MODERADA</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Objetivo Principal:</span>
+                        <span class="dato-valor" th:text="${#strings.replace(datosUsuario.objetivo, '_', ' ')}">MANTENER
+                            PESO</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-group">
+                <h3 class="subtitulo-vista">Restricciones Alimentarias</h3>
+
+                <div
+                    th:if="${datosUsuario.restriccionesAlimentarias != null and !datosUsuario.restriccionesAlimentarias.isEmpty()}">
+                    <ul class="lista-restricciones">
+                        <li th:each="restriccion : ${datosUsuario.restriccionesAlimentarias}"
+                            th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(restriccion, '_', ' ')))}"
+                            class="badge-restriccion">
+                            Celiaco
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="acciones-footer">
+                <a th:href="@{/panel-cliente}" class="btn-regresar">Volver al Dashboard</a>
+            </div>
+        </section>
+    </main> -->
+
+    <main>
+        <section class="sub-container">
+            <h1 class="titulo">Tu Perfil Alimentario</h1>
+            <p class="descripcion-intro">Aquí tienes un resumen de la información registrada en tu perfil médico y
+                nutricional.</p>
+
+            <div class="info-group">
+                <h3>Datos Personales</h3>
+                <div class="grid-datos">
+                    <div class="dato-item">
+                        <span class="dato-label">Peso actual:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.peso}">peso</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Altura:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.altura}">altura</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Edad:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.edad}">edad</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Sexo:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.sexo}">sexo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-group">
+                <h3>Estilo de Vida y Objetivos</h3>
+                <div class="grid-datos">
+                    <div class="dato-item">
+                        <span class="dato-label">Actividad Física:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.actividadFisica}">actividad</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Objetivo Principal:</span>
+                        <span class="dato-valor" th:text="${datosClientePanel.objetivo}">objetivo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-group">
+                <h3>Restricciones Alimentarias</h3>
+                <div>
+                    <ul class="lista-restricciones">
+                        <li th:each="perfilRestriccion : ${datosClientePanel.perfilRestricciones}"
+                            th:text="${perfilRestriccion.restriccion.nombre}" class="restriccion"></li>
+                    </ul>
+                </div>
+            </div>
+            <a class="btn-1" th:href="@{/Registro-perfil-alimentario}">Modificar datos del perfil</a>
+        </section>
+
+        <section class="sub-container">
+            <h1 class="titulo">Presupuesto</h1>
+            <div class="info-group">
+                <div class="grid-datos">
+                    <div class="dato-item">
+                        <span class="dato-label">Fecha de inicio: </span>
+                        <span class="dato-valor" th:text="${datosClientePanel.presupuestoFechaInicio}">0/0/0</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Intervalo: </span>
+                        <span class="dato-valor" th:text="${datosClientePanel.intervalo}">Intervalo</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Monto: </span>
+                        <span class="dato-valor" th:text="${datosClientePanel.monto}">$0</span>
+                    </div>
+                </div>
+            </div>
+            <a class="btn-1" th:href="@{/configurar-presupuesto}">Modificar presupuesto</a>
+        </section>
+    </main>
+
+</body>
+
+</html>
