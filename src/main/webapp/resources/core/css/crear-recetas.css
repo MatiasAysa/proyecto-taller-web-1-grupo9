@@ -1,14 +1,9 @@
-/* ==========================================================================
-   Estilos específicos para la vista de Crear Recetas (Segunda Guía)
-   ========================================================================== */
-
 body {
-    background-color: #F9F6EF !important; /* Fondo off-white de la guía */
+    background-color: #F9F6EF !important;
     font-family: 'Lato', sans-serif !important;
-    color: #4C4847 !important; /* Gris oscuro principal */
+    color: #4C4847 !important;
 }
 
-/* Contenedor y Tarjeta */
 .form-container-receta {
     max-width: 700px;
     margin-top: 5rem;
@@ -16,12 +11,12 @@ body {
 
 .card-custom {
     border: none !important;
-    border-radius: 10px !important; /* Radio estricto de la guía */
+    border-radius: 10px !important;
     overflow: hidden;
 }
 
 .bg-custom-header {
-    background-color: #03A62C !important; /* Verde césped brillante */
+    background-color: #03A62C !important;
     color: #FFFFFF !important;
 }
 
@@ -30,7 +25,6 @@ h4 {
     font-weight: 700 !important;
 }
 
-/* Botón de Regresar (Gris oscuro con tipografía Montserrat de 14px) */
 .btn-back-home {
     color: #4C4847 !important;
     font-family: 'Montserrat', sans-serif !important;
@@ -47,7 +41,6 @@ h4 {
     color: #4C4847 !important;
 }
 
-/* Botón Principal (Verde de la guía) */
 .btn-custom-green {
     background-color: #03A62C !important;
     border-color: #03A62C !important;
@@ -62,11 +55,11 @@ h4 {
 
 .btn-custom-green:hover,
 .btn-custom-green:focus {
-    background-color: #007B37 !important; /* Verde pino (Hover) */
+    background-color: #007B37 !important;
     border-color: #007B37 !important;
 }
 
-/* Botón Secundario (Amarillo/Dorado de la guía) */
+
 .btn-custom-yellow {
     background-color: #F29F05 !important;
     border-color: #F29F05 !important;
@@ -80,11 +73,11 @@ h4 {
 
 .btn-custom-yellow:hover,
 .btn-custom-yellow:focus {
-    background-color: #D88107 !important; /* Dorado oscuro (Hover) */
+    background-color: #D88107 !important;
     border-color: #D88107 !important;
 }
 
-/* Inputs y Selects */
+
 .form-control-custom,
 .form-select-custom {
     border-color: #4C4847 !important;
@@ -98,7 +91,6 @@ h4 {
 }
 
 
-/* Indicador de Unidad (Fijo en gramos) */
 .unit-badge {
     background-color: #4C4847;
     color: #FFFFFF;
