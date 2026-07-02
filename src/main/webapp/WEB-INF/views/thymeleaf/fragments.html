@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FRAGMENTS</title>
 </head>
-
-<!-- =========                    HOME                    ========== -->
 
 <body>
     <!-- ================== HEADER ================== -->
@@ -16,20 +14,22 @@
         <nav class="navbar">
             <a th:href="@{/home}" class="logotipo">GRUPO 9</a>
             <div class="navbar__enlaces">
-                <a th:href="@{/sobre-nosotros}">Sobre nosotros</a>
                 <a href="#como-funciona" class="link-como-funciona">Cómo funciona</a>
             </div>
             <!-- si no existe datosPerfilUsuario mostrar registro y login -->
-            <div th:if="${datosPerfilUsuario == null}" class="navbar__perfil">
+            <div th:if="${usuarioLogueadoEmail == null}" class="navbar__perfil">
                 <a th:href="@{/nuevo-usuario}" class="btn-1">Registrarse</a>
                 <a th:href="@{/login}" class="btn-1">Iniciar sesión</a>
             </div>
+            <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
+                <a th:href="@{/logout}" class="btn-1">Cerrar sesión</a>
+            </div>
 
             <!-- si existe datosPerfilUsuario mostras busqueda y lista de compras -->
-            <div th:if="${datosPerfilUsuario != null}" class="navbar__perfil">
+            <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
                 <a th:href="@{/busqueda-supermercados}" class="btn-1">Buscar Supermercados</a>
             </div>
-            <div th:if="${datosPerfilUsuario != null}" class="navbar__perfil">
+            <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
                 <a th:href="@{/lista-compras}" class="btn-1">Lista de Compras</a>
             </div>
         </nav>
@@ -43,11 +43,11 @@
             <ul>
                 <li>
                     <a th:href="@{/sobre-nosotros}" class="footer__subtitulos">Integrantes</a>
-                    <ul class="sobre-nosotros__intrgantes">
-                        <li><a th:href="@{/sobre-nosotros}">Aquino Santiago</a></li>
-                        <li><a th:href="@{/sobre-nosotros}">Aysa Pereira Matias</a></li>
-                        <li><a th:href="@{/sobre-nosotros}">Maida Santos Eric</a></li>
-                        <li><a th:href="@{/sobre-nosotros}">Osorio Lucas Ezequiel</a></li>
+                    <ul class="sobre-nosotros__integrantes">
+                        <li><a href="#">Aquino Santiago</a></li>
+                        <li><a href="#">Aysa Pereira Matias</a></li>
+                        <li><a href="#">Maida Santos Eric</a></li>
+                        <li><a href="#">Osorio Lucas Ezequiel</a></li>
                     </ul>
                 </li>
                 <li><a href="#como-funciona" class="footer__subtitulos">Cómo funciona</a></li>
@@ -58,6 +58,17 @@
         <p class="footer__copyright">@2026 Grupo 9</p>
     </footer>
 
+    <!-- una ves loguadodo lo  invita al panel -->
+    <!-- MAIN- CALL TO ACTION PANEL CLIENTE -->
+    <div th:fragment="call-to-action-panel-cliente" class="call-to-action sub-container">
+        <div class="call-to-action__text">
+            <h1 class="call-to-action__titulo">Ingresa al Panel de Usuario</h1>
+            <p class="call-to-action__parrafo">Aquí podrás gestionar tus planes, buscar supermercados y mucho más.</p>
+            <a th:href="@{/panel-cliente}" class="btn-1">Ir al Panel</a>
+        </div>
+        <img th:src="@{/img/canasta.png}" class="call-to-action-img" alt="Canasta de alimentos">
+
+    </div>
 </body>
 
 </html>

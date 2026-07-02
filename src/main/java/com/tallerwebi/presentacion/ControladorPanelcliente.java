@@ -62,11 +62,18 @@ public class ControladorPanelcliente {
   public ModelAndView irAPanelDatosPersonales(HttpSession session) {
     String email = obtenerEmail(session);
     if (email != null) {
+      if (!servicioUsuario.tienePerfilAlimentario(email)) {
+        return new ModelAndView("redirect:/Registro-perfil-alimentario");
+      }
+      if (!servicioUsuario.tienePresupuesto(email)) {
+        return new ModelAndView("redirect:/configurar-presupuesto");
+      }
       ModelMap modelo = new ModelMap();
       DatosClientePanel datos = servicioUsuario.obtenerDatosClientePanel(email);
       modelo.put("datosClientePanel", datos);
       return new ModelAndView("panel__datos-personales", modelo);
     }
+
     return new ModelAndView("redirect:/login");
   }
 
