@@ -36,10 +36,11 @@ public class ServicioUsuarioImp implements ServicioUsuario {
   @Override
   public boolean tienePresupuesto(String email) {
     Usuario usuario = repositorioUsuario.buscar(email);
-    if (usuario == null) {
+    Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(usuario);
+    if (presupuesto == null) {
       return false;
     }
-    return usuario.getPresupuestoSemanal() != null && usuario.getPresupuestoSemanal() > 0;
+    return true;
   }
 
   @Override
