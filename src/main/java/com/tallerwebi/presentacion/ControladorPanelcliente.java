@@ -61,7 +61,10 @@ public class ControladorPanelcliente {
         return new ModelAndView("redirect:/Registro-perfil-alimentario");
       }
       if (!servicioUsuario.tienePresupuesto(email)) {
-        return new ModelAndView("redirect:/configurar-presupuesto");
+        ModelMap modelo = new ModelMap();
+        DatosClientePanel datos = servicioUsuario.obtenerDatosClientePanel(email);
+        modelo.put("datosClientePanel", datos);
+        return new ModelAndView("panel__datos-personales", modelo);
       }
       ModelMap modelo = new ModelMap();
       DatosClientePanel datos = servicioUsuario.obtenerDatosClientePanel(email);

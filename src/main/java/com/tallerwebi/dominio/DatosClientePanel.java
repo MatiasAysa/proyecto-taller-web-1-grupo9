@@ -26,6 +26,32 @@ public class DatosClientePanel {
 
   //=========================
 
+  public DatosClientePanel(
+    double peso,
+    double altura,
+    String objetivo,
+    String sexo,
+    int edad,
+    String actividadFisica,
+    Set<PerfilRestriccion> perfilRestricciones,
+    LocalDate presupuestoFechaInicio,
+    int intervalo,
+    double monto
+  ) {
+    this.peso = peso;
+    this.altura = altura;
+    this.objetivo = objetivo;
+    this.sexo = sexo;
+    this.edad = edad;
+    this.actividadFisica = actividadFisica;
+    this.perfilRestricciones = perfilRestricciones;
+    this.presupuestoFechaInicio = presupuestoFechaInicio;
+    this.intervalo = intervalo;
+    this.monto = monto;
+  }
+
+  public DatosClientePanel() {}
+
   public double getPeso() {
     return peso;
   }

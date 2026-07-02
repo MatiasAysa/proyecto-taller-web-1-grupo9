@@ -65,6 +65,9 @@ public class ServicioUsuarioImp implements ServicioUsuario {
     datosClientePanel.setPerfilRestricciones(restricciones);
 
     Presupuesto presupuesto = repositorioPresupuesto.buscarPresupuesto(usuario);
+    if (presupuesto == null) {
+      presupuesto = new Presupuesto();
+    }
     datosClientePanel.setPresupuestoFechaInicio(presupuesto.getFecha());
     datosClientePanel.setIntervalo(presupuesto.getIntervalo());
     datosClientePanel.setMonto(presupuesto.getMonto());

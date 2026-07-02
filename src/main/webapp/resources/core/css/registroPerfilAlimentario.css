@@ -182,13 +182,10 @@ select[multiple] {
     cursor: pointer;
 }
 
-<<<<<<< HEAD
 .opcion-radio span {
     margin-left: 1em;
 }
 
-=======
->>>>>>> feature/lista-compras
 .submit-btn {
     background-color: var(--color-principal);
     color: white;

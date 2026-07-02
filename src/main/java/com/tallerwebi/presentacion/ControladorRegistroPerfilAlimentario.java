@@ -54,7 +54,8 @@ public class ControladorRegistroPerfilAlimentario {
     ModelMap modelo;
     try {
       servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilAlimentarioDTO, email);
-      return new ModelAndView("redirect:/configurar-presupuesto");
+
+      return new ModelAndView("redirect:/panel-cliente/datos-personales");
     } catch (UsuarioInexistenteException exeption) {
       modelo = new ModelMap();
       modelo.put(ATT_ERROR, "Error: Usuario inexistente");
