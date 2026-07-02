@@ -26,8 +26,9 @@
       <img th:src="@{/img/canasta.png}" class="call-to-action-img" alt="Canasta de alimentos">
     </section>
 
-    <div th:if="${usuarioLogueadoEmail != null}" th:replace="~{fragments :: call-to-action-panel-cliente}">
-    </div>
+    <th:block th:if="${usuarioLogueadoEmail != null}">
+      <div th:replace="~{fragments :: call-to-action-panel-cliente}"></div>
+    </th:block>
 
     <section class="features-section sub-container">
       <div class="feature-card">

@@ -83,16 +83,42 @@
                 <div class="form-group">
                     <h3 class="subtitulo">Restricciones alimentarias</h3>
                     <p>Seleccione si tiene alguna restricción alimentaria, puede seleccionar más de una.</p>
-                    <label for="restriccionesAlimentarias"></label>
-                    <select class="opciones" name="restriccionesAlimentarias" id="restriccionesAlimentarias" multiple
-                        th:field="*{restriccionesAlimentarias}">
-                        <option value="CELIACO">Celiaco</option>
-                        <option value="DIABETICO">Diabetico</option>
-                        <option value="INTOLERANCIA_LACTOSA">Intolerancia Lactosa</option>
-                        <option value="VEGETARIANO">Vegetariano</option>
-                        <option value="VEGANO">Vegano</option>
-                        <option value="NINGUNO" th:selected="true">Ninguna</option>
-                    </select>
+
+                    <div class="opciones"
+                        style="border: none; padding: 1em 0 0 0; background: transparent; margin-bottom: 0;">
+
+                        <label class="opcion-radio">
+                            <input type="checkbox" value="CELIACO" th:field="*{restriccionesAlimentarias}">
+                            <span>Celiaco</span>
+                        </label>
+
+                        <label class="opcion-radio">
+                            <input type="checkbox" value="DIABETICO" th:field="*{restriccionesAlimentarias}">
+                            <span>Diabetico</span>
+                        </label>
+
+                        <label class="opcion-radio">
+                            <input type="checkbox" value="INTOLERANCIA_LACTOSA" th:field="*{restriccionesAlimentarias}">
+                            <span>Intolerancia Lactosa</span>
+                        </label>
+
+                        <label class="opcion-radio">
+                            <input type="checkbox" value="VEGETARIANO" th:field="*{restriccionesAlimentarias}">
+                            <span>Vegetariano</span>
+                        </label>
+
+                        <label class="opcion-radio">
+                            <input type="checkbox" value="VEGANO" th:field="*{restriccionesAlimentarias}">
+                            <span>Vegano</span>
+                        </label>
+
+                        <label class="opcion-radio">
+                            <input type="checkbox" value="NINGUNO" th:field="*{restriccionesAlimentarias}">
+                            <span>Ninguna</span>
+                        </label>
+
+                    </div>
+
                     <p class="error" th:if="${RestriccionesAlimentariasInvalidasException}"
                         th:text="${RestriccionesAlimentariasInvalidasException}">Error en restricciones</p>
                 </div>

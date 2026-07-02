@@ -182,6 +182,10 @@ select[multiple] {
     cursor: pointer;
 }
 
+.opcion-radio span {
+    margin-left: 1em;
+}
+
 .submit-btn {
     background-color: var(--color-principal);
     color: white;
