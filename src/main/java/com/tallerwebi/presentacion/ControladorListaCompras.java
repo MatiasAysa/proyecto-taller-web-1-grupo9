@@ -1,16 +1,15 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Alimento;
 import com.tallerwebi.dominio.Comida;
-import com.tallerwebi.dominio.ItemComida;
+import com.tallerwebi.dominio.DiaListaComprasDTO;
 import com.tallerwebi.dominio.ItemCompra;
 import com.tallerwebi.dominio.ServicioListaCompras;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,7 +26,7 @@ public class ControladorListaCompras {
 
   @PostMapping("/lista-compras")
   public ModelAndView mostrarListaCompras(
-    @RequestParam(required = false) Map<String, String> todasLasSelecciones
+    @RequestParam(required = false) MultiValueMap<String, String> todasLasSelecciones
   ) {
     ModelMap modelo = new ModelMap();
 
@@ -36,40 +35,57 @@ public class ControladorListaCompras {
       return new ModelAndView("redirect:/planificador", modelo);
     }
 
-    List<Comida> comidasDelPlan = new ArrayList<>();
-    for (Map.Entry<String, String> entrada : todasLasSelecciones.entrySet()) {
-      String key = entrada.getKey();
+    List<DiaListaComprasDTO> dias = servicioListaCompras.armarDiasSeleccionados(
+      todasLasSelecciones
+    );
 
-      if (key.startsWith("alimentosSeleccionados")) {
-        String numeroDiaStr = key.substring(key.indexOf("[") + 1, key.indexOf("]"));
-        Integer numeroDia = Integer.parseInt(numeroDiaStr);
+    List<Comida> todasLasComidas = dias
+      .stream()
+      .flatMap(dia -> dia.getComidas().stream())
+      .collect(Collectors.toList());
 
-        String[] idsArray = entrada.getValue().split(",");
-
-        Comida comidaDia = new Comida();
-        comidaDia.setNombre("DÍA " + numeroDia + " - Alimentos Seleccionados");
-
-        for (String idStr : idsArray) {
-          Long idAlimento = Long.parseLong(idStr);
-          Alimento alimentoReal = servicioListaCompras.buscarAlimentoPorId(idAlimento);
-
-          if (alimentoReal != null) {
-            ItemComida item = new ItemComida(150.0, alimentoReal);
-            comidaDia.getItems().add(item);
-          }
-        }
-
-        comidasDelPlan.add(comidaDia);
-      }
-    }
-    List<ItemCompra> listaDeCompras = servicioListaCompras.generarListaCompras(comidasDelPlan);
+    List<ItemCompra> listaDeCompras = servicioListaCompras.generarListaCompras(todasLasComidas);
     servicioListaCompras.calcularPrecios(listaDeCompras);
+
     Double total = servicioListaCompras.calcularTotalListaCompras(listaDeCompras);
 
-    modelo.put("comidas", comidasDelPlan);
+    modelo.put("dias", dias);
     modelo.put("listaDeCompras", listaDeCompras);
     modelo.put("totalLista", total);
 
     return new ModelAndView("lista-compras", modelo);
   }
 }
+/*
+
+    for (Map.Entry<String, List<String>> entrada : todasLasSelecciones.entrySet()) {
+      String key = entrada.getKey();
+
+      if (key.startsWith("comidasSeleccionadas")) {
+        String numeroDiaStr = key.substring(key.indexOf("[") + 1, key.indexOf("]"));
+        Integer numeroDia = Integer.parseInt(numeroDiaStr);
+
+        List<String> idsArray = entrada.getValue();
+
+        Comida comidaDia = new Comida();
+        comidaDia.setNombre("DÍA " + numeroDia + " - Alimentos Seleccionados");
+        comidasPorDia.putIfAbsent(numeroDia, new ArrayList<>());
+
+        for (String idStr : idsArray) {
+          Long idComida = Long.parseLong(idStr);
+          Comida comida = servicioListaCompras.buscarComidaPorId(idComida);
+
+          if (comida != null) {
+            comidasPorDia.get(numeroDia).add(comida);
+          }
+
+          if (alimentoReal != null) {
+            ItemComida item = new ItemComida(150.0, alimentoReal);
+            comidaDia.getItems().add(item);
+          }
+
+
+        }
+                }
+                }
+ */

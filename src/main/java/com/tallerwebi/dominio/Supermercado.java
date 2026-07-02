@@ -3,7 +3,25 @@ package com.tallerwebi.dominio;
 public class Supermercado {
 
   private String nombre;
-  private Cordenandas cordenandas;
+  private Cordenandas cordenadas;
+  private Double distanciaMetros;
+  private Integer minutosCaminando;
+
+  public Double getDistanciaMetros() {
+    return distanciaMetros;
+  }
+
+  public void setDistanciaMetros(Double distanciaMetros) {
+    this.distanciaMetros = distanciaMetros;
+  }
+
+  public Integer getMinutosCaminando() {
+    return minutosCaminando;
+  }
+
+  public void setMinutosCaminando(Integer minutosCaminando) {
+    this.minutosCaminando = minutosCaminando;
+  }
 
   public String getNombre() {
     return nombre;
@@ -13,11 +31,11 @@ public class Supermercado {
     this.nombre = nombre;
   }
 
-  public Cordenandas getCordenandas() {
-    return cordenandas;
+  public Cordenandas getCordenadas() {
+    return cordenadas;
   }
 
-  public void setCordenandas(Cordenandas cordenandas) {
-    this.cordenandas = cordenandas;
+  public void setCordenadas(Cordenandas cordenadas) {
+    this.cordenadas = cordenadas;
   }
 }

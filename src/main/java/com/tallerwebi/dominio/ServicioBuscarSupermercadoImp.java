@@ -15,6 +15,10 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado {
 
+  private static final Integer RADIO_BUSQUEDA = 800;
+  private final Double RADIO_TIERRA = 6371000.0;
+  private final Double METROS_POR_MINUTO = 83.33; //REGLA GENERAL DE UNA PERSONA PROMEDIO
+
   @Override
   public Cordenandas obtenerCordenadaActual(Direccion direccion) {
     String direccionCompleta = direccion.getUbicacion() + " " + direccion.getNumero();
@@ -65,15 +69,36 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
 
   @Override
   public List<Supermercado> buscarSupermercadosCercanos(Double latitud, Double longitud) {
-    String url =
-      "https://overpass-api.de/api/interpreter?data=" +
+    //  String url =
+    //   "https://overpass-api.de/api/interpreter?data=" +
+    //   "[out:json];" + "node[shop=supermarket](around:700," + latitud + "," + longitud + ");out;";
+    String consulta =
       "[out:json];" +
-      "node[shop=supermarket](around:3000," +
+      "(" +
+      "node[shop=supermarket](around:2000," +
       latitud +
       "," +
       longitud +
-      ");out;";
+      ");" +
+      "node[shop=convenience](around:2000," +
+      latitud +
+      "," +
+      longitud +
+      ");" +
+      "node[shop=grocery](around:2000," +
+      latitud +
+      "," +
+      longitud +
+      ");" +
+      "node[shop=greengrocer](around:2000," +
+      latitud +
+      "," +
+      longitud +
+      ");" +
+      ");" +
+      "out;";
 
+    String url = "https://overpass-api.de/api/interpreter?data=" + consulta;
     RestTemplate restTemplate = new RestTemplate();
 
     HttpHeaders headers = new HttpHeaders();
@@ -125,12 +150,51 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
         Cordenandas coordenadas = new Cordenandas();
         coordenadas.setLatitud(lat);
         coordenadas.setLongitud(lon);
-        tienda.setCordenandas(coordenadas);
+        tienda.setCordenadas(coordenadas);
         tiendas.add(tienda);
       }
       return tiendas;
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public void calcularDistancias(List<Supermercado> supermercados, Cordenandas ubicacion) {
+    for (Supermercado supermercado : supermercados) {
+      Double distancia = calcularDistanciaMetros(ubicacion, supermercado.getCordenadas());
+
+      supermercado.setDistanciaMetros(distancia);
+
+      Integer minutos = calcularTiempoCaminando(distancia);
+      supermercado.setMinutosCaminando(minutos);
+    }
+  }
+
+  @Override
+  public Double calcularDistanciaMetros(Cordenandas origen, Cordenandas destino) {
+    Double lat1 = Math.toRadians(origen.getLatitud());
+    Double lon1 = Math.toRadians(origen.getLongitud());
+
+    Double lat2 = Math.toRadians(destino.getLatitud());
+    Double lon2 = Math.toRadians(destino.getLongitud());
+
+    Double diferenciaLatitud = lat2 - lat1;
+    Double diferenciaLongitud = lon2 - lon1;
+
+    Double variable1 =
+      Math.sin(diferenciaLatitud / 2) * Math.sin(diferenciaLatitud / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(diferenciaLongitud / 2), 2);
+
+    Double variable2 = 2 * Math.atan2(Math.sqrt(variable1), Math.sqrt(1 - variable1));
+
+    return RADIO_TIERRA * variable2;
+  }
+
+  @Override
+  public Integer calcularTiempoCaminando(Double metros) {
+    Integer minutos = (int) Math.round(metros / METROS_POR_MINUTO);
+
+    return Math.max(minutos, 1);
   }
 }

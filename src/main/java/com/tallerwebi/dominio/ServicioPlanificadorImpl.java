@@ -97,6 +97,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
 
     return plan;
   }
+
   private PlanAlimenticio inicializarPlanBase(
     PerfilAlimentarioUsuario perfil,
     int diasTotales,

@@ -24,4 +24,9 @@ public class RepositorioListaDeComprasImpl implements RepositorioListaDeCompras 
       .createQuery("select distinct c from Comida c left join fetch c.ingredientes", Comida.class)
       .getResultList();
   }
+
+  @Override
+  public Comida buscarComidaPorId(Long id) {
+    return sessionFactory.getCurrentSession().get(Comida.class, id);
+  }
 }

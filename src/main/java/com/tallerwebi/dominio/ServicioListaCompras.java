@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import java.util.List;
+import org.springframework.util.MultiValueMap;
 
 public interface ServicioListaCompras {
   List<ItemCompra> generarListaCompras(List<Comida> Comidas);
@@ -8,4 +9,6 @@ public interface ServicioListaCompras {
   void calcularPrecios(List<ItemCompra> listaCompra);
   Double calcularTotalListaCompras(List<ItemCompra> listaCompra);
   Alimento buscarAlimentoPorId(Long id);
+  Comida buscarComidaPorId(Long id);
+  List<DiaListaComprasDTO> armarDiasSeleccionados(MultiValueMap<String, String> seleccionados);
 }

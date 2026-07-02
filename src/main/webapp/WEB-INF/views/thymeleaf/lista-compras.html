@@ -21,34 +21,45 @@
 
 <main class="container mt-5">
 
-    <h1 class="titulo-principal">
-        Comidas Generadas
-    </h1>
+    <h1 class="titulo-principal">Comidas Generadas</h1>
 
     <div class="contenedor-comidas">
-        <div class="card-comida" th:each="comida : ${comidas}">
-            <h2 th:text="${comida.nombre}"></h2>
-            <ul>
-                <li th:each="item : ${comida.items}">
-                    <span th:text="${item.alimento.nombre}"></span>
-                    <span th:text="${item.cantidadGramos}"></span>
-                </li>
-            </ul>
+        <div class="card-dia" th:each="dia : ${dias}">
+            <h2 class="fecha-dia" th:text="'DÍA ' + ${dia.numeroDia}"></h2>
+
+            <details class="desplegable-comida" th:each="comida : ${dia.comidas}">
+                <summary class="summary-comida">
+                    <span th:text="${comida.tipo}"></span>
+                </summary>
+                <div class="detalle-contenido">
+                    <h4 th:text="${comida.nombre}"></h4>
+                    <ul class="lista-ingredientes">
+                        <li th:each="item : ${comida.items}">
+                            <span class="alimento-nombre" th:text="${item.alimento.nombre}"></span>
+                            <span class="alimento-cantidad" th:text="${item.cantidadGramos + ' g'}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </details>
         </div>
     </div>
+
     <h1 class="titulo-principal">Lista de compras generada</h1>
 
     <div class="contenedor-comidas">
-        <div class="card-comida">
-            <ul>
+        <div class="card-compras">
+            <ul class="lista-compras">
                 <li th:each="item : ${listaDeCompras}">
-                    <span th:text="${item.alimento.nombre}"></span>
-                    <span th:text="${item.cantidadTotal}"></span>
-                    <span>$</span>
-                    <span th:text="${item.precoTotal}"></span>
+                    <span class="alimento-nombre" th:text="${item.alimento.nombre}"></span>
+                    <div class="precio-cantidad-box">
+                        <span class="alimento-cantidad" th:text="${item.cantidadTotal + ' g'}"></span>
+                        <span class="alimento-precio" th:text="'$ ' + ${item.precoTotal}"></span>
+                    </div>
                 </li>
             </ul>
-            <h3>Total: $ <span th:text="${totalLista}"></span></h3>
+            <div class="total-box">
+                <h3>Total: $<span th:text="${totalLista}"></span></h3>
+            </div>
         </div>
     </div>
 
