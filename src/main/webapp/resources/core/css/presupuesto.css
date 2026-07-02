@@ -1,13 +1,20 @@
  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700&display=swap');
 
 body {
-    background-color: #F9F6EF !important; /* Fondo off-white de la guía */
-    font-family: 'Lato', sans-serif !important; /* Tipografía base */
+    background-color: #ffffff !important; /* Fondo off-white de la guÃ­a */
+    font-family: 'Lato', sans-serif !important; /* TipografÃ­a base */
     color: #4C4847 !important; /* Gris oscuro para textos */
     font-size: 16px;
+    height:100vh;
+    width: 100vw;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.container{
 }
 
-/* Tipografías para títulos (Montserrat Bold) */
+/* TipografÃ­as para tÃ­tulos (Montserrat Bold) */
 .font-title, .card-custom h4 {
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 700 !important;
@@ -15,7 +22,7 @@ body {
 
 .form-container {
     max-width: 500px;
-    /* No agregamos margin-top aquí para respetar el padding-top del body de main.css */
+    /* No agregamos margin-top aquÃ­ para respetar el padding-top del body de main.css */
 }
 
 /* Tarjeta contenedora con bordes redondeados a 10px */
@@ -29,6 +36,7 @@ body {
 .bg-custom-header {
     background-color: #03A62C !important;
     color: #FFFFFF !important;
+    width:100% !important;
 }
 
 .btn-custom-green {
@@ -37,19 +45,19 @@ body {
     color: #FFFFFF !important; /* Texto blanco como en la imagen */
     border-radius: 10px !important; /* El radio de 10px crucial */
 
-    /* Forzamos la tipografía de la guía */
+    /* Forzamos la tipografÃ­a de la guÃ­a */
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 700 !important; /* Montserrat Bold */
-    font-size: 16px !important; /* Tamaño estándar de texto de la guía */
+    font-size: 16px !important; /* TamaÃ±o estÃ¡ndar de texto de la guÃ­a */
 
     /* Ajustamos el padding interno para que tenga la forma alargada de tu muestra */
     padding: 0.6rem 1.5rem !important;
 
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
-    letter-spacing: 0.5px; /* Le da un aire más limpio al texto */
+    letter-spacing: 0.5px; /* Le da un aire mÃ¡s limpio al texto */
 }
 
-/* Estado Hover (Verde más oscuro de la guía) */
+/* Estado Hover (Verde mÃ¡s oscuro de la guÃ­a) */
 .btn-custom-green:hover,
 .btn-custom-green:focus {
     background-color: #007B37 !important; /* #659911 de la imagen */
@@ -62,7 +70,7 @@ body {
     transform: scale(0.98);
 }
 
-/* Inputs adaptados al gris de la guía */
+/* Inputs adaptados al gris de la guÃ­a */
 .form-control-custom, .form-select-custom {
     border-color: #4C4847 !important;
     color: #4C4847 !important;
@@ -70,14 +78,10 @@ body {
 
 .form-control-custom:focus, .form-select-custom:focus {
     border-color: #03A62C !important;
-<<<<<<< HEAD
     box-shadow: 0 0 0 0.25rem #03A62C !important;
-=======
-    box-shadow: 0 0 0 0.25rem rgba(3, 166, 44) !important;
->>>>>>> feature/lista-compras
 }
 
-/* Botón Secundario (Amarillo/Dorado de la guía) */
+/* BotÃ³n Secundario (Amarillo/Dorado de la guÃ­a) */
 .btn-custom-yellow {
     background-color: #F29F05 !important;
     border-color: #F29F05 !important;
@@ -102,18 +106,18 @@ body {
     transform: scale(0.98);
 }
 
-/* Color para los íconos y textos atenuados adaptados al gris oscuro */
+/* Color para los Ã­conos y textos atenuados adaptados al gris oscuro */
 .text-custom-muted {
     color: #4C4847 !important;
     opacity: 0.7;
 }
 
-/* Botón Volver al Home (Gris oscuro de la guía con hover sutil) */
+/* BotÃ³n Volver al Home (Gris oscuro de la guÃ­a con hover sutil) */
 .btn-back-home {
     color: #4C4847 !important;
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 700 !important;
-    font-size: 14px !important; /* <p> header de 14px de la guía */
+    font-size: 14px !important; /* <p> header de 14px de la guÃ­a */
     text-decoration: none !important;
     transition: opacity 0.2s ease;
     display: inline-flex;

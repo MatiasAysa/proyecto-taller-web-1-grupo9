@@ -21,16 +21,9 @@
                 <a th:href="@{/nuevo-usuario}" class="btn-1">Registrarse</a>
                 <a th:href="@{/login}" class="btn-1">Iniciar sesión</a>
             </div>
+            
             <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
                 <a th:href="@{/logout}" class="btn-1">Cerrar sesión</a>
-            </div>
-
-            <!-- si existe datosPerfilUsuario mostras busqueda y lista de compras -->
-            <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
-                <a th:href="@{/busqueda-supermercados}" class="btn-1">Buscar Supermercados</a>
-            </div>
-            <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
-                <a th:href="@{/lista-compras}" class="btn-1">Lista de Compras</a>
             </div>
         </nav>
 

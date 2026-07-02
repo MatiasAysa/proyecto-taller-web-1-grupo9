@@ -67,7 +67,8 @@ public class ControladorPresupuesto {
     } catch (MontoPresupuestoInsuficienteException e) {
       return fallarPresupuesto(e.getMensaje());
     }
-    return new ModelAndView("mi-presupuesto", model);
+    // return new ModelAndView("mi-presupuesto", model);
+    return new ModelAndView("redirect:/panel-cliente/datos-personales");
   }
 
   private ModelAndView fallarPresupuesto(String mensaje) {
