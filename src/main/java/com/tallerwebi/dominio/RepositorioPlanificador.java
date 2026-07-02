@@ -5,4 +5,5 @@ import java.util.List;
 public interface RepositorioPlanificador {
   List<Alimento> obtenerAlimentosDisponibles();
   Usuario buscarUsuarioPorId(Long id);
+  List<Comida> obtenerComidasDisponibles();
 }

@@ -27,10 +27,9 @@ public class DiaPlan {
   @JoinTable(
     name = "DIA_PLAN_OPCIONES",
     joinColumns = @JoinColumn(name = "dia_plan_id"),
-    inverseJoinColumns = @JoinColumn(name = "alimento_id")
+    inverseJoinColumns = @JoinColumn(name = "comida_id")
   )
-  //comidas
-  private List<Alimento> opcionesAlimentos = new ArrayList<>();
+  private List<Comida> opcionesComidas = new ArrayList<>();
 
   public DiaPlan() {}
 
@@ -40,24 +39,24 @@ public class DiaPlan {
     this.planAlimenticio = planAlimenticio;
   }
 
-  public List<Alimento> getOpcionesDesayuno() {
-    return opcionesAlimentos
+  public List<Comida> getOpcionesDesayuno() {
+    return opcionesComidas
       .stream()
-      .filter(a -> "DESAYUNO".equals(a.getTipoComida().toString()))
+      .filter(c -> c.getTipo() != null && "DESAYUNO".equalsIgnoreCase(c.getTipo().name()))
       .collect(Collectors.toList());
   }
 
-  public List<Alimento> getOpcionesAlmuerzo() {
-    return opcionesAlimentos
+  public List<Comida> getOpcionesAlmuerzo() {
+    return opcionesComidas
       .stream()
-      .filter(a -> "ALMUERZO".equals(a.getTipoComida().toString()))
+      .filter(c -> c.getTipo() != null && "ALMUERZO".equalsIgnoreCase(c.getTipo().name()))
       .collect(Collectors.toList());
   }
 
-  public List<Alimento> getOpcionesCena() {
-    return opcionesAlimentos
+  public List<Comida> getOpcionesCena() {
+    return opcionesComidas
       .stream()
-      .filter(a -> "CENA".equals(a.getTipoComida().toString()))
+      .filter(c -> c.getTipo() != null && "CENA".equalsIgnoreCase(c.getTipo().name()))
       .collect(Collectors.toList());
   }
 
@@ -93,11 +92,12 @@ public class DiaPlan {
     this.planAlimenticio = planAlimenticio;
   }
 
-  public List<Alimento> getOpcionesAlimentos() {
-    return opcionesAlimentos;
+  // 🌟 GETTER/SETTER de la colección general mapeada por Hibernate
+  public List<Comida> getOpcionesAlimentos() {
+    return opcionesComidas;
   }
 
-  public void setOpcionesAlimentos(List<Alimento> opcionesAlimentos) {
-    this.opcionesAlimentos = opcionesAlimentos;
+  public void setOpcionesAlimentos(List<Comida> opcionesComidas) {
+    this.opcionesComidas = opcionesComidas;
   }
 }

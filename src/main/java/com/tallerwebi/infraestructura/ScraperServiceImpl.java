@@ -40,11 +40,17 @@ public class ScraperServiceImpl implements ScraperService {
   }
 
   private Double parsingPrecio(String textoOriginal) {
+    if (textoOriginal == null || textoOriginal.trim().isEmpty()) {
+      return null;
+    }
     try {
-      String precioTexto = textoOriginal.replaceAll("[^0-9,.]", "");
-
+      String precioTexto = textoOriginal.replaceAll("[^0-9,.]", "").trim();
       if (precioTexto.contains(",") && precioTexto.contains(".")) {
-        precioTexto = precioTexto.replace(".", "").replace(",", ".");
+        if (precioTexto.lastIndexOf(',') > precioTexto.lastIndexOf('.')) {
+          precioTexto = precioTexto.replace(".", "").replace(",", ".");
+        } else {
+          precioTexto = precioTexto.replace(",", "");
+        }
       } else if (precioTexto.contains(",")) {
         precioTexto = precioTexto.replace(",", ".");
       }

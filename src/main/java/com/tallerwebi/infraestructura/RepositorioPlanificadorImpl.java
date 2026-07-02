@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Alimento;
+import com.tallerwebi.dominio.Comida;
 import com.tallerwebi.dominio.RepositorioPlanificador;
 import com.tallerwebi.dominio.Usuario;
 import java.util.List;
@@ -22,6 +23,13 @@ public class RepositorioPlanificadorImpl implements RepositorioPlanificador {
   public List<Alimento> obtenerAlimentosDisponibles() {
     return this.sessionFactory.getCurrentSession()
       .createQuery("FROM Alimento", Alimento.class)
+      .getResultList();
+  }
+
+  @Override
+  public List<Comida> obtenerComidasDisponibles() {
+    return this.sessionFactory.getCurrentSession()
+      .createQuery("FROM Comida", Comida.class)
       .getResultList();
   }
 
