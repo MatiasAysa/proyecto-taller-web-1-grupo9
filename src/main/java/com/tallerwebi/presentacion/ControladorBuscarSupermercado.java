@@ -47,6 +47,7 @@ public class ControladorBuscarSupermercado {
       cordenandas.getLatitud(),
       cordenandas.getLongitud()
     );
+    servicioBuscarSupermercado.calcularDistancias(supermercados, cordenandas);
     modelo.put("supermercados", supermercados);
 
     return new ModelAndView("busqueda-supermercados", modelo);

@@ -14,6 +14,8 @@
 
     <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/busqueda-supermercados.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         #map {
@@ -32,29 +34,61 @@
 </nav>
 
 <main class="container mt-5">
+    <div class="card-busqueda">
 
-    <div class="container">
-            <form action="#" th:action="@{/ingreso-direccion}" method="POST" th:object="${direccion}">
+        <h2>Buscar supermercados cercanos</h2>
 
-                <input th:field="*{ubicacion}" type="text" id="ubicacion" placeholder="Calle" required />
-                <input th:field="*{numero}" type="number" id="numero" placeholder="Calle" required />
+        <form th:action="@{/ingreso-direccion}" method="POST" th:object="${direccion}" class="form-direccion">
 
-                <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit"
-                >Buscar supermercados</button>
+            <input th:field="*{ubicacion}" type="text" placeholder="Calle" class="campo"/>
+            <input th:field="*{numero}" type="number" placeholder="Número" class="campo"/>
 
-            </form>
+            <button class="btn-buscar" type="submit">Buscar supermercados</button>
+        </form>
 
+        <button id="btnUbicacion" class="btn-ubicacion"> Usar mi ubicación</button>
     </div>
-    <p th:text="${latitud}" id="latitud"></p>
-    <p th:text="${longitud}" id="longitud"></p>
 
-    <button id="btnUbicacion">Usar mi ubicacion</button>
+    <p id="latitud" hidden th:text="${latitud}"></p>
+    <p id="longitud" hidden th:text="${longitud}"></p>
 
     <div id="map"></div>
 
-    <div th:each="supermercado : ${supermercados}">
-        <p th:text="${supermercado.nombre}"></p>
+    <div id="supermercados" style="display:none;">
+        <div th:each="supermercado : ${supermercados}"
+             class="supermercado"
+             th:data-nombre="${supermercado.nombre}"
+             th:data-latitud="${supermercado.cordenadas.latitud}"
+             th:data-longitud="${supermercado.cordenadas.longitud}">
+        </div>
     </div>
+
+    <h2 class="titulo-lista">
+        <i class="fas fa-store"></i>
+        Supermercados encontrados
+    </h2>
+
+    <div class="lista-supermercados">
+        <div class="card-super" th:each="supermercado : ${supermercados}">
+            <div class="icono-super">
+                <i class="fas fa-store"></i>
+            </div>
+
+            <div class="info-super">
+                <h5 th:text="${supermercado.nombre}"></h5>
+                <div class="dato-super">
+                    <i class="fas fa-location-dot"></i>
+                    <span th:text="${#numbers.formatDecimal(supermercado.distanciaMetros,0,0)} + ' metros'"></span>
+                </div>
+
+                <div class="dato-super">
+                    <i class="fas fa-person-walking"></i>
+                    <span th:text="${supermercado.minutosCaminando} + ' min caminando'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 <script type="module" th:src="@{js/busqueda_direccion.js}"></script>
 <!-- LINK PARA LA LIBRERIA LEAFLET-->
@@ -62,3 +96,24 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> feature/lista-compras

@@ -1,47 +1,191 @@
+/* --- Variables de Color (Inspiradas en la app de tu amigo) --- */
+:root {
+    --color-principal: #198754;
+    --color-principal-hover: #146c43;
+    --color-fondo: #f8f9fa;
+    --color-texto: #333333;
+    --color-gris-borde: #e0e0e0;
+    --color-gris-fondo: #f1f3f5;
+}
+
 body {
-    background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
+    background-color: var(--color-fondo);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: var(--color-texto);
+    margin: 0;
+    padding: 0;
 }
 
 .titulo-principal {
     text-align: center;
-    margin-bottom: 40px;
-    font-weight: bold;
+    margin: 40px 0 20px 0;
+    font-weight: 700;
+    color: var(--color-texto);
+    font-size: 28px;
 }
 
+/* --- Contenedor General --- */
 .contenedor-comidas {
     display: flex;
     flex-wrap: wrap;
     gap: 25px;
     justify-content: center;
+    padding: 10px;
+    align-items: flex-start; /* Evita que las cards se estiren verticalmente a la par */
 }
 
-.card-comida {
-    background-color: white;
-    width: 320px;
-    padding: 20px;
+/* --- Cards de los Días --- */
+.card-dia {
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-    transition: 0.2s;
+    padding: 24px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 360px; /* Ancho fijo para que no se ensanche hacia la derecha */
+    box-sizing: border-box; /* Crucial para que los paddings no sumen ancho */
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.card-comida:hover {
-    transform: scale(1.02);
+.card-dia:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-.card-comida h2 {
+.fecha-dia {
+    color: var(--color-principal);
+    font-size: 22px;
+    margin-top: 0;
     margin-bottom: 15px;
-    color: #198754;
-    font-size: 24px;
+    border-bottom: 2px solid var(--color-gris-fondo);
+    padding-bottom: 8px;
 }
 
-.card-comida ul {
+/* --- Estilos del Desplegable (Details / Summary) --- */
+.desplegable-comida {
+    margin-top: 12px;
+    border: 1px solid var(--color-gris-borde);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.summary-comida {
+    cursor: pointer;
+    padding: 12px 16px;
+    font-weight: 600;
+    background: var(--color-gris-fondo);
+    list-style: none; /* Saca la flecha nativa en algunos navegadores */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Flecha personalizada usando pseudoelemento si querés, o dejamos la nativa */
+.summary-comida::after {
+    content: '▼';
+    font-size: 10px;
+    color: #666;
+    transition: transform 0.2s;
+}
+
+.desplegable-comida[open] .summary-comida::after {
+    transform: rotate(180deg);
+    color: white;
+}
+
+.desplegable-comida[open] .summary-comida {
+    background: var(--color-principal);
+    color: white;
+}
+
+/* Contenedor interno para animar o dar padding cuando se abre */
+.detalle-contenido {
+    padding: 16px;
+    background: #ffffff;
+}
+
+.detalle-contenido h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1f4e79;
+    font-size: 16px;
+}
+
+/* --- Listas Internas de Ingredientes --- */
+.lista-ingredientes {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.card-comida li {
-    padding: 8px 0;
-    border-bottom: 1px solid #eaeaea;
+.lista-ingredientes li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--color-gris-borde);
+}
+
+.lista-ingredientes li:last-child {
+    border-bottom: none;
+}
+
+/* --- Card de Lista de Compras --- */
+.card-compras {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 450px; /* Un toque más ancha para que entren bien los precios */
+    box-sizing: border-box;
+}
+
+.lista-compras {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lista-compras li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-gris-fondo);
+    font-size: 14px;
+}
+
+.precio-cantidad-box {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.alimento-nombre {
+    font-weight: 500;
+    color: #444;
+}
+
+.alimento-cantidad {
+    color: #777;
+    font-size: 13px;
+}
+
+.alimento-precio {
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+.total-box {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid var(--color-principal);
+    text-align: right;
+}
+
+.total-box h3 {
+    margin: 0;
+    color: var(--color-principal);
+    font-size: 20px;
 }

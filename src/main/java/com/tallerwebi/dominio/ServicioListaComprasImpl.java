@@ -2,9 +2,11 @@ package com.tallerwebi.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
 @Service
 @Transactional
@@ -13,15 +15,61 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
   private final double CANTIDAD_KILO_A_GRAMOS = 1000.0;
 
   private RepositorioAlimento repositorioAlimento;
+  private RepositorioListaDeCompras repositorioListaDeCompras;
 
   @Autowired
-  public ServicioListaComprasImpl(RepositorioAlimento repositorioAlimento) {
+  public ServicioListaComprasImpl(
+    RepositorioAlimento repositorioAlimento,
+    RepositorioListaDeCompras repositorioListaDeCompras
+  ) {
     this.repositorioAlimento = repositorioAlimento;
+    this.repositorioListaDeCompras = repositorioListaDeCompras;
   }
 
   @Override
   public Alimento buscarAlimentoPorId(Long id) {
     return this.repositorioAlimento.buscarPorId(id);
+  }
+
+  @Override
+  public Comida buscarComidaPorId(Long id) {
+    return this.repositorioListaDeCompras.buscarComidaPorId(id);
+  }
+
+  @Override
+  public List<DiaListaComprasDTO> armarDiasSeleccionados(
+    MultiValueMap<String, String> seleccionados
+  ) {
+    List<DiaListaComprasDTO> dias = new ArrayList<>();
+
+    for (Map.Entry<String, List<String>> entrada : seleccionados.entrySet()) {
+      String key = entrada.getKey();
+
+      if (!key.startsWith("comidasSeleccionadas")) {
+        continue;
+      }
+
+      String numeroDiaStr = key.substring(key.indexOf("[") + 1, key.indexOf("]"));
+
+      Integer numeroDia = Integer.parseInt(numeroDiaStr);
+
+      DiaListaComprasDTO diaDTO = new DiaListaComprasDTO();
+      diaDTO.setNumeroDia(numeroDia);
+
+      List<Comida> comidas = new ArrayList<>();
+
+      for (String idStr : entrada.getValue()) {
+        Long idComida = Long.parseLong(idStr);
+        Comida comida = buscarComidaPorId(idComida);
+        if (comida != null) {
+          comidas.add(comida);
+        }
+      }
+      diaDTO.setComidas(comidas);
+      dias.add(diaDTO);
+    }
+
+    return dias;
   }
 
   @Override

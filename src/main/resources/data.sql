@@ -26,8 +26,8 @@ INSERT INTO RestriccionAlimentaria (nombre) VALUES ('INTOLERANCIA_LACTOSA');
 -- =============================================================================
 -- INSERTS DE ALIMENTOS BASE (Despensa completa y extendida)
 -- =============================================================================
-
 -- --- DESAYUNOS ---
+
 INSERT INTO Alimento (id, nombre, precioEstimado, tipoComida, esVegetariano, esCeliaco, contieneLactosa, calorias, proteinas, carbohidratos, grasas, url_supermercado)
 VALUES (1, 'Avena instantánea Carrefour 400g', 2100.00, 'DESAYUNO', true, false, false, 389, 16.9, 66.3, 6.9, 'https://www.carrefour.com.ar/avena-instantanea-carrefour-400-g/p');
 
@@ -167,7 +167,6 @@ INSERT INTO Comida (id, nombre, tipo) VALUES (23, 'Guiso Multigrano de Mijo y Le
 INSERT INTO Comida (id, nombre, tipo) VALUES (24, 'Tortilla de Espinaca y Queso Port Salut', 'CENA');         -- Vegetariano, Celíaco, Con Lactosa
 INSERT INTO Comida (id, nombre, tipo) VALUES (25, 'Sándwich de Tofu, Palta y Tomate', 'ALMUERZO');            -- Vegano, Sin Lactosa, Con TACC
 
-
 -- =============================================================================
 -- DETALLE DE INGREDIENTES Y GRAMAJES (comida_items)
 -- =============================================================================
@@ -272,3 +271,4 @@ INSERT INTO comida_items (comida_id, cantidadGramos, alimento_id) VALUES (25, 60
 INSERT INTO comida_items (comida_id, cantidadGramos, alimento_id) VALUES (25, 100.0, 38); -- Tofu
 INSERT INTO comida_items (comida_id, cantidadGramos, alimento_id) VALUES (25, 40.0, 45);  -- Palta
 INSERT INTO comida_items (comida_id, cantidadGramos, alimento_id) VALUES (25, 50.0, 7);   -- Puré/Rodajas Tomate
+

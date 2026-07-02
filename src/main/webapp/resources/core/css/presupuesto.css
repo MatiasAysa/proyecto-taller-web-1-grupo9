@@ -70,7 +70,11 @@ body {
 
 .form-control-custom:focus, .form-select-custom:focus {
     border-color: #03A62C !important;
+<<<<<<< HEAD
     box-shadow: 0 0 0 0.25rem #03A62C !important;
+=======
+    box-shadow: 0 0 0 0.25rem rgba(3, 166, 44) !important;
+>>>>>>> feature/lista-compras
 }
 
 /* Botón Secundario (Amarillo/Dorado de la guía) */

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorHome {
 
   private final String ATT_USUARIO_LOGUEADO_EMAIL = "usuarioLogueadoEmail";
-
   private final ServicioUsuario servicioUsuario;
 
   @Autowired
