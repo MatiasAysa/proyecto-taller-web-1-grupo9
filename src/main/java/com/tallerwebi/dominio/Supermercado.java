@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 public class Supermercado {
+
   private String nombre;
   private Cordenandas cordenadas;
   private Double distanciaMetros;
@@ -33,6 +34,7 @@ public class Supermercado {
   public Cordenandas getCordenadas() {
     return cordenadas;
   }
+
   public void setCordenadas(Cordenandas cordenadas) {
     this.cordenadas = cordenadas;
   }

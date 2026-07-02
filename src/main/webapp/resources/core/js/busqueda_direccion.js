@@ -15,17 +15,11 @@ window.addEventListener("load",() => {
         boton.style.display = "none";
 
         mostrarMapa(parseFloat(latitud),parseFloat(longitud))
-<<<<<<< HEAD
-=======
         dibujarSupermercados();
->>>>>>> feature/lista-compras
     }
 
 })
 
-<<<<<<< HEAD
-
-=======
 function dibujarSupermercados(){
     const supermercados = document.querySelectorAll(".supermercado");
 
@@ -41,7 +35,6 @@ function dibujarSupermercados(){
 
     });
 }
->>>>>>> feature/lista-compras
 
 
 document.getElementById("btnUbicacion").addEventListener("click",() => {
@@ -78,24 +71,6 @@ function mostrarMapa(lat,lon){
 
     L.marker([lat, lon]).addTo(map).bindPopup("Estás acá 📍").openPopup();
 
-<<<<<<< HEAD
-=======
-    /*
->>>>>>> feature/lista-compras
-    supermercados.forEach(supermercado => {
-
-        L.marker([
-            supermercado.cordenandas.latitud,
-            supermercado.cordenandas.longitud
-        ])
-            .addTo(map)
-            .bindPopup(supermercado.nombre);
-
-    });
-<<<<<<< HEAD
-=======
-    */
->>>>>>> feature/lista-compras
 }
 
 

@@ -56,25 +56,16 @@ public class ControladorPresupuestoTest {
   }
 
   @Test
-<<<<<<< HEAD
   public void sePuedeVolverAtrasDesdeConfigurarPresupuesto() {
-=======
-  public void sePuedeVolverAMiPresupuestoDesdeConfigurarPresupuesto() {
->>>>>>> feature/lista-compras
     DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
     datosPresupuesto.setMonto(monto);
     datosPresupuesto.setIntervalo(intervalo);
     datosPresupuesto.setFecha(fecha);
-<<<<<<< HEAD
     ModelAndView mav = whenVolverAtrasDesdeConfigurarPresupuesto(datosPresupuesto);
-=======
-    ModelAndView mav = whenVolverAMiPresupuesto(datosPresupuesto);
->>>>>>> feature/lista-compras
     assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/mi-presupuesto"));
   }
 
   @Test
-<<<<<<< HEAD
   public void siVuelvoAMiPresupuestoSinPresupuestoRedirigePerfilAlimentario() {
     DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
     ModelAndView mav = whenVolverAtrasDesdeConfigurarPresupuestoSinPresupuesto();
@@ -86,32 +77,18 @@ public class ControladorPresupuestoTest {
   }
 
   private ModelAndView whenVolverAtrasDesdeConfigurarPresupuestoSinPresupuesto() {
-=======
-  public void siVuelvoAMiPresupuestoSinPresupuestoRedirigeAHome() {
-    DatosPresupuesto datosPresupuesto = new DatosPresupuesto();
-    ModelAndView mav = whenVolverAMiPresupuestoSinPresupuesto();
-    thenVoyAlHome(mav);
-  }
-
-  private ModelAndView whenVolverAMiPresupuestoSinPresupuesto() {
->>>>>>> feature/lista-compras
     when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
     when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
     doThrow(UsuarioSinPresupuestoException.class)
       .when(servicioPresupuesto)
       .buscarPresupuesto(email);
-<<<<<<< HEAD
     return controladorPresupuesto.volverAtrasDesdeConfigurarPresupuesto(session);
-=======
-    return controladorPresupuesto.volverAMiPresupuesto(session);
->>>>>>> feature/lista-compras
   }
 
   private void thenVoyAlHome(ModelAndView mav) {
     assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/home"));
   }
 
-<<<<<<< HEAD
   private ModelAndView whenVolverAtrasDesdeConfigurarPresupuesto(
     DatosPresupuesto datosPresupuesto
   ) {
@@ -119,13 +96,6 @@ public class ControladorPresupuestoTest {
     when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
     when(servicioPresupuesto.buscarPresupuesto(email)).thenReturn(datosPresupuesto);
     return controladorPresupuesto.volverAtrasDesdeConfigurarPresupuesto(session);
-=======
-  private ModelAndView whenVolverAMiPresupuesto(DatosPresupuesto datosPresupuesto) {
-    when(session.getAttribute("usuarioLogueadoEmail")).thenReturn(email);
-    when(session.getAttribute("usuarioLogueadoEmail").toString()).thenReturn(email);
-    when(servicioPresupuesto.buscarPresupuesto(email)).thenReturn(datosPresupuesto);
-    return controladorPresupuesto.volverAMiPresupuesto(session);
->>>>>>> feature/lista-compras
   }
 
   private ModelAndView whenIrAConfigurarPresupuesto() {
