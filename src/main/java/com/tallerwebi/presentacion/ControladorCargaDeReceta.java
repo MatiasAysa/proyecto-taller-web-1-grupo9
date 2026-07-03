@@ -48,11 +48,11 @@ public class ControladorCargaDeReceta {
     if (!ingredientesInvalidos.isEmpty()) {
       return fallarReceta(ingredientesInvalidos, datosReceta);
     }
-    return cargarReceta(datosReceta);
+    return cargarReceta(datosReceta, session.getAttribute("usuarioLogueadoEmail").toString());
   }
 
-  private ModelAndView cargarReceta(DatosReceta datosReceta) {
-    servicioCargaDeReceta.cargarReceta(datosReceta);
+  private ModelAndView cargarReceta(DatosReceta datosReceta, String email) {
+    servicioCargaDeReceta.cargarReceta(datosReceta, email);
     return new ModelAndView("redirect:/home");
   }
 

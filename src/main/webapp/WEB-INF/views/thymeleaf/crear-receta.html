@@ -32,7 +32,7 @@
                 Ejemplo de error: El alimento ingresado no existe en la base de datos.
             </div>
 
-            <form action="#" th:action="@{/validar-receta}" method="post" th:object="${datosReceta}">
+            <form action="#" th:action="@{/validar-receta}" method="post" th:object="${datosReceta}" accept-charset="UTF-8">
 
                 <div class="mb-3">
                     <label for="nombreReceta" class="form-label fw-bold">Nombre de la receta:</label>
