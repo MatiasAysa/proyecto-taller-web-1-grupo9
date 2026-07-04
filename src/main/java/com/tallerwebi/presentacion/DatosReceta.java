@@ -8,6 +8,22 @@ public class DatosReceta {
   private String nombre;
   private String tipo;
 
+  @Override
+  public String toString() {
+    return (
+      "DatosReceta{" +
+      "ingredientes=" +
+      ingredientes +
+      ", nombre='" +
+      nombre +
+      '\'' +
+      ", tipo='" +
+      tipo +
+      '\'' +
+      '}'
+    );
+  }
+
   public List<IngredienteDTO> getIngredientes() {
     return ingredientes;
   }

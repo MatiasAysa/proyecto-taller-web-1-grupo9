@@ -1,0 +1,78 @@
+/* Estilos específicos para la vista de Mis Recetas */
+
+.bg-custom-recipe {
+    background-color: #F9F6EF !important; /* Fondo off-white de la guía */
+    color: #4C4847; /* Gris oscuro para textos */
+    font-family: 'Lato', sans-serif;
+}
+
+.title-page {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #4C4847;
+}
+
+/* Botón Verde Principal */
+.btn-custom-primary {
+    background-color: #03A62C;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px; /* Radio estricto de la guía */
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-custom-primary:hover {
+    background-color: #028523;
+    color: #FFFFFF;
+}
+
+/* Contenedor del Estado Vacío */
+.empty-state-container {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    padding: 60px 40px;
+    box-shadow: 0 4px 6px rgba(76, 72, 71, 0.05); /* Sombra muy sutil */
+    margin-top: 40px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #03A62C; /* Tu verde institucional */
+    opacity: 0.3;
+}
+
+.empty-state-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4C4847;
+    margin-bottom: 10px;
+}
+
+.empty-state-text {
+    font-size: 1.05rem;
+    color: #7A7574; /* Un gris un poco más suave para el subtítulo */
+}
+
+/* Botón de acción grande dentro del estado vacío (con el color dorado/amarillo opcional de tu guía) */
+.btn-custom-secondary-action {
+    background-color: #F29F05; /* El color amarillo/dorado de tus componentes secundarios */
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-custom-secondary-action:hover {
+    background-color: #D48B04;
+    color: #FFFFFF;
+}

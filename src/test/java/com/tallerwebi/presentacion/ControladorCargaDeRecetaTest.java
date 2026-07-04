@@ -21,6 +21,13 @@ public class ControladorCargaDeRecetaTest {
   private HttpSession session = mock(HttpSession.class);
 
   @Test
+  public void sePuedeIrAlaVistaMisRecetas() {
+    givenExisteUsuario();
+    ModelAndView mav = controlador.mostrarMisRecetas(session);
+    thenVoyAVistaMisRecetas(mav);
+  }
+
+  @Test
   public void sePuedeIrAlaVistaCrearReceta() {
     givenExisteUsuario();
     ModelAndView mav = controlador.irACrearReceta(session);
@@ -154,5 +161,9 @@ public class ControladorCargaDeRecetaTest {
 
   private void thenVoyAVistaCrearReceta(ModelAndView mav) {
     assertThat(mav.getViewName(), is(equalToIgnoringCase("crear-receta")));
+  }
+
+  private void thenVoyAVistaMisRecetas(ModelAndView mav) {
+    assertThat(mav.getViewName(), is(equalToIgnoringCase("mis-recetas")));
   }
 }
