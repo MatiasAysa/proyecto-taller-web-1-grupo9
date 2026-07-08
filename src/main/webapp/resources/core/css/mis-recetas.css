@@ -101,6 +101,37 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
     display: flex;
     flex-direction: column;
+    position: relative !important;
+}
+
+.receta-card-actions {
+    position: absolute !important;
+    top: 1.2em !important;
+    right: 1.2em !important;
+    z-index: 10 !important;
+}
+
+.btn-eliminar-receta {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    color: var(--color-subtitulo) !important; /* Gris oscuro institucional */
+    font-size: 1.25rem !important;            /* Tamaño óptimo para el ícono */
+    cursor: pointer !important;
+    padding: 0.3em !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+    text-decoration: none !important;
+
+    /* Resetea la escala que le meten tus compañeros a las etiquetas 'a' globales */
+    transform: none !important;
+}
+
+.btn-eliminar-receta:hover {
+    color: var(--color-error, #db1c65) !important; /* Rojo de la cátedra */
+    transform: scale(1.2) !important;            /* Agranda un 20% el ícono */
 }
 
 .receta-card-title {
@@ -161,4 +192,111 @@
     border-radius: 20px;
     font-size: var(--font-size-textos-pequenos);
     font-weight: 700;
+}
+/* ==========================================================================
+   Estilos para el Dialog de Confirmación Nativo
+   ========================================================================== */
+
+/* Caja del Dialog */
+.custom-dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 2em;
+    max-width: 400px;
+    width: 90%;
+    background-color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+/* Animación sutil de apertura */
+.custom-dialog[open] {
+    animation: fadeInDialog 0.2s ease-out forwards;
+}
+
+/* Estilo del fondo oscurecido y desenfocado (Nativo de la etiqueta dialog) */
+.custom-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.dialog-icon {
+    font-size: 2.5rem;
+    color: var(--color-error, #db1c65);
+    margin-bottom: 0.5em;
+}
+
+.dialog-title {
+    font-family: var(--fuente-titulos);
+    font-size: var(--font-size-subtitulo);
+    color: var(--color-titulo);
+    font-weight: 700;
+    margin-bottom: 0.5em;
+}
+
+.dialog-text {
+    font-size: var(--font-size-textos-pequenos);
+    color: var(--color-subtitulo);
+    line-height: 1.4;
+    margin-bottom: 1.5em;
+}
+
+/* Botonera interna */
+.dialog-actions {
+    display: flex;
+    gap: 1em;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Botón Cancelar */
+.btn-dialog-cancelar {
+    background-color: var(--color-grupo);
+    border: 1px solid var(--color-grupo-borde);
+    color: var(--color-subtitulo);
+    padding: 0.6em 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.btn-dialog-cancelar:hover {
+    background-color: var(--white-hover);
+}
+
+/* Botón Confirmar Eliminar (Usa el color de error de la cátedra) */
+.btn-dialog-confirmar {
+    background-color: var(--color-error, #db1c65);
+    color: white;
+    padding: 0.6em 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s ease;
+}
+.btn-dialog-confirmar:hover {
+    opacity: 0.9;
+}
+
+/* Keyframes para la animación */
+@keyframes fadeInDialog {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }

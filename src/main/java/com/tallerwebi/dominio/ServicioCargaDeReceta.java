@@ -9,4 +9,6 @@ public interface ServicioCargaDeReceta {
   void cargarReceta(DatosReceta datosReceta, String usuario);
 
   List<DatosReceta> obtenerRecetasDeUsuario(String email);
+
+  void eliminarReceta(Long id, String string);
 }

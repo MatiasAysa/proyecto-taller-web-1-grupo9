@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +21,7 @@ public class ControladorCargaDeReceta {
   private final String CAMPO_DATOS_RECETA = "datosReceta";
   private final String VISTA_CREAR_RECETA = "crear-receta";
   private final String CAMPO_MAIL_USUARIO = "usuarioLogueadoEmail";
+  private final String REDIRECT_LOGIN = "redirect:/login";
 
   @Autowired
   public ControladorCargaDeReceta(ServicioCargaDeReceta servicioCargaDeReceta) {
@@ -28,9 +30,7 @@ public class ControladorCargaDeReceta {
 
   @RequestMapping("/crear-receta")
   public ModelAndView irACrearReceta(HttpSession session) {
-    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
-      "redirect:/login"
-    );
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(REDIRECT_LOGIN);
     ModelMap model = new ModelMap();
     DatosReceta datosReceta = new DatosReceta();
     List<IngredienteDTO> ingredientes = new ArrayList<IngredienteDTO>();
@@ -44,9 +44,7 @@ public class ControladorCargaDeReceta {
 
   @RequestMapping(path = "/validar-receta", method = RequestMethod.POST)
   public ModelAndView validarReceta(DatosReceta datosReceta, HttpSession session) {
-    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
-      "redirect:/login"
-    );
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(REDIRECT_LOGIN);
     if (
       datosReceta.getNombre() == null || datosReceta.getNombre().isEmpty()
     ) return fallarRecetaPorNombre(datosReceta, "Por favor, introduzca un nombre.");
@@ -67,13 +65,18 @@ public class ControladorCargaDeReceta {
 
   @RequestMapping("/mis-recetas")
   public ModelAndView mostrarMisRecetas(HttpSession session) {
-    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(
-      "redirect:/login"
-    );
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(REDIRECT_LOGIN);
     String email = session.getAttribute(CAMPO_MAIL_USUARIO).toString();
     ModelMap model = new ModelMap();
     model.put("recetas", servicioCargaDeReceta.obtenerRecetasDeUsuario(email));
     return new ModelAndView("mis-recetas", model);
+  }
+
+  @RequestMapping(path = "mis-recetas/eliminar/{id}")
+  public ModelAndView eliminarReceta(@PathVariable("id") Long id, HttpSession session) {
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(REDIRECT_LOGIN);
+    servicioCargaDeReceta.eliminarReceta(id, session.getAttribute(CAMPO_MAIL_USUARIO).toString());
+    return new ModelAndView("redirect:/mis-recetas");
   }
 
   private ModelAndView fallarRecetaPorTipo(DatosReceta datosReceta, String mensaje) {

@@ -47,4 +47,18 @@ public class RepositorioRecetaImpl implements RepositorioReceta {
         .list()
       : new ArrayList<Comida>();
   }
+
+  @Override
+  public Comida buscarRecetaPorId(Long id) {
+    return (Comida) sessionFactory
+      .getCurrentSession()
+      .createCriteria(Comida.class)
+      .add(Restrictions.eq("id", id))
+      .uniqueResult();
+  }
+
+  @Override
+  public void eliminarReceta(Long id) {
+    sessionFactory.getCurrentSession().delete(buscarRecetaPorId(id));
+  }
 }

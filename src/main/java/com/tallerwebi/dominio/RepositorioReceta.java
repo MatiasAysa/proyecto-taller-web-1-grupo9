@@ -8,4 +8,8 @@ public interface RepositorioReceta {
   Comida buscarRecetaPorNombreYUsuario(String nombre, Usuario usuario);
 
   List<Comida> obtenerRecetasDeUsuario(Usuario usuario);
+
+  Comida buscarRecetaPorId(Long id);
+
+  void eliminarReceta(Long id);
 }

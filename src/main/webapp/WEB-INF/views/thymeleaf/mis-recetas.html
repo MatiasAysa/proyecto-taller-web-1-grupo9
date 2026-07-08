@@ -37,6 +37,12 @@
     <div th:unless="${#lists.isEmpty(recetas)}" class="recetas-grid">
         <div th:each="receta : ${recetas}" class="receta-card">
 
+            <div class="receta-card-actions">
+                <button type="button" class="btn-eliminar-receta" title="Eliminar receta"
+                        th:onclick="'abrirModal(' + ${receta.id} + ')'">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
             <h5 class="receta-card-title" th:text="${receta.nombre}">Nombre de la Receta</h5>
 
             <span class="receta-badge-tipo" th:text="${receta.tipo}">DESAYUNO</span>
@@ -50,7 +56,25 @@
             </ul>
 
         </div>
-    </div> </main>
+    </div>
+    <dialog id="modalConfirmacion" class="custom-dialog">
+        <div class="dialog-content">
+            <div class="dialog-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="dialog-title">¿Eliminar receta?</h3>
+            <p class="dialog-text">Esta acción no se puede deshacer. La receta se borrará del sistema de forma permanente.</p>
 
+            <div class="dialog-actions">
+                <button type="button" class="btn-dialog-cancelar" onclick="cerrarModal()">Cancelar</button>
+
+                <form id="formEliminarReceta" method="POST" action="">
+                    <button type="submit" class="btn-dialog-confirmar">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+</main>
 </body>
+<script th:src="@{/js/mis-recetas.js}"></script>
 </html>

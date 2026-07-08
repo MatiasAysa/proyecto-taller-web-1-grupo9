@@ -70,6 +70,14 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
     return obtenerDTODeRecetas(obtenerListaDeRecetas(email));
   }
 
+  @Override
+  public void eliminarReceta(Long id, String email) {
+    Usuario usuario = repositorioUsuario.buscar(email);
+    Comida comida = repositorioReceta.buscarRecetaPorId(id);
+    if (comida == null || comida.getAutor() == null || !comida.getAutor().equals(usuario)) return;
+    repositorioReceta.eliminarReceta(id);
+  }
+
   @Transactional
   private List<Comida> obtenerListaDeRecetas(String email) {
     Usuario usuario = repositorioUsuario.buscar(email);
@@ -82,6 +90,7 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
     for (Comida c : recetasEntity) {
       if (c != null) {
         DatosReceta datosReceta = new DatosReceta();
+        datosReceta.setId(c.getId());
         datosReceta.setNombre(c.getNombre());
         datosReceta.setTipo(c.getTipo().name());
         List<IngredienteDTO> ingredientes = new ArrayList<IngredienteDTO>();

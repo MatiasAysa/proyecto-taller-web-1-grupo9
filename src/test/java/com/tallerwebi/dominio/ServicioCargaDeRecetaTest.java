@@ -2,8 +2,10 @@ package com.tallerwebi.dominio;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.excepcion.RecetaConNombreRepetidoException;
 import com.tallerwebi.presentacion.DatosReceta;
 import com.tallerwebi.presentacion.IngredienteDTO;
 import java.util.ArrayList;
@@ -42,6 +44,62 @@ public class ServicioCargaDeRecetaTest {
     thenSeCreaLaReceta();
   }
 
+  @Test
+  public void cargarDosVecesLaMismaRecetaProvocaUnaExcepcion() {
+    Usuario usuario = givenExisteUsuario();
+    List<String> listaAlimentos = givenExistenAlimentos(
+      List.of("Huevo", "Harina", "Manteca", "Queso")
+    );
+    DatosReceta datosReceta = obtenerDatosRecetaValidos(listaAlimentos);
+    givenYaExisteReceta(datosReceta, usuario);
+    assertThrows(
+      RecetaConNombreRepetidoException.class,
+      () -> servicioCargaDeReceta.cargarReceta(datosReceta, usuario.getEmail())
+    );
+  }
+
+  @Test
+  public void sePuedeEliminarUnaReceta() {
+    Usuario usuario = givenExisteUsuario();
+    givenExisteRecetaConUsuarioYId(usuario, 1L);
+    whenBorroUnaReceta(usuario, 1L);
+    thenSeBorraLaReceta();
+  }
+
+  @Test
+  public void noSePuedeEliminarUnaRecetaAjena() {
+    Usuario usuario = givenExisteUsuario();
+    Usuario otro = new Usuario();
+    otro.setEmail("emailDistinto@gmail.com");
+    givenExisteRecetaConUsuarioYId(usuario, 1L);
+    whenBorroUnaReceta(otro, 1L);
+    thenNoSeBorraLaReceta();
+  }
+
+  private void thenNoSeBorraLaReceta() {
+    verify(repositorioReceta, never()).eliminarReceta(any());
+  }
+
+  private void thenSeBorraLaReceta() {
+    verify(repositorioReceta).eliminarReceta(any());
+  }
+
+  private void whenBorroUnaReceta(Usuario usuario, long id) {
+    servicioCargaDeReceta.eliminarReceta(id, usuario.getEmail());
+  }
+
+  private void givenExisteRecetaConUsuarioYId(Usuario usuario, long id) {
+    Comida comida = new Comida();
+    comida.setAutor(usuario);
+    comida.setId(id);
+    when(repositorioReceta.buscarRecetaPorId(id)).thenReturn(comida);
+  }
+
+  private void givenYaExisteReceta(DatosReceta datosReceta, Usuario usuario) {
+    when(repositorioReceta.buscarRecetaPorNombreYUsuario(datosReceta.getNombre(), usuario))
+      .thenReturn(new Comida());
+  }
+
   private void thenSeCreaLaReceta() {
     verify(repositorioReceta, times(1)).guardarReceta(any(Comida.class));
   }
@@ -63,6 +121,7 @@ public class ServicioCargaDeRecetaTest {
       }
     }
     datosReceta.setIngredientes(ingredienteDTOS);
+    datosReceta.setTipo("ALMUERZO");
     return datosReceta;
   }
 
