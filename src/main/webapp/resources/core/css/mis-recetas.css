@@ -1,78 +1,164 @@
-/* Estilos específicos para la vista de Mis Recetas */
+/* ==========================================================================
+   Estilos específicos para la sección de Mis Recetas (Evitando Bootstrap)
+   ========================================================================== */
 
-.bg-custom-recipe {
-    background-color: #F9F6EF !important; /* Fondo off-white de la guía */
-    color: #4C4847; /* Gris oscuro para textos */
-    font-family: 'Lato', sans-serif;
+.recetas-main-container {
+    padding: 2em;
+    font-family: var(--fuente-cuerpo);
 }
 
-.title-page {
-    font-family: 'Montserrat', sans-serif;
+/* Encabezado flex alineado con el estilo del grupo */
+.recetas-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid var(--color-grupo-borde);
+}
+
+.recetas-titulo-seccion {
+    font-family: var(--fuente-titulos);
+    font-size: var(--font-size-titulo);
+    color: var(--color-titulo);
     font-weight: 700;
-    color: #4C4847;
 }
 
-/* Botón Verde Principal */
-.btn-custom-primary {
-    background-color: #03A62C;
-    color: #FFFFFF;
-    font-family: 'Montserrat', sans-serif;
+/* Botones adaptados para heredar la interacción del panel */
+.btn-recetas-principal {
+    background-color: var(--color-principal);
+    color: white !important;
+    padding: 0.6em 1.2em;
+    border-radius: 10px;
+    font-family: var(--fuente-titulos);
     font-weight: 700;
-    border: none;
-    border-radius: 10px; /* Radio estricto de la guía */
-    padding: 10px 20px;
-    text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
+    font-size: var(--font-size-textos-pequenos);
+}
+.btn-recetas-principal:hover {
+    background-color: var(--color-principal-hover);
 }
 
-.btn-custom-primary:hover {
-    background-color: #028523;
-    color: #FFFFFF;
+.btn-recetas-principal i, .btn-recetas-secundario i {
+    margin-right: 0.5em;
 }
 
 /* Contenedor del Estado Vacío */
-.empty-state-container {
-    background-color: #FFFFFF;
+.recetas-empty-state {
+    background-color: var(--color-grupo);
+    border: 1px solid var(--color-grupo-borde);
     border-radius: 10px;
-    padding: 60px 40px;
-    box-shadow: 0 4px 6px rgba(76, 72, 71, 0.05); /* Sombra muy sutil */
-    margin-top: 40px;
+    padding: 4em 2em;
+    text-center: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
 }
 
-.empty-state-icon {
-    font-size: 4rem;
-    color: #03A62C; /* Tu verde institucional */
-    opacity: 0.3;
+.empty-icon-wrapper {
+    font-size: 3.5rem;
+    color: var(--color-principal);
+    opacity: 0.6;
 }
 
-.empty-state-title {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: #4C4847;
-    margin-bottom: 10px;
+.recetas-empty-state h2 {
+    font-family: var(--fuente-titulos);
+    font-size: var(--font-size-subtitulo);
+    color: var(--color-titulo);
 }
 
-.empty-state-text {
-    font-size: 1.05rem;
-    color: #7A7574; /* Un gris un poco más suave para el subtítulo */
+.recetas-empty-state p {
+    color: var(--color-subtitulo);
+    font-size: var(--font-size-texto);
 }
 
-/* Botón de acción grande dentro del estado vacío (con el color dorado/amarillo opcional de tu guía) */
-.btn-custom-secondary-action {
-    background-color: #F29F05; /* El color amarillo/dorado de tus componentes secundarios */
-    color: #FFFFFF;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    border: none;
+.btn-recetas-secundario {
+    background-color: var(--color-complementary, var(--color-complementario));
+    color: white !important;
+    padding: 0.8em 1.5em;
     border-radius: 10px;
-    padding: 12px 24px;
+    font-family: var(--fuente-titulos);
+    font-weight: 700;
+}
+.btn-recetas-secundario:hover {
+    background-color: var(--color-complementario-hover);
+}
+
+/* NUESTRA GRILLA RESPONSIVE PURA */
+.recetas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5em;
+    width: 100%;
+}
+
+/* Estructura de Tarjetas */
+.receta-card {
+    background-color: #ffffff;
+    border: 1px solid var(--color-grupo-borde);
+    border-radius: 10px;
+    padding: 1.5em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+.receta-card-title {
+    font-family: var(--fuente-titulos);
+    font-size: var(--font-size-texto);
+    color: var(--color-titulo);
+    font-weight: 700;
+    margin-bottom: 0.4em;
+}
+
+.receta-badge-tipo {
     display: inline-block;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
+    align-self: flex-start;
+    background-color: var(--color-grupo);
+    border: 1px solid var(--color-grupo-borde);
+    color: var(--color-subtitulo);
+    padding: 0.3em 0.6em;
+    border-radius: 5px;
+    font-size: var(--font-size-textos-pequenos);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
 }
 
-.btn-custom-secondary-action:hover {
-    background-color: #D48B04;
-    color: #FFFFFF;
+.receta-sub-ingredientes {
+    font-family: var(--fuente-titulos);
+    font-size: var(--font-size-textos-pequenos);
+    color: var(--color-subtitulo);
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+}
+
+.receta-lista-ingredientes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.receta-ingrediente-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4em 0;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: var(--font-size-texto);
+    color: var(--color-subtitulo);
+}
+
+.receta-ingrediente-item:last-child {
+    border-bottom: none;
+}
+
+.receta-cantidad-badge {
+    background-color: var(--color-principal);
+    color: white;
+    padding: 0.2em 0.6em;
+    border-radius: 20px;
+    font-size: var(--font-size-textos-pequenos);
+    font-weight: 700;
 }
