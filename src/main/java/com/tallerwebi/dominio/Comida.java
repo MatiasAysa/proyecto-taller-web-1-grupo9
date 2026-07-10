@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.springframework.lang.Nullable;
 
 @Entity
 public class Comida {
@@ -19,6 +20,10 @@ public class Comida {
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "comida_items", joinColumns = @JoinColumn(name = "comida_id"))
   private List<ItemComida> items = new ArrayList<>();
+
+  @Nullable
+  @ManyToOne
+  private Usuario autor;
 
   public Long getId() {
     return id;
@@ -50,6 +55,15 @@ public class Comida {
 
   public void setItems(List<ItemComida> items) {
     this.items = items;
+  }
+
+  @Nullable
+  public Usuario getAutor() {
+    return autor;
+  }
+
+  public void setAutor(@Nullable Usuario autor) {
+    this.autor = autor;
   }
 
   public Double getPrecioEstimado() {

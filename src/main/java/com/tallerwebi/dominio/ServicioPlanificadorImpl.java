@@ -83,7 +83,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     List<Comida> comidasAptas = ordenarComidasPorObjetivo(
       obtenerComidasFiltradasPorPerfil(
         repositorioPlanificador.obtenerComidasDisponibles(),
-        usuario.getPerfilAlimentario()
+        usuario
       ),
       usuario.getPerfilAlimentario()
     );
@@ -228,24 +228,33 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
     }
   }
 
-  private List<Comida> obtenerComidasFiltradasPorPerfil(
-    List<Comida> comidas,
-    PerfilAlimentarioUsuario perfil
-  ) {
+  private List<Comida> obtenerComidasFiltradasPorPerfil(List<Comida> comidas, Usuario usuario) {
+    PerfilAlimentarioUsuario perfil = usuario.getPerfilAlimentario();
+    List<Comida> comidasFiltradasPorUsuario = obtenerComidasFiltradasPorUsuario(usuario, comidas);
     if (
       perfil == null ||
       perfil.getPerfilRestricciones() == null ||
       perfil.getPerfilRestricciones().isEmpty()
     ) {
-      return comidas;
+      return comidasFiltradasPorUsuario;
     }
     List<Comida> aptas = new ArrayList<>();
-    for (Comida com : comidas) {
+    for (Comida com : comidasFiltradasPorUsuario) {
       if (verificarComidaApta(com, perfil.getPerfilRestricciones())) {
         aptas.add(com);
       }
     }
     return aptas;
+  }
+
+  private List<Comida> obtenerComidasFiltradasPorUsuario(Usuario usuario, List<Comida> comidas) {
+    List<Comida> comidasFiltradas = new ArrayList<Comida>();
+    for (Comida c : comidas) {
+      if (c != null && (c.getAutor() == null || c.getAutor().equals(usuario))) comidasFiltradas.add(
+        c
+      );
+    }
+    return comidasFiltradas.isEmpty() ? comidas : comidasFiltradas;
   }
 
   private boolean verificarComidaApta(Comida com, Set<PerfilRestriccion> restricciones) {

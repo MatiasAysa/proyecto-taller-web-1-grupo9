@@ -23,6 +23,8 @@ public class Alimento {
   @Column(name = "url_supermercado", length = 500)
   private String urlSupermercado;
 
+  private String nombreGenerico;
+
   public String getUrlSupermercado() {
     return urlSupermercado;
   }
@@ -117,5 +119,13 @@ public class Alimento {
 
   public void setGrasas(Double grasas) {
     infoNutricional.setGrasas(grasas);
+  }
+
+  public String getNombreGenerico() {
+    return nombreGenerico;
+  }
+
+  public void setNombreGenerico(String nombreGenerico) {
+    this.nombreGenerico = nombreGenerico;
   }
 }

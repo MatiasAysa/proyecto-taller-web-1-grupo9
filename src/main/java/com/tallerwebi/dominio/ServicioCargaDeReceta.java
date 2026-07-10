@@ -6,5 +6,9 @@ import java.util.List;
 public interface ServicioCargaDeReceta {
   List<String> obtenerNombresDeAlimentosExistentes();
 
-  void cargarReceta(DatosReceta datosReceta);
+  void cargarReceta(DatosReceta datosReceta, String usuario);
+
+  List<DatosReceta> obtenerRecetasDeUsuario(String email);
+
+  void eliminarReceta(Long id, String string);
 }
