@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorPresupuesto {
 
-  private static final String MENSAJE_PRESUPUESTO_EXITOSO = "Presupuesto creado con exito";
   private static final String MENSAJE_INTERVALO_OBLIGATORIO = "El intervalo es obligatorio";
   private static final String MENSAJE_FECHA_OBLIGATORIA = "La fecha es obligatoria";
   private static final String MENSAJE_MONTO_OBLIGATORIO = "El monto es obligatorio";
@@ -44,8 +43,6 @@ public class ControladorPresupuesto {
     @ModelAttribute("datosPresupuesto") DatosPresupuesto datosPresupuesto,
     HttpSession session
   ) {
-    ModelMap model = new ModelMap();
-    model.put("mensaje", MENSAJE_PRESUPUESTO_EXITOSO);
     if (datosPresupuesto.getIntervalo() == 0) {
       return fallarPresupuesto(MENSAJE_INTERVALO_OBLIGATORIO);
     }
@@ -59,16 +56,14 @@ public class ControladorPresupuesto {
         datosPresupuesto.getFecha(),
         session.getAttribute(CAMPO_MAIL_USUARIO).toString()
       );
-      model.put("monto", datosPresupuesto.getMonto());
-      model.put("intervalo", datosPresupuesto.getIntervalo());
-      model.put("fecha", datosPresupuesto.getFecha());
+      return new ModelAndView("redirect:/panel-cliente/datos-personales");
+
+
     } catch (PresupuestoNoPositivoException e) {
       return fallarPresupuesto(MENSAJE_MONTO_OBLIGATORIO);
     } catch (MontoPresupuestoInsuficienteException e) {
       return fallarPresupuesto(e.getMensaje());
     }
-    // return new ModelAndView("mi-presupuesto", model);
-    return new ModelAndView("redirect:/panel-cliente/datos-personales");
   }
 
   private ModelAndView fallarPresupuesto(String mensaje) {
@@ -104,10 +99,6 @@ public class ControladorPresupuesto {
       "redirect:Registro-perfil-alimentario/"
     );
     return new ModelAndView("redirect:/mi-presupuesto");
-  }
-
-  public String getMENSAJE_PRESUPUESTO_EXITOSO() {
-    return MENSAJE_PRESUPUESTO_EXITOSO;
   }
 
   public String getMENSAJE_INTERVALO_OBLIGATORIO() {
