@@ -11,4 +11,6 @@ public interface ServicioCargaDeReceta {
   List<DatosReceta> obtenerRecetasDeUsuario(String email);
 
   void eliminarReceta(Long id, String string);
+
+  DatosReceta obtenerRecetaPorId(Long id);
 }

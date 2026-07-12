@@ -42,6 +42,16 @@ public class ControladorCargaDeReceta {
     return new ModelAndView(VISTA_CREAR_RECETA, model);
   }
 
+  @RequestMapping("/modificar-receta/{id}")
+  public ModelAndView irAModificarReceta(HttpSession session, @PathVariable("id") Long id) {
+    if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(REDIRECT_LOGIN);
+    ModelMap model = new ModelMap();
+    DatosReceta datosReceta = servicioCargaDeReceta.obtenerRecetaPorId(id);
+    model.put(CAMPO_DATOS_RECETA, datosReceta);
+    model.put("listaAlimentos", servicioCargaDeReceta.obtenerNombresDeAlimentosExistentes());
+    return new ModelAndView(VISTA_CREAR_RECETA, model);
+  }
+
   @RequestMapping(path = "/validar-receta", method = RequestMethod.POST)
   public ModelAndView validarReceta(DatosReceta datosReceta, HttpSession session) {
     if (session.getAttribute(CAMPO_MAIL_USUARIO) == null) return new ModelAndView(REDIRECT_LOGIN);
