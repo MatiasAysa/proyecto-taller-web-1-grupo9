@@ -40,10 +40,7 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
   @Override
   public void cargarReceta(DatosReceta datosReceta, String email) {
     Usuario usuario = repositorioUsuario.buscar(email);
-    Comida recetaConMismoNombre = obtenerRecetaPorNombreYUsuario(
-      datosReceta.getNombre(),
-      usuario
-    );
+    Comida recetaConMismoNombre = obtenerRecetaPorNombreYUsuario(datosReceta.getNombre(), usuario);
     if (
       recetaConMismoNombre != null &&
       !Objects.equals(datosReceta.getId(), recetaConMismoNombre.getId())

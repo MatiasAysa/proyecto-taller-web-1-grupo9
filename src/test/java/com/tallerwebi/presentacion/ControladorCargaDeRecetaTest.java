@@ -2,8 +2,7 @@ package com.tallerwebi.presentacion;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.ServicioCargaDeReceta;
 import java.util.ArrayList;
@@ -113,11 +112,56 @@ public class ControladorCargaDeRecetaTest {
   }
 
   @Test
+  public void siElServicioDevuelveUnaExcepcionSeVuelveALaVistaCrearReceta() {
+    givenExisteUsuario();
+    givenExistenAlimentos(List.of("leche", "harina", "huevo"));
+    IngredienteDTO i1 = new IngredienteDTO();
+    i1.setNombre("leche");
+    i1.setCantidad(250D);
+    IngredienteDTO i2 = new IngredienteDTO();
+    i2.setNombre("harina");
+    i2.setCantidad(100D);
+    IngredienteDTO i3 = new IngredienteDTO();
+    i3.setNombre("huevo");
+    i3.setCantidad(2D);
+    DatosReceta datosReceta = new DatosReceta();
+    datosReceta.setIngredientes(new ArrayList<IngredienteDTO>(List.of(i1, i2, i3)));
+
+    thenNoSeCreaLaReceta(controlador.validarReceta(datosReceta, session));
+
+    datosReceta.setNombre("tortilla");
+
+    thenNoSeCreaLaReceta(controlador.validarReceta(datosReceta, session));
+
+    datosReceta.setTipo("desayuno");
+
+    thenSeCreaLaReceta(controlador.validarReceta(datosReceta, session));
+  }
+
+  @Test
   public void sePuedeEliminarUnaReceta() {
     givenExisteUsuario();
     DatosReceta datosReceta = givenExisteReceta();
     ModelAndView mav = whenBorroReceta(datosReceta.getId());
     thenRedirigeAMisRecetas(mav);
+  }
+
+  @Test
+  public void sePuedeIrModificarReceta() {
+    givenExisteUsuario();
+    givenExisteRecetaConId();
+    ModelAndView mav = controlador.irAModificarReceta(session, 1L);
+    thenVoyAModificarReceta(mav);
+  }
+
+  private void givenExisteRecetaConId() {
+    when(servicioCargaDeReceta.obtenerRecetaPorId(1L)).thenReturn(givenExisteReceta());
+  }
+
+  private void thenVoyAModificarReceta(ModelAndView mav) {
+    DatosReceta datosReceta = (DatosReceta) mav.getModel().get("datosReceta");
+    assertThat(mav.getViewName(), equalToIgnoringCase("crear-receta"));
+    assertThat(datosReceta, is(notNullValue()));
   }
 
   private void thenRedirigeAMisRecetas(ModelAndView mav) {

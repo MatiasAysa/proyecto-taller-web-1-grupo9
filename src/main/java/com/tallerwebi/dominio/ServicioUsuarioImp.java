@@ -42,7 +42,6 @@ public class ServicioUsuarioImp implements ServicioUsuario {
     }
     return true;
   }
-  
 
   @Override
   public DatosClientePanel obtenerDatosClientePanel(String email) {

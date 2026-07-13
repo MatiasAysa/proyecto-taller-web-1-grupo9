@@ -1,8 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
@@ -42,6 +41,56 @@ public class RepositorioRecetaTest {
     Comida receta = givenComidaValida(usuario);
     whenGuardoReceta(receta);
     thenSeGuardaLaReceta(receta);
+  }
+
+  @Transactional
+  @Test
+  public void sePuedebuscarRecetaPorNombreYUsuario() {
+    Usuario usuario = givenExisteUsuario();
+    Comida receta = givenComidaValida(usuario);
+    repositorioReceta.guardarReceta(receta);
+    Comida resultadoObtenido = whenBuscoRecetaPorNombreYUsuario(receta);
+    assertThat(receta, is(equalTo(resultadoObtenido)));
+  }
+
+  @Transactional
+  @Test
+  public void sePuedeModificarUnaReceta() {
+    Usuario usuario = givenExisteUsuario();
+    Comida receta = givenComidaValida(usuario);
+    repositorioReceta.guardarReceta(receta);
+    receta.setNombre("Comida muy rica");
+    receta.setTipo(TipoDeComida.ALMUERZO);
+    repositorioReceta.guardarReceta(receta);
+    List<Comida> resultadoEsperado = List.of(receta);
+    List<Comida> resultadoObtenido = repositorioReceta.obtenerRecetasDeUsuario(usuario);
+    assertThat(resultadoObtenido, equalTo(resultadoEsperado));
+  }
+
+  @Transactional
+  @Test
+  public void sePuedeObtenerRecetasDeUsuario() {
+    Usuario usuario = givenExisteUsuario();
+    Comida receta = givenComidaValida(usuario);
+    repositorioReceta.guardarReceta(receta);
+    List<Comida> resultadoObtenido = repositorioReceta.obtenerRecetasDeUsuario(usuario);
+    assertThat(resultadoObtenido, equalTo(List.of(receta)));
+  }
+
+  @Transactional
+  @Test
+  public void sePuedeEliminarUnaReceta() {
+    Usuario usuario = givenExisteUsuario();
+    Comida receta = givenComidaValida(usuario);
+    repositorioReceta.guardarReceta(receta);
+    repositorioReceta.eliminarReceta(receta.getId());
+
+    List<Comida> resultadoObtenido = repositorioReceta.obtenerRecetasDeUsuario(usuario);
+    assertThat(resultadoObtenido, is(empty()));
+  }
+
+  private Comida whenBuscoRecetaPorNombreYUsuario(Comida receta) {
+    return repositorioReceta.buscarRecetaPorNombreYUsuario(receta.getNombre(), receta.getAutor());
   }
 
   private void thenSeGuardaLaReceta(Comida receta) {

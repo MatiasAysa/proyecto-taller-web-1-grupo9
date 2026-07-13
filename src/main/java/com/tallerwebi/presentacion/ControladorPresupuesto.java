@@ -57,8 +57,6 @@ public class ControladorPresupuesto {
         session.getAttribute(CAMPO_MAIL_USUARIO).toString()
       );
       return new ModelAndView("redirect:/panel-cliente/datos-personales");
-
-
     } catch (PresupuestoNoPositivoException e) {
       return fallarPresupuesto(MENSAJE_MONTO_OBLIGATORIO);
     } catch (MontoPresupuestoInsuficienteException e) {
