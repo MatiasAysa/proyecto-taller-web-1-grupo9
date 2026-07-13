@@ -3,17 +3,23 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.Cordenandas;
 import com.tallerwebi.dominio.DatosClientePanel;
 import com.tallerwebi.dominio.Direccion;
+import com.tallerwebi.dominio.ItemDespensa;
 import com.tallerwebi.dominio.ServicioBuscarSupermercado;
+import com.tallerwebi.dominio.ServicioDespensa;
 import com.tallerwebi.dominio.ServicioUsuario;
 import com.tallerwebi.dominio.Supermercado;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -21,14 +27,16 @@ public class ControladorPanelcliente {
 
   private final ServicioUsuario servicioUsuario;
   private final ServicioBuscarSupermercado servicioBuscarSupermercado;
+  private final ServicioDespensa servicioDespensa;
 
   @Autowired
   public ControladorPanelcliente(
-    ServicioUsuario servicioUsuario,
-    ServicioBuscarSupermercado servicioBuscarSupermercado
-  ) {
+      ServicioUsuario servicioUsuario,
+      ServicioBuscarSupermercado servicioBuscarSupermercado,
+      ServicioDespensa servicioDespensa) {
     this.servicioUsuario = servicioUsuario;
     this.servicioBuscarSupermercado = servicioBuscarSupermercado;
+    this.servicioDespensa = servicioDespensa;
   }
 
   @GetMapping("/panel-cliente")
@@ -84,8 +92,7 @@ public class ControladorPanelcliente {
 
   @PostMapping("/panel-cliente/supermercados")
   public ModelAndView procesarBusquedaSupermercados(
-    @ModelAttribute("direccion") Direccion direccion
-  ) {
+      @ModelAttribute("direccion") Direccion direccion) {
     ModelMap modelo = new ModelMap();
     Cordenandas cordenandas = servicioBuscarSupermercado.obtenerCordenadaActual(direccion);
     if (cordenandas != null) {
@@ -93,9 +100,8 @@ public class ControladorPanelcliente {
       modelo.put("longitud", cordenandas.getLongitud());
 
       List<Supermercado> supermercados = servicioBuscarSupermercado.buscarSupermercadosCercanos(
-        cordenandas.getLatitud(),
-        cordenandas.getLongitud()
-      );
+          cordenandas.getLatitud(),
+          cordenandas.getLongitud());
       modelo.put("supermercados", supermercados);
     }
 
@@ -105,7 +111,26 @@ public class ControladorPanelcliente {
 
   private String obtenerEmail(HttpSession session) {
     return session.getAttribute("usuarioLogueadoEmail") != null
-      ? session.getAttribute("usuarioLogueadoEmail").toString()
-      : null;
+        ? session.getAttribute("usuarioLogueadoEmail").toString()
+        : null;
   }
+
+  @GetMapping("/panel-cliente/despensa")
+  public ModelAndView irADespensa(HttpSession session) {
+    String email = obtenerEmail(session);
+    if (email == null)
+      return new ModelAndView("redirect:/login");
+
+    List<ItemDespensa> alimentos = servicioDespensa.obtenerDespensaDelUsuario(email);
+
+    ModelMap modelo = new ModelMap();
+    if (alimentos != null) {
+      modelo.put("alimentos", alimentos);
+      return new ModelAndView("panel__despensa", modelo);
+    }
+    return new ModelAndView("panel__despensa");
+  }
+
+  
+  
 }

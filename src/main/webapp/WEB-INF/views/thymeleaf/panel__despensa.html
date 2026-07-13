@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi despensa</title>
+    <link rel="stylesheet" th:href="@{/css/panel_allacena.css}">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+        :root {
+            --color-principal: #03A62C;
+            --color-principal-hover: #007B37;
+            --color-complementario: #F29F05;
+            --color-complementario-hover: #D88107;
+            --fuente-titulos: 'Montserrat', sans-serif;
+            --fuente-cuerpo: 'Lato', sans-serif;
+            --color-titulo: #000000;
+            --color-subtitulo: #4C4847;
+            --color-error: #db1c65;
+
+            --font-size-titulo: 24px;
+            --font-size-subtitulo: 20px;
+            --font-size-texto: 16px;
+            --font-size-textos-pequenos: 14px;
+
+            --color-grupo: #f8f8f8;
+            --white-hover: #ebebeb;
+            --color-grupo-borde: #d4d4d4;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            list-style: none;
+            border: none;
+        }
+
+        body {
+            font-family: var(--fuente-cuerpo);
+            background-color: #ffffff;
+            color: var(--color-subtitulo);
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            padding: 1em 2em;
+        }
+
+        .sub-container {
+            padding: 1em 10em;
+        }
+
+        .btn-1 {
+            background-color: var(--color-principal);
+            color: white;
+            padding: 0.5em 1em;
+            border-radius: 0.5em;
+        }
+
+        .btn-2 {
+            background-color: var(--color-complementario);
+            font-size: var(--font-size-texto);
+            color: white;
+            padding: 1.1em 2em;
+            border-radius: 1.4em;
+        }
+
+        button {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            color: var(--color-subtitulo);
+        }
+
+        button:active {
+            transform: scale(1.2);
+        }
+
+        a {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            color: var(--color-subtitulo);
+        }
+
+        a:hover {
+            transform: scale(1.1);
+        }
+
+        .navbar .logotipo {
+            font-weight: 400;
+            font-size: var(--font-size-titulo);
+            letter-spacing: 2px;
+            color: var(--color-principal);
+            font-family: "Bebas Neue", sans-serif;
+        }
+
+        .navbar .logotipo:active {
+            color: var(--color-complementario);
+        }
+
+        .navbar a:hover {
+            cursor: pointer;
+        }
+
+        .navbar a:hover:not(.logotipo) {
+            color: var(--color-principal);
+        }
+
+        .navbar a:active:not(.logotipo) {
+            color: var(--color-principal-hover);
+        }
+
+        .navbar__enlaces {
+            display: flex;
+            gap: 3em;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ========== PANEL ========== */
+        .header-panel {
+            background-color: var(--color-principal);
+            width: 100%;
+            height: 4em;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .header-panel .navbar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .titulo-seccion {
+            color: white;
+            margin-left: -25em;
+        }
+
+        .header-panel .navbar a {
+            color: white;
+        }
+
+        .header-panel .navbar a:hover {
+            color: white;
+        }
+
+        .btn-perfil {
+            display: flex;
+            flex-direction: rows;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.3em 1em 0.3em 1em;
+            border-radius: 10px;
+            transition: transform 0.2s ease;
+            border: none;
+        }
+
+        .btn-perfil:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-perfil img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .btn-perfil span {
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 0.5em;
+            margin-right: 0.7em;
+        }
+
+        .btn-perfil img:last-child {
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .menu-perfil {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--color-grupo);
+            border: 1px solid var(--color-grupo-borde);
+            border-radius: 0.5em;
+            display: none;
+        }
+
+        /* ========== ASIDE ========== */
+        aside {
+            height: 100vh;
+            border-right: 1px solid var(--color-grupo-borde);
+            font-size: var(--font-size-subtitulo);
+            width: 250px;
+        }
+
+        .aside__enlaces {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            padding: 1.5em 2em 1em 0.7em;
+            width: 100%;
+            margin-left: 0.8em;
+        }
+
+        .aside__enlaces a {
+            display: block;
+            padding: 0.5em;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: var(--font-size-subtitulo);
+        }
+
+        .aside__enlaces a:hover {
+            background-color: var(--white-hover);
+            color: var(--color-principal)
+        }
+
+        main {
+            height: 100vh;
+            overflow-y: scroll;
+            flex: 1;
+            margin-top: 1em;
+            padding-bottom: 10em;
+        }
+
+
+        .search-bar {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 2em;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            width: 100%;
+
+            padding: 1em;
+            border-radius: 0.5em;
+            border: 1px solid var(--color-grupo-borde);
+        }
+
+        .search-bar button {
+            padding: 1em 2em;
+            border-radius: 0.5em;
+            border: none;
+            background-color: var(--color-principal);
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--color-principal-hover);
+        }
+
+        .search-bar {
+            background-color: var();
+        }
+
+        /* ============ grid    =========== */
+        .alimentos-container-grid {
+
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        /* ============ cards   ======= */
+        .alimento-card {
+            display: flex;
+            flex-direction: column;
+            width: 250px;
+            height: 250px;
+            border-radius: 5px;
+            padding: 15px;
+
+            box-shadow: 0px 4px 8px 0px #00000040;
+
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-eliminar {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-eliminar img {
+            width: 23px;
+            height: 22px;
+            filter: invert(19%) sepia(95%) saturate(7000%) hue-rotate(358deg) brightness(95%) contrast(116%);
+        }
+
+        .imagenAlimento {
+            width: 70%;
+            margin: auto;
+            border-radius: 5px;
+            aspect-ratio: 1/1;
+            background-color: var(--color-complementario);
+        }
+
+        .cantidad {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5em;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cantidad .btn-minus,
+        .cantidad .btn-plus {
+            width: 33px;
+            height: 33px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 3px solid var(--color-complementario);
+            color: black;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        button.agregar {
+            position: fixed;
+            z-index: 1;
+            bottom: 60px;
+            right: 35px;
+        }
+
+
+        /* =========== POPUP AGREGAR ALIMENTO  ========*/
+        .pop-up-agregar-alimento {
+            display: flex;
+            flex-direction: column;
+
+            font-size: var(--font-size-texto);
+            font-weight: 600;
+            z-index: 2;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            background-color: white;
+            padding: 30px 60px;
+            border-radius: 10px;
+             
+            background-color: white; 
+            box-shadow: 0px 4px 8px 0px #00000040;
+            
+            display: none;
+        }
+
+        .pop-up-agregar-alimento form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pop-up-agregar-alimento input,select {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--color-grupo-borde);
+        }
+    </style>
+</head>
+
+<body>
+    <header th:replace="~{fragments-panel-cliente::header-panel}"></header>
+    <aside th:replace="~{fragments-panel-cliente::aside-panel}"></aside>
+
+    <main class="container">
+
+        <div class="pop-up-agregar-alimento" id="popUpAgregarAlimento">
+            <form action="">
+                <button></button>
+                <label for="nombreAlimento">Nombre</label>
+                <input type="text" id="nombreAlimento">
+
+                <label for="tipoComida">Tipo</label>
+                <select id="tipoComida">
+                    <option value="DESAYUNO">Desayuno</option>
+                    <option value="ALMUERZO">Almuerzo</option>
+                    <option value="MERIENDA">Merienda</option>
+                    <option value="CENA">Cena</option>
+                </select>
+
+                <div style="display: flex; justify-content: space-between;">
+                    <label for="esVegetariano">Es Vegetariano</label>
+                    <input type="checkbox" id="esVegetariano">
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <label for="esCeliaco">Es Celiaco</label>
+                    <input type="checkbox" id="esCeliaco">
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <label for="contieneLactosa">Contiene Lactosa</label>
+                    <input type="checkbox" id="contieneLactosa">
+                </div>
+
+                <label for="calorias">Calorias</label>
+                <input type="number" id="calorias">
+
+                <label for="proteinas">Proteinas</label>
+                <input type="number" id="proteinas">
+
+                <label for="carbohidratos">Carbohidratos</label>
+                <input type="number" id="carbohidratos">
+
+                <label for="grasas">Grasas</label>
+                <input type="number" id="grasas">
+
+                <button class="btn-1" type="submit">Agregar</button>
+                <button style="background-color:var(--color-complementario);" class="btn-1" type="button"
+                    id="cancelar">Cancelar</button>
+            </form>
+        </div>
+
+        <button class="btn-2 agregar" id="btnAgregar">Agregar</button>
+
+        <div class="search-bar sub-container">
+            <input type="text" placeholder="Buscar alimento..." id="searchInput">
+            <button type="button" class="btn-1" id="searchBtn">Buscar</button>
+        </div>
+
+        <div class="alimentos-container-grid">
+            <div class="alimento-card">
+                <div class="card-header">
+                    <span class="cuducidad">29d</span>
+                    <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
+                            alt="imagenEliminar"></button>
+                </div>
+                <!-- <span hidden th:text="${itemDespensa.id}">33</span> -->
+                <img class="imagenAlimento" src="" alt="imagenAlimento">
+                <div class="cantidad"> 
+                    <span class="number">49</span>
+                    <button class="btn-1" id="btn-editar">Editar</button>
+                </div>
+            </div>
+
+
+
+            <div class="alimentos-container grid-container">
+                <div class="alimento-card">
+                    <div class="card-header">
+                        <span class="cuducidad">29d</span>
+                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
+                                alt="imagenEliminar"></button>
+                    </div>
+                    <img class="imagenAlimento" src="" alt="imagenAlimento">
+                    <div class="cantidad">
+                        <button class="btn-minus">-</button>
+                        <span class="number">49</span>
+                        <button class="btn-plus">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alimentos-container grid-container">
+                <div class="alimento-card">
+                    <div class="card-header">
+                        <span class="cuducidad">29d</span>
+                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
+                                alt="imagenEliminar"></button>
+                    </div>
+                    <img class="imagenAlimento" src="" alt="imagenAlimento">
+                    <div class="cantidad">
+                        <button class="btn-minus">-</button>
+                        <span class="number">49</span>
+                        <button class="btn-plus">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alimentos-container grid-container">
+                <div class="alimento-card">
+                    <div class="card-header">
+                        <span class="cuducidad">29d</span>
+                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
+                                alt="imagenEliminar"></button>
+                    </div>
+                    <img class="imagenAlimento" src="" alt="imagenAlimento">
+                    <div class="cantidad">
+                        <button class="btn-minus">-</button>
+                        <span class="number">49</span>
+                        <button class="btn-plus">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alimentos-container grid-container">
+                <div class="alimento-card">
+                    <div class="card-header">
+                        <span class="cuducidad">29d</span>
+                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
+                                alt="imagenEliminar"></button>
+                    </div>
+                    <img class="imagenAlimento" src="" alt="imagenAlimento">
+                    <div class="cantidad">
+                        <button class="btn-minus">-</button>
+                        <span class="number">49</span>
+                        <button class="btn-plus">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alimentos-container grid-container">
+                <div class="alimento-card">
+                    <div class="card-header">
+                        <span class="cuducidad">29d</span>
+                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
+                                alt="imagenEliminar"></button>
+                    </div>
+                    <img class="imagenAlimento" src="" alt="imagenAlimento">
+                    <div class="cantidad">
+                        <button class="btn-minus">-</button>
+                        <span class="number">49</span>
+                        <button class="btn-plus">+</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </main>
+
+    <script th:src="@{/js/panel_allacena.js}"></script>
+</body>
+
+</html>
