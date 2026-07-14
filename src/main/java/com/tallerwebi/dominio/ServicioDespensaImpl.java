@@ -1,93 +1,109 @@
 package com.tallerwebi.dominio;
 
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
 public class ServicioDespensaImpl implements ServicioDespensa {
 
-    private final RepositorioDespensa repositorioDespensa;
-    private final RepositorioUsuario repositorioUsuario;
-    public ServicioDespensaImpl(RepositorioDespensa repositorioDespensa, RepositorioUsuario repositorioUsuario) {
-        this.repositorioDespensa = repositorioDespensa;
-        this.repositorioUsuario = repositorioUsuario;
+  private final RepositorioDespensa repositorioDespensa;
+  private final RepositorioUsuario repositorioUsuario;
+  private final RepositorioAlimento repositorioAlimento;
+
+  @Autowired
+  public ServicioDespensaImpl(
+    RepositorioDespensa repositorioDespensa,
+    RepositorioUsuario repositorioUsuario,
+    RepositorioAlimento repositorioAlimento
+  ) {
+    this.repositorioDespensa = repositorioDespensa;
+    this.repositorioUsuario = repositorioUsuario;
+    this.repositorioAlimento = repositorioAlimento;
+  }
+
+  @Override
+  public List<ItemDespensa> obtenerDespensaDelUsuario(String email) {
+    Usuario usuario = this.repositorioUsuario.buscar(email);
+    if (usuario == null) {
+      throw new RuntimeException("Usuario no encontrado");
+    }
+    return this.repositorioDespensa.obtenerDespensaDelUsuario(usuario);
+  }
+
+  @Override
+  public void guardarOActualizarDespensa(ItemDespensa item) {
+    repositorioDespensa.guardarOActualizarDespensa(item);
+  }
+
+  @Override
+  public void agregarItemDespensa(String email, ItemDespensaDTO itemDespensaDTO) {
+    Usuario usuario = this.repositorioUsuario.buscar(email);
+    if (usuario == null) {
+      throw new RuntimeException("Usuario no encontrado");
     }
 
-    @Override
-    public List<ItemDespensa> obtenerDespensaDelUsuario(String email) {
-        Usuario usuario = this.repositorioUsuario.buscar(email);
-        if (usuario == null) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
-        return this.repositorioDespensa.obtenerAlacenaDelUsuario(usuario);
+    // si existe alimento en la base de datos
+    if (itemDespensaDTO.getIdAlimentoExistenteEnBaseDatos() != null) {
+      Alimento alimento = repositorioAlimento.buscarPorId(
+        itemDespensaDTO.getIdAlimentoExistenteEnBaseDatos()
+      );
+      this.repositorioDespensa.agregarItemDespensa(
+          usuario,
+          alimento,
+          itemDespensaDTO.getCantidad()
+        );
+      return;
     }
 
-    @Override
-    public void guardarOActualizarDespensa(ItemDespensa item) {
-        repositorioDespensa.guardarOActualizarDespensa(item);
+    // no existe alimento en la base de datos
+    ItemDespensa itemDespensaNuevo = new ItemDespensa();
+    itemDespensaNuevo.setNombre(itemDespensaDTO.getNombre());
+    itemDespensaNuevo.setTipoComida(itemDespensaDTO.getTipoComida());
+    itemDespensaNuevo.setEsVegetariano(itemDespensaDTO.getEsVegetariano());
+    itemDespensaNuevo.setEsCeliaco(itemDespensaDTO.getEsCeliaco());
+    itemDespensaNuevo.setContieneLactosa(itemDespensaDTO.getContieneLactosa());
+    itemDespensaNuevo
+      .getInfoNutricional()
+      .setCalorias(itemDespensaDTO.getInfoNutricional().getCalorias());
+    itemDespensaNuevo
+      .getInfoNutricional()
+      .setProteinas(itemDespensaDTO.getInfoNutricional().getProteinas());
+    itemDespensaNuevo
+      .getInfoNutricional()
+      .setCarbohidratos(itemDespensaDTO.getInfoNutricional().getCarbohidratos());
+    itemDespensaNuevo
+      .getInfoNutricional()
+      .setGrasas(itemDespensaDTO.getInfoNutricional().getGrasas());
+    itemDespensaNuevo.setCantidad(itemDespensaDTO.getCantidad());
+    itemDespensaNuevo.setFechaVencimiento(itemDespensaDTO.getFechaVencimiento());
+
+    // this.repositorioAlimento.guard
+    this.repositorioDespensa.agregarItemDespensaNuevo(usuario, itemDespensaNuevo);
+  }
+
+  @Override
+  public List<Alimento> obtenerAlimentosBaseDatos() {
+    return repositorioAlimento.obtenerListaAlimentos();
+  }
+
+  @Override
+  public void eliminarItemDespensa(Long id) {
+    repositorioDespensa.eliminarItemDespensa(id);
+  }
+
+  @Override
+  public void cambiarCantidadDespensa(Long id, Double cantidad) {
+    ItemDespensa item = repositorioDespensa.obtenerItemDespensaPorId(id);
+    if (item == null) {
+      throw new RuntimeException("Item no encontrado");
     }
-
-    
-    public ItemDespensa buscarItem(Usuario usuario, Alimento alimento) {
-
-        return repositorioDespensa.obtenerDespensaDelUsuario(usuario)
-                .stream()
-                .filter(i -> i.getAlimento().getId().equals(alimento.getId()))
-                .findFirst()
-                .orElse(null);
+    if (item.getCantidad() + cantidad <= 0) {
+      repositorioDespensa.eliminarItemDespensa(id);
+    } else {
+      item.setCantidad(cantidad);
     }
-
-    
-    public void agregarStock(Usuario usuario, Alimento alimento,
-            Double gramos, Integer unidades) {
-
-        ItemDespensa item = buscarItem(usuario, alimento);
-
-        if (item == null) {
-            item = new ItemDespensa();
-            item.setUsuario(usuario);
-            item.setAlimento(alimento);
-            item.setGramosDisponibles(0.0);
-            item.setUnidadesDisponibles(0);
-        }
-
-        if (gramos != null) {
-            item.setGramosDisponibles(
-                    item.getGramosDisponibles() + gramos);
-        }
-
-        if (unidades != null) {
-            item.setUnidadesDisponibles(
-                    item.getUnidadesDisponibles() + unidades);
-        }
-
-        guardarOActualizar(item);
-    }
-
-     
-    public void descontarStock(Usuario usuario, Alimento alimento,
-            Double gramos, Integer unidades) {
-
-        ItemDespensa item = buscarItem(usuario, alimento);
-
-        if (item == null) {
-            return;
-        }
-
-        if (gramos != null) {
-            double restante = item.getGramosDisponibles() - gramos;
-            item.setGramosDisponibles(Math.max(restante, 0.0));
-        }
-
-        if (unidades != null) {
-            int restante = item.getUnidadesDisponibles() - unidades;
-            item.setUnidadesDisponibles(Math.max(restante, 0));
-        }
-
-        guardarOActualizar(item);
-    }
+  }
 }

@@ -5,7 +5,13 @@ import java.util.List;
 public interface ServicioDespensa {
   List<ItemDespensa> obtenerDespensaDelUsuario(String email);
 
-  void guardarOActualizarDespensa(ItemDespensa itemDespensa);
+  void guardarOActualizarDespensa(ItemDespensa item);
 
-  void eliminarItemDespensa(String email, Long idAlacena);
+  void agregarItemDespensa(String email, ItemDespensaDTO itemDespensaDTO);
+
+  List<Alimento> obtenerAlimentosBaseDatos();
+
+  void eliminarItemDespensa(Long id);
+
+  void cambiarCantidadDespensa(Long id, Double cantidad);
 }

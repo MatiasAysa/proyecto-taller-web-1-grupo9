@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi despensa</title>
-    <link rel="stylesheet" th:href="@{/css/panel_allacena.css}">
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
@@ -297,7 +295,6 @@
             display: flex;
             flex-direction: column;
             width: 250px;
-            height: 250px;
             border-radius: 5px;
             padding: 15px;
 
@@ -377,10 +374,10 @@
             background-color: white;
             padding: 30px 60px;
             border-radius: 10px;
-             
-            background-color: white; 
+
+            background-color: white;
             box-shadow: 0px 4px 8px 0px #00000040;
-            
+
             display: none;
         }
 
@@ -390,11 +387,44 @@
             gap: 8px;
         }
 
-        .pop-up-agregar-alimento input,select {
+        .pop-up-agregar-alimento input,
+        select {
             margin-bottom: 10px;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid var(--color-grupo-borde);
+        }
+
+        .popup-cambiarCantidad {
+            display: none;
+            z-index: 2;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background-color: white;
+            padding: 30px 60px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px 0px #00000040;
+        }
+
+        .popup-cambiarCantidad h2 {
+            margin-bottom: 10px;
+        }
+
+        .popup-cambiarCantidad input {
+            outline: 2px solid var(--color-grupo-borde);
+        }
+
+        .popup-cambiarCantidad div {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+            margin-top: 1em;
         }
     </style>
 </head>
@@ -405,14 +435,57 @@
 
     <main class="container">
 
-        <div class="pop-up-agregar-alimento" id="popUpAgregarAlimento">
-            <form action="">
-                <button></button>
+        <!-- FORM CAMBIAR CANTIDAD -->
+        <div class="popup-cambiarCantidad" id="popUpCambiarCantidad">
+            <h2>Cambiar Cantidad</h2>
+            <form th:action="@{/panel-cliente/despensa/cambiar-cantidad}" method="get">
+                <input type="hidden" id="inputId" name="id">
+                <label for="inputCantidad">Cantidad</label>
+                <input type="number" min="0" id="inputCantidad" name="cantidad" required>
+                <div>
+                    <button class="btn-1" type="submit" id="cambiar-cantidad">Cambiar</button>
+                    <button class="btn-1" type="button" id="cancelarCantidad">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+
+        <!------------- FORM AGREGAR ALIMENTO QUE EXISTENTE EN LA BASE DE DATOS ----->
+        <div class="pop-up-agregar-alimento" id="popUpAgregarAlimentoExistente">
+            <form th:action="@{/panel-cliente/despensa/agregar-alimento-existente}" th:object="${itemDespensaDTO}"
+                method="post">
+                <h2 style="text-align: center; margin-bottom: 1.5em;">Agregar Alimento Existente</h2>
+                <label for="alimentoSeleccionado">Seleccionar Alimento</label>
+                <select id="alimentoSeleccionado" th:field="*{idAlimentoExistenteEnBaseDatos}" required>
+                    <option value="" disabled selected>-- Selecciona un alimento --</option>
+                    <option th:each="alimento : ${listaAlimentosBaseDatos}" th:value="${alimento.id}"
+                        th:text="${alimento.nombre}">
+                    </option>
+                </select>
+
+                <label for="cantidad">Cantidad</label>
+                <input type="number" id="cantidad" th:field="*{cantidad}" required>
+
+                <button class="btn-1" type="submit">Agregar</button>
+                <button style="background-color:var(--color-complementario);" class="btn-1" type="button"
+                    id="cancelar1">Cancelar</button>
+                <button type="button" id="btnAgregarAlimentoNuevo" class="btn-1"
+                    style="background-color:rgb(0, 0, 0);">Agregar
+                    alimento nuevo</button>
+            </form>
+        </div>
+
+
+
+        <!------------- FORM AGREGAR ALIMENTO Q NO EXISTE EN LA BASE DE DATOS ----->
+        <div class="pop-up-agregar-alimento" id="popUpAgregarAlimentoInexistente">
+            <form th:action="@{/panel-cliente/despensa/agregar-alimento-existente}" th:object="${itemDespensaDTO}"
+                method="post">
                 <label for="nombreAlimento">Nombre</label>
-                <input type="text" id="nombreAlimento">
+                <input type="text" id="nombreAlimento" th:field="*{nombre}" required>
 
                 <label for="tipoComida">Tipo</label>
-                <select id="tipoComida">
+                <select id="tipoComida" th:field="*{tipoComida}" required>
                     <option value="DESAYUNO">Desayuno</option>
                     <option value="ALMUERZO">Almuerzo</option>
                     <option value="MERIENDA">Merienda</option>
@@ -421,134 +494,87 @@
 
                 <div style="display: flex; justify-content: space-between;">
                     <label for="esVegetariano">Es Vegetariano</label>
-                    <input type="checkbox" id="esVegetariano">
+                    <input type="checkbox" id="esVegetariano" th:field="*{esVegetariano}">
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <label for="esCeliaco">Es Celiaco</label>
-                    <input type="checkbox" id="esCeliaco">
+                    <input type="checkbox" id="esCeliaco" th:field="*{esCeliaco}">
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <label for="contieneLactosa">Contiene Lactosa</label>
-                    <input type="checkbox" id="contieneLactosa">
+                    <input type="checkbox" id="contieneLactosa" th:field="*{contieneLactosa}">
                 </div>
 
                 <label for="calorias">Calorias</label>
-                <input type="number" id="calorias">
+                <input type="number" id="calorias" th:field="*{infoNutricional.calorias}">
 
                 <label for="proteinas">Proteinas</label>
-                <input type="number" id="proteinas">
+                <input type="number" id="proteinas" th:field="*{infoNutricional.proteinas}">
 
                 <label for="carbohidratos">Carbohidratos</label>
-                <input type="number" id="carbohidratos">
+                <input type="number" id="carbohidratos" th:field="*{infoNutricional.carbohidratos}">
 
                 <label for="grasas">Grasas</label>
-                <input type="number" id="grasas">
+                <input type="number" id="grasas" th:field="*{infoNutricional.grasas}">
+
+                <label for="fechaVencimiento">Fecha Vencimiento</label>
+                <input type="date" id="fechaVencimiento" th:field="*{fechaVencimiento}">
+
+                <label for="cantidadInexistente">Cantidad</label>
+                <input type="number" id="cantidadInexistente" th:field="*{cantidad}" required>
 
                 <button class="btn-1" type="submit">Agregar</button>
                 <button style="background-color:var(--color-complementario);" class="btn-1" type="button"
-                    id="cancelar">Cancelar</button>
+                    id="cancelar2">Cancelar</button>
             </form>
         </div>
+
 
         <button class="btn-2 agregar" id="btnAgregar">Agregar</button>
 
         <div class="search-bar sub-container">
             <input type="text" placeholder="Buscar alimento..." id="searchInput">
             <button type="button" class="btn-1" id="searchBtn">Buscar</button>
+            <button type="button" class="btn-1" id="clearSearch">Limpiar</button>
         </div>
 
         <div class="alimentos-container-grid">
-            <div class="alimento-card">
+            <div th:if="${despensa} == null">
+                <p>No hay alimentos en la despensa</p>
+                <p>Agrega alimentos para comenzar</p>
+            </div>
+
+            <!----------------------- CARDS -->
+            <div th:each="itemDespensa : ${despensa}" class="alimento-card">
                 <div class="card-header">
-                    <span class="cuducidad">29d</span>
-                    <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
-                            alt="imagenEliminar"></button>
+                    <span th:if="${itemDespensa.fechaVencimiento}==null" class="cuducidad"></span>
+                    <span th:if="${itemDespensa.fechaVencimiento}!=null" class="cuducidad"
+                        th:text="${itemDespensa.fechaVencimiento} + 'd' ">00d</span>
+                    <a th:href="@{/panel-cliente/despensa/eliminar/{id}(id=${itemDespensa.id})}" class="btn-eliminar">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1214/1214594.png" alt="imagenEliminar">
+                    </a>
                 </div>
-                <!-- <span hidden th:text="${itemDespensa.id}">33</span> -->
-                <img class="imagenAlimento" src="" alt="imagenAlimento">
-                <div class="cantidad"> 
-                    <span class="number">49</span>
-                    <button class="btn-1" id="btn-editar">Editar</button>
+
+                <img class="imagenAlimento" src="" alt="imagenAlimento" th:data-alimento-id="${itemDespensa.alimento!=null ? itemDespensa.alimento.id : 99999}">
+                
+                <span class="nombreAlimento" th:if="${itemDespensa.alimento!=null}" th:text="${itemDespensa.alimento.nombre}"
+                    style="font-weight: bold;align-self: center;text-align: center; margin-top: 20px;margin-bottom: 25px;">Nombre
+                    del
+                    alimento</span>
+                    
+                <span class="nombreAlimento" th:if="${itemDespensa.alimento==null}" th:text="${itemDespensa.nombre}"
+                    style="font-weight: bold;align-self: center;text-align: center;">Nombre del
+                    alimento</span>
+
+                <div class="cantidad">
+                    <span class="number" th:text="${#numbers.formatInteger(itemDespensa.cantidad, 1)}">49</span>
+                    <button class="btn-1 btn-editar" th:data-id="${itemDespensa.id}"
+                        th:data-cantidad="${itemDespensa.cantidad}">
+                        Editar
+                    </button>
                 </div>
             </div>
 
-
-
-            <div class="alimentos-container grid-container">
-                <div class="alimento-card">
-                    <div class="card-header">
-                        <span class="cuducidad">29d</span>
-                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
-                                alt="imagenEliminar"></button>
-                    </div>
-                    <img class="imagenAlimento" src="" alt="imagenAlimento">
-                    <div class="cantidad">
-                        <button class="btn-minus">-</button>
-                        <span class="number">49</span>
-                        <button class="btn-plus">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="alimentos-container grid-container">
-                <div class="alimento-card">
-                    <div class="card-header">
-                        <span class="cuducidad">29d</span>
-                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
-                                alt="imagenEliminar"></button>
-                    </div>
-                    <img class="imagenAlimento" src="" alt="imagenAlimento">
-                    <div class="cantidad">
-                        <button class="btn-minus">-</button>
-                        <span class="number">49</span>
-                        <button class="btn-plus">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="alimentos-container grid-container">
-                <div class="alimento-card">
-                    <div class="card-header">
-                        <span class="cuducidad">29d</span>
-                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
-                                alt="imagenEliminar"></button>
-                    </div>
-                    <img class="imagenAlimento" src="" alt="imagenAlimento">
-                    <div class="cantidad">
-                        <button class="btn-minus">-</button>
-                        <span class="number">49</span>
-                        <button class="btn-plus">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="alimentos-container grid-container">
-                <div class="alimento-card">
-                    <div class="card-header">
-                        <span class="cuducidad">29d</span>
-                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
-                                alt="imagenEliminar"></button>
-                    </div>
-                    <img class="imagenAlimento" src="" alt="imagenAlimento">
-                    <div class="cantidad">
-                        <button class="btn-minus">-</button>
-                        <span class="number">49</span>
-                        <button class="btn-plus">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="alimentos-container grid-container">
-                <div class="alimento-card">
-                    <div class="card-header">
-                        <span class="cuducidad">29d</span>
-                        <button class="btn-eliminar"><img src="	https://cdn-icons-png.flaticon.com/512/1214/1214594.png"
-                                alt="imagenEliminar"></button>
-                    </div>
-                    <img class="imagenAlimento" src="" alt="imagenAlimento">
-                    <div class="cantidad">
-                        <button class="btn-minus">-</button>
-                        <span class="number">49</span>
-                        <button class="btn-plus">+</button>
-                    </div>
-                </div>
-            </div>
 
 
         </div>
@@ -557,8 +583,139 @@
 
 
     </main>
+    <script>
+        const popUpAgregarAlimentoExistente = document.querySelector('#popUpAgregarAlimentoExistente');
+        const popUpAgregarAlimentoInexistente = document.querySelector('#popUpAgregarAlimentoInexistente');
+        const btnAgregar = document.querySelector('#btnAgregar');
+        const btnAgregarAlimentoNuevo = document.querySelector('#btnAgregarAlimentoNuevo');
+        const cancelar1 = document.querySelector('#cancelar1');
+        const cancelar2 = document.querySelector('#cancelar2');
 
-    <script th:src="@{/js/panel_allacena.js}"></script>
+        btnAgregar.addEventListener('click', () => {
+            popUpAgregarAlimentoExistente.style.display = 'flex';
+        });
+
+        btnAgregarAlimentoNuevo.addEventListener('click', () => {
+            popUpAgregarAlimentoExistente.style.display = 'none';
+            popUpAgregarAlimentoInexistente.style.display = 'flex';
+        });
+
+        cancelar1.addEventListener('click', () => {
+            popUpAgregarAlimentoExistente.style.display = 'none';
+            popUpAgregarAlimentoInexistente.style.display = 'none';
+        });
+        cancelar2.addEventListener('click', () => {
+            popUpAgregarAlimentoExistente.style.display = 'none';
+            popUpAgregarAlimentoInexistente.style.display = 'none';
+        });
+
+
+        const cancelarCantidad = document.querySelector('#cancelarCantidad');
+        const popUpCambiarCantidad = document.querySelector('#popUpCambiarCantidad');
+
+        cancelarCantidad.addEventListener('click', () => {
+            popUpCambiarCantidad.style.display = 'none';
+        });
+
+        const botonesEditar = document.querySelectorAll('.btn-editar');
+        const inputId = document.querySelector('#inputId');
+        const inputCantidad = document.querySelector('#inputCantidad');
+
+        botonesEditar.forEach(boton => {
+            boton.addEventListener('click', () => {
+                popUpCambiarCantidad.style.display = 'flex';
+                inputId.value = boton.dataset.id;
+                inputCantidad.value = boton.dataset.cantidad;
+
+                const cantidadOriginal = parseFloat(boton.dataset.cantidad);
+                inputCantidad.value = Math.round(cantidadOriginal);
+            });
+        });
+
+
+
+
+        // Diccionario de imágenes representativas, limpias y de alta calidad (Unsplash / Libres de derechos)
+        const imagenesAlimentos = {
+            // --- DESAYUNOS ---
+            1: "https://carrefourar.vtexassets.com/arquivos/ids/830692/7792180144973_02.jpg", // Avena instantánea Carrefour 400g
+            2: "https://carrefourar.vtexassets.com/arquivos/ids/178223/7798152220621_01.jpg", // Leche entera Larga Vida Carrefour 1L
+            3: "https://acdn-us.mitiendanube.com/stores/798/865/products/38207966-1fd4c37184f5dbe46e17539394926209-1024-1024.webp", // Yogur entero firme Frutilla Ilolay 190g
+            4: "https://jumboargentina.vtexassets.com/arquivos/ids/646170/Caf-La-Virginia-Molido-250gr-1-871478.jpg", // Café molido clásico La Virginia 250g
+            17: "https://ardiaprod.vtexassets.com/arquivos/ids/367810/Queso-Crema-Clasico-Casancrem-290-Gr-_1.jpg", // Queso crema clásico Casancrem 290g
+            30: "https://jumboargentina.vtexassets.com/arquivos/ids/870559-800-600", // Pan lactal sin TACC San Jacinto 300g
+            31: "https://jumboargentina.vtexassets.com/arquivos/ids/902900-800-600", // Bebida de Almendras Silk Original 1L
+            32: "https://jumboargentina.vtexassets.com/arquivos/ids/690034-800-600", // Mermelada de Frutilla BC La Campagnola 390g
+            33: "https://ardiaprod.vtexassets.com/arquivos/ids/308434/Huevo-Color-Grande-6-Ud-_1.jpg", // Huevos colorados x6 un.
+            40: "https://jumboargentina.vtexassets.com/arquivos/ids/693337/Pan-Blanco-Bimbo-550-Gr-1-848509.jpg", // Pan lactal blanco Bimbo 550g
+            41: "https://carrefourar.vtexassets.com/arquivos/ids/162815/2301386000000_01.jpg", // Banana Cavendish por kg
+            42: "https://frutosare.com.ar/wp-content/uploads/2023/02/crunchi-Tapa-Azul-1.jpg", // Crema de maní s/azúcar Le-Fit 400g
+
+            // --- ALMUERZOS ---
+            6: "https://carrefourar.vtexassets.com/arquivos/ids/370695/7791720026304_02.jpg", // Fideos tallarines Carrefour 500g
+            7: "https://carrefourar.vtexassets.com/arquivos/ids/221805/7791722013821_01.jpg", // Puré de tomate Carrefour 520g
+            8: "https://carrefourar.vtexassets.com/arquivos/ids/171035/7798108345330_01.jpg", // Arroz largo fino Carrefour 1kg
+            9: "https://carrefourar.vtexassets.com/arquivos/ids/386717/7798033333907_E01.jpg", // Atún al natural en trozos Carrefour 170g
+            21: "https://angelitagolosinas.com.ar/Articulo_Foto/foto1_12943_0.jpeg", // Fideos de arroz s/TACC Matarazzo 500g
+            34: "https://acdn-us.mitiendanube.com/stores/115/846/products/2303014000003_02_111-017e84440a1c95023d16331993436961-1024-1024.webp", // Pechuga de pollo fresca suprema x1kg
+            35: "https://carrefourar.vtexassets.com/arquivos/ids/581115/7791720036433_01.jpg", // Espinaca congelada en cubos Carrefour 400g
+            36: "https://carrefourar.vtexassets.com/arquivos/ids/542348/7791720029534_01.jpg", // Garbanzos secos Carrefour 400g
+            44: "https://alberdisa.vteximg.com.br/arquivos/ids/182357/FILETE_DE_MERLUZA_CONGELADO.png", // Filet de merluza fresco congelado x1kg
+            45: "https://d22fxaf9t8d39k.cloudfront.net/e77322c787c3bbe476c2a257dce52e9075b901c428bb065da1fefbb2ecfb49c779214.webp", // Palta Torres selección por unidad
+            46: "https://carrefourar.vtexassets.com/arquivos/ids/537579/7791720030073_01.jpg", // Arvejas en lata Carrefour 300g
+
+            // --- CENAS ---
+            11: "https://arcordiezb2c.vteximg.com.br/arquivos/ids/178088/Medallones-De-Carne-Clasicos-Swift-4-Un-276-Gr-1-902.jpg", // Medallones Swift 4 un.
+            15: "https://carrefourar.vtexassets.com/arquivos/ids/537471/7791720030028_01.jpg", // Lentejas secas remojadas Carrefour 300g
+            23: "https://www.plant.com.ar/_next/image?url=https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fvivet-web.appspot.com%2Fo%2Fproducts%252FwwqMdsFnyOLgEmCXAOlw%252FlXP35J%3Falt%3Dmedia%26token%3Df3378f50-3c5c-49af-9ab7-ff6ae4efb96a&w=3840&q=75", // Medallones NotCo 2 un (NotBurger)
+            37: "https://masonlineprod.vtexassets.com/arquivos/ids/335590/Crema-Milkaut-200-Cc-0779482090318-2.jpg", // Crema de leche regular Milkaut 200g
+            38: "https://acdn-us.mitiendanube.com/stores/001/126/866/products/soyana-nuggets-b93cc1b468247782d117026510297098-1024-1024-7b9d7aa25c234a014017062737461425-640-0.webp", // Tofu clásico Soyana 300g
+            39: "https://jumboargentina.vtexassets.com/arquivos/ids/837281/Carne-Vacuna-Picada-Com-n-1-886930.jpg", // Carne picada vacuna común x1kg
+            47: "https://arcordiezb2c.vteximg.com.br/arquivos/ids/176372/Costilla-De-Cerdo-X-Kg-1-5527.jpg", // Costillitas de cerdo frescas por kg
+            48: "https://www.taiichi.com.ar/wp-content/uploads/2021/10/mijo-pelado.jpg", // Mijo pelado nativo grano orgánico 500g
+            49: "https://masonlineprod.vtexassets.com/arquivos/ids/356002-800-auto", // Queso Port Salut La Serenísima 400g
+            // Imagen por defecto 
+            default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFdjU9EXsBfBrIyuf3_GI4o0BfZDOmmJHBt-yHWtiS2g&s=10"
+        };
+
+        const imagenesDOM = document.querySelectorAll(".imagenAlimento");
+
+        imagenesDOM.forEach(img => {
+            const id = img.getAttribute("data-alimento-id");
+            img.src = imagenesAlimentos[id] || imagenesAlimentos.default;
+        });
+
+      
+
+        const searchInput = document.querySelector("#searchInput");
+        const searchBtn = document.querySelector("#searchBtn");
+        
+        // filtra los cards a medida q se escrive
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const cards = document.querySelectorAll(".alimento-card");
+            cards.forEach(card => {
+                const cardText = card.querySelector(".nombreAlimento").textContent.toLowerCase();
+                if (cardText.includes(searchTerm)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        const clearSearch = document.querySelector("#clearSearch");
+        clearSearch.addEventListener("click", () => {
+            searchInput.value = "";
+            const cards = document.querySelectorAll(".alimento-card");
+            cards.forEach(card => {
+                card.style.display = "flex";
+            });
+        });
+        
+
+
+    </script>
 </body>
 
 </html>

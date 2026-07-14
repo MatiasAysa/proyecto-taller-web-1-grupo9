@@ -1,9 +1,11 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.Alimento;
 import com.tallerwebi.dominio.Cordenandas;
 import com.tallerwebi.dominio.DatosClientePanel;
 import com.tallerwebi.dominio.Direccion;
 import com.tallerwebi.dominio.ItemDespensa;
+import com.tallerwebi.dominio.ItemDespensaDTO;
 import com.tallerwebi.dominio.ServicioBuscarSupermercado;
 import com.tallerwebi.dominio.ServicioDespensa;
 import com.tallerwebi.dominio.ServicioUsuario;
@@ -11,19 +13,21 @@ import com.tallerwebi.dominio.Supermercado;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ControladorPanelcliente {
+
+  private final String ATT_EMAIL_SESION = "usuarioLogueadoEmail";
+  private final String RUTA_LOGIN = "redirect:/login";
+  private final String RUTA_PANEL = "redirect:/panel-cliente";
 
   private final ServicioUsuario servicioUsuario;
   private final ServicioBuscarSupermercado servicioBuscarSupermercado;
@@ -31,9 +35,10 @@ public class ControladorPanelcliente {
 
   @Autowired
   public ControladorPanelcliente(
-      ServicioUsuario servicioUsuario,
-      ServicioBuscarSupermercado servicioBuscarSupermercado,
-      ServicioDespensa servicioDespensa) {
+    ServicioUsuario servicioUsuario,
+    ServicioBuscarSupermercado servicioBuscarSupermercado,
+    ServicioDespensa servicioDespensa
+  ) {
     this.servicioUsuario = servicioUsuario;
     this.servicioBuscarSupermercado = servicioBuscarSupermercado;
     this.servicioDespensa = servicioDespensa;
@@ -41,11 +46,11 @@ public class ControladorPanelcliente {
 
   @GetMapping("/panel-cliente")
   public ModelAndView irAPanelCliente(HttpSession session) {
-    if (session.getAttribute("usuarioLogueadoEmail") != null) {
+    if (session.getAttribute(ATT_EMAIL_SESION) != null) {
       return new ModelAndView("panel-cliente");
     }
 
-    return new ModelAndView("redirect:/home");
+    return new ModelAndView(RUTA_LOGIN);
   }
 
   @GetMapping("/panel-cliente/dashboard")
@@ -80,7 +85,7 @@ public class ControladorPanelcliente {
       return new ModelAndView("panel__datos-personales", modelo);
     }
 
-    return new ModelAndView("redirect:/login");
+    return new ModelAndView(RUTA_LOGIN);
   }
 
   @GetMapping("/panel-cliente/supermercados")
@@ -92,7 +97,8 @@ public class ControladorPanelcliente {
 
   @PostMapping("/panel-cliente/supermercados")
   public ModelAndView procesarBusquedaSupermercados(
-      @ModelAttribute("direccion") Direccion direccion) {
+    @ModelAttribute("direccion") Direccion direccion
+  ) {
     ModelMap modelo = new ModelMap();
     Cordenandas cordenandas = servicioBuscarSupermercado.obtenerCordenadaActual(direccion);
     if (cordenandas != null) {
@@ -100,8 +106,9 @@ public class ControladorPanelcliente {
       modelo.put("longitud", cordenandas.getLongitud());
 
       List<Supermercado> supermercados = servicioBuscarSupermercado.buscarSupermercadosCercanos(
-          cordenandas.getLatitud(),
-          cordenandas.getLongitud());
+        cordenandas.getLatitud(),
+        cordenandas.getLongitud()
+      );
       modelo.put("supermercados", supermercados);
     }
 
@@ -111,26 +118,60 @@ public class ControladorPanelcliente {
 
   private String obtenerEmail(HttpSession session) {
     return session.getAttribute("usuarioLogueadoEmail") != null
-        ? session.getAttribute("usuarioLogueadoEmail").toString()
-        : null;
+      ? session.getAttribute("usuarioLogueadoEmail").toString()
+      : null;
   }
 
+  // ========== DESPENSA ==============
   @GetMapping("/panel-cliente/despensa")
   public ModelAndView irADespensa(HttpSession session) {
     String email = obtenerEmail(session);
-    if (email == null)
-      return new ModelAndView("redirect:/login");
+    if (email == null) return new ModelAndView(RUTA_LOGIN);
 
-    List<ItemDespensa> alimentos = servicioDespensa.obtenerDespensaDelUsuario(email);
+    List<ItemDespensa> despensa = servicioDespensa.obtenerDespensaDelUsuario(email);
+    List<Alimento> listaAlimentosBaseDatos = servicioDespensa.obtenerAlimentosBaseDatos();
 
     ModelMap modelo = new ModelMap();
-    if (alimentos != null) {
-      modelo.put("alimentos", alimentos);
-      return new ModelAndView("panel__despensa", modelo);
+    if (despensa != null) {
+      modelo.put("despensa", despensa);
     }
-    return new ModelAndView("panel__despensa");
+    modelo.put("itemDespensaDTO", new ItemDespensaDTO());
+    modelo.put("listaAlimentosBaseDatos", listaAlimentosBaseDatos);
+
+    return new ModelAndView("panel__despensa", modelo);
   }
 
-  
-  
+  @PostMapping("/panel-cliente/despensa/agregar-alimento-existente")
+  public ModelAndView agregarItemDespensaExistente(
+    HttpSession session,
+    @ModelAttribute("itemDespensaDTO") ItemDespensaDTO itemDespensaDTO
+  ) {
+    String email = obtenerEmail(session);
+    if (email == null) return new ModelAndView(RUTA_LOGIN);
+
+    servicioDespensa.agregarItemDespensa(email, itemDespensaDTO);
+    return new ModelAndView("redirect:/panel-cliente/despensa");
+  }
+
+  @GetMapping("/panel-cliente/despensa/eliminar/{id}")
+  public ModelAndView eliminarItemDespensa(HttpSession session, @PathVariable("id") Long id) {
+    String email = obtenerEmail(session);
+    if (email == null) return new ModelAndView(RUTA_LOGIN);
+
+    servicioDespensa.eliminarItemDespensa(id);
+    return new ModelAndView("redirect:/panel-cliente/despensa");
+  }
+
+  @GetMapping("/panel-cliente/despensa/cambiar-cantidad")
+  public ModelAndView cambiarCantidadDespensa(
+    HttpSession session,
+    @RequestParam("id") Long id,
+    @RequestParam("cantidad") Double cantidad
+  ) {
+    String email = obtenerEmail(session);
+    if (email == null) return new ModelAndView(RUTA_LOGIN);
+
+    servicioDespensa.cambiarCantidadDespensa(id, cantidad);
+    return new ModelAndView("redirect:/panel-cliente/despensa");
+  }
 }
