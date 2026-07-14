@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +17,17 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
 
   private RepositorioAlimento repositorioAlimento;
   private RepositorioListaDeCompras repositorioListaDeCompras;
+  private RepositorioUsuario repositorioUsuario;
 
   @Autowired
   public ServicioListaComprasImpl(
     RepositorioAlimento repositorioAlimento,
-    RepositorioListaDeCompras repositorioListaDeCompras
+    RepositorioListaDeCompras repositorioListaDeCompras,
+    RepositorioUsuario repositorioUsuario
   ) {
     this.repositorioAlimento = repositorioAlimento;
     this.repositorioListaDeCompras = repositorioListaDeCompras;
+    this.repositorioUsuario = repositorioUsuario;
   }
 
   @Override
@@ -122,5 +126,70 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
       total += item.getPrecoTotal();
     }
     return total;
+  }
+
+  @Override
+  public List<DiaListaComprasDTO> actualizarCantidadesYAlimentos(
+    List<DiaListaComprasDTO> dias,
+    String email
+  ) throws UsuarioInexistenteException {
+    Usuario usuario = repositorioUsuario.buscar(email);
+    if (usuario == null) {
+      throw new UsuarioInexistenteException("No existe un usuario con email " + email);
+    }
+    List<DiaListaComprasDTO> nuevaListaCompras = new ArrayList<>();
+
+    ObjetivoNutricional objetivoDiario = CalculadorNutricionalHelper.calcularObjetivoDiario(usuario.getPerfilAlimentario());
+    ObjetivoNutricional objetivoNutricionalDesayuno = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.DESAYUNO);
+    ObjetivoNutricional objetivoNutricionalAlmuerzo = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.ALMUERZO);
+    ObjetivoNutricional objetivoNutricionalCena =CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.CENA);
+
+    return nuevaListaCompras;
+  }
+
+  @Override
+  public List<String> mostrarDtosTestear(String email) throws UsuarioInexistenteException {
+    Usuario usuario = repositorioUsuario.buscar(email);
+
+    if (usuario == null) {
+      throw new UsuarioInexistenteException("No existe un usuario con email " + email);
+    }
+    List<String> datos = new ArrayList<>();
+
+    ObjetivoNutricional total = CalculadorNutricionalHelper.calcularObjetivoDiario(
+      usuario.getPerfilAlimentario()
+    );
+    ObjetivoNutricional desayuno = CalculadorNutricionalHelper.calcularObjetivoComida(
+      total,
+      TipoDeComida.DESAYUNO
+    );
+    ObjetivoNutricional almuerzo = CalculadorNutricionalHelper.calcularObjetivoComida(
+      total,
+      TipoDeComida.ALMUERZO
+    );
+    ObjetivoNutricional cena = CalculadorNutricionalHelper.calcularObjetivoComida(
+      total,
+      TipoDeComida.CENA
+    );
+
+    datos.add("=== OBJETIVO DIARIO ===");
+    datos.add(total.toString());
+
+    datos.add("");
+
+    datos.add("=== DESAYUNO ===");
+    datos.add(desayuno.toString());
+
+    datos.add("");
+
+    datos.add("=== ALMUERZO ===");
+    datos.add(almuerzo.toString());
+
+    datos.add("");
+
+    datos.add("=== CENA ===");
+    datos.add(cena.toString());
+
+    return datos;
   }
 }

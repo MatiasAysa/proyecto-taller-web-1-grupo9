@@ -1,7 +1,13 @@
 let map = null;
+const iconoUsuario = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 
-const boton = document.getElementById("btnUbicacion");
-
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 
 window.addEventListener("load",() => {
     //EN UN FUTURO CAMBIAR LOS <P> POR IMPUT,PORQUE LA ALTITUD Y LONGITUD NO SE DEBE MOSTRAR,SON DATOS POCO IMPORTANTES PARA EL USUARIO
@@ -12,7 +18,6 @@ window.addEventListener("load",() => {
     console.log("log : ",longitud)
 
     if(latitud && longitud){
-        boton.style.display = "none";
 
         mostrarMapa(parseFloat(latitud),parseFloat(longitud))
         dibujarSupermercados();
@@ -22,42 +27,42 @@ window.addEventListener("load",() => {
 
 function dibujarSupermercados(){
     const supermercados = document.querySelectorAll(".supermercado");
+    const grupo = L.featureGroup();
 
     supermercados.forEach(supermercado => {
 
+        const direccion = supermercado.dataset.direccion;
+        const distancia = supermercado.dataset.distancia;
+        const minutos = supermercado.dataset.minutos;
         const nombre = supermercado.dataset.nombre;
         const latitud = parseFloat(supermercado.dataset.latitud);
         const longitud = parseFloat(supermercado.dataset.longitud);
 
-        L.marker([latitud, longitud])
+        const marker = L.marker([latitud, longitud])
             .addTo(map)
-            .bindTooltip(nombre);
+            .bindTooltip(nombre, {
+                permanent: true,
+                direction: "top",
+                offset: [0, -10]
+            })
+            .bindPopup(`
+                <b>${nombre}</b><br>
+                📍 ${direccion}<br>
+                📏 ${distancia} metros<br>
+                🚶 ${minutos} min caminando
+            `);
+        grupo.addLayer(marker);
 
     });
+    grupo.addLayer(
+        L.marker([latUsuario, lonUsuario])
+    );
+
+    // Hace zoom para que entren todos los marcadores
+    map.fitBounds(grupo.getBounds(), {
+        padding: [60, 60]
+    });
 }
-
-
-document.getElementById("btnUbicacion").addEventListener("click",() => {
-    if(!navigator.geolocation){
-        alert("Tu navegador no permite la geolocalizacion")
-        return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const latitud = position.coords.latitude;
-            const longitud = position.coords.longitude;
-            boton.style.display = "none";
-            mostrarMapa(latitud,longitud);
-            console.log(L);
-        },
-        (error) => {
-            console.error(error);
-            alert("No se puede obtener la localizacion")
-        }
-    )
-
-})
 
 function mostrarMapa(lat,lon){
 
@@ -69,7 +74,21 @@ function mostrarMapa(lat,lon){
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19}).addTo(map);
 
-    L.marker([lat, lon]).addTo(map).bindPopup("Estás acá 📍").openPopup();
+    // Marcador del usuario
+    L.marker([lat, lon], {
+        icon: iconoUsuario
+    })
+        .addTo(map)
+        .bindPopup("👤<b>Tu ubicación</b>")
+        .openPopup();
+
+    // Radio de búsqueda (2000 m)
+    L.circle([lat, lon], {
+        radius: 2000,
+        color: "#03A62C",
+        fillColor: "#03A62C",
+        fillOpacity: 0.15
+    }).addTo(map);
 
 }
 

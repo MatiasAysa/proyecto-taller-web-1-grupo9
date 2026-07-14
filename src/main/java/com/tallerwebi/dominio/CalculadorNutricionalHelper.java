@@ -41,6 +41,51 @@ public final class CalculadorNutricionalHelper {
     return (int) (mb * act * obj * (double) dias);
   }
 
+  public static int calcularCaloriasObjetivoDiarias(PerfilAlimentarioUsuario perfil) {
+    if (
+      perfil == null ||
+      perfil.getPeso() == null ||
+      perfil.getAltura() == null ||
+      perfil.getEdad() == null
+    ) {
+      return CALORIAS_BASE_REGULATORIAS;
+    }
+
+    double metabolismoBasal = SEXO_FEMENINO.equalsIgnoreCase(perfil.getSexo())
+      ? 447.593 +
+      (9.247 * perfil.getPeso()) +
+      (3.098 * perfil.getAltura()) -
+      (4.330 * perfil.getEdad())
+      : 88.362 +
+      (13.397 * perfil.getPeso()) +
+      (4.799 * perfil.getAltura()) -
+      (5.677 * perfil.getEdad());
+
+    double actividad = obtenerActividad(perfil.getActividadFisica());
+    double objetivo = obtenerObjetivo(perfil.getObjetivo());
+
+    return (int) (metabolismoBasal * actividad * objetivo);
+  }
+
+  public static ObjetivoNutricional calcularObjetivoDiario(PerfilAlimentarioUsuario perfil) {
+    int calorias = CalculadorNutricionalHelper.calcularCaloriasObjetivoDiarias(perfil);
+
+    double proteinas = (calorias * 0.30) / 4.0;
+    double carbohidratos = (calorias * 0.45) / 4.0;
+    double grasas = (calorias * 0.25) / 9.0;
+
+    return new ObjetivoNutricional(
+      calorias,
+      redondear(proteinas),
+      redondear(carbohidratos),
+      redondear(grasas)
+    );
+  }
+
+  private static Double redondear(Double valor) {
+    return Math.round(valor * 100.0) / 100.0;
+  }
+
   private static double obtenerActividad(String actividad) {
     if (ACTIVIDAD_MODERADA.equalsIgnoreCase(actividad)) {
       return 1.55;
@@ -93,6 +138,35 @@ public final class CalculadorNutricionalHelper {
     );
     plan.setTotalGrasas(
       Math.round((gras * fAjuste) * MULTIPLICADOR_REDONDEO) / MULTIPLICADOR_REDONDEO
+    );
+  }
+
+  public static ObjetivoNutricional calcularObjetivoComida(
+    ObjetivoNutricional objetivo,
+    TipoDeComida tipo
+  ) {
+    double porcentaje;
+
+    switch (tipo) {
+      case DESAYUNO:
+        porcentaje = 0.25;
+        break;
+      case ALMUERZO:
+        porcentaje = 0.40;
+        break;
+      case CENA:
+        porcentaje = 0.35;
+        break;
+      default:
+        porcentaje = 0.33;
+        break;
+    }
+
+    return new ObjetivoNutricional(
+      (int) Math.round(objetivo.getCalorias() * porcentaje),
+      objetivo.getProteinas() * porcentaje,
+      objetivo.getCarbohidratos() * porcentaje,
+      objetivo.getGrasas() * porcentaje
     );
   }
 }

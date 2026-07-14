@@ -4,8 +4,10 @@ import com.tallerwebi.dominio.Comida;
 import com.tallerwebi.dominio.DiaListaComprasDTO;
 import com.tallerwebi.dominio.ItemCompra;
 import com.tallerwebi.dominio.ServicioListaCompras;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,15 +28,22 @@ public class ControladorListaCompras {
 
   @PostMapping("/lista-compras")
   public ModelAndView mostrarListaCompras(
-    @RequestParam(required = false) MultiValueMap<String, String> todasLasSelecciones
+    @RequestParam(required = false) MultiValueMap<String, String> todasLasSelecciones,
+    HttpSession sesion
   ) {
-    ModelMap modelo = new ModelMap();
+    Object emailLogueado = sesion.getAttribute("usuarioLogueadoEmail");
 
+    if (emailLogueado == null) {
+      return new ModelAndView("redirect:/login");
+    }
+
+    ModelMap modelo = new ModelMap();
     if (todasLasSelecciones == null || todasLasSelecciones.isEmpty()) {
       modelo.put("error", "No seleccionaste ningún alimento de tu plan.");
       return new ModelAndView("redirect:/planificador", modelo);
     }
 
+    String email = (String) emailLogueado;
     List<DiaListaComprasDTO> dias = servicioListaCompras.armarDiasSeleccionados(
       todasLasSelecciones
     );
@@ -52,39 +61,13 @@ public class ControladorListaCompras {
     modelo.put("listaDeCompras", listaDeCompras);
     modelo.put("totalLista", total);
 
+    try {
+      List<String> datosNutricional = servicioListaCompras.mostrarDtosTestear(email);
+      modelo.put("test", datosNutricional);
+    } catch (UsuarioInexistenteException e) {
+      return new ModelAndView("redirect:/login");
+    }
+
     return new ModelAndView("lista-compras", modelo);
   }
 }
-/*
-
-    for (Map.Entry<String, List<String>> entrada : todasLasSelecciones.entrySet()) {
-      String key = entrada.getKey();
-
-      if (key.startsWith("comidasSeleccionadas")) {
-        String numeroDiaStr = key.substring(key.indexOf("[") + 1, key.indexOf("]"));
-        Integer numeroDia = Integer.parseInt(numeroDiaStr);
-
-        List<String> idsArray = entrada.getValue();
-
-        Comida comidaDia = new Comida();
-        comidaDia.setNombre("DÍA " + numeroDia + " - Alimentos Seleccionados");
-        comidasPorDia.putIfAbsent(numeroDia, new ArrayList<>());
-
-        for (String idStr : idsArray) {
-          Long idComida = Long.parseLong(idStr);
-          Comida comida = servicioListaCompras.buscarComidaPorId(idComida);
-
-          if (comida != null) {
-            comidasPorDia.get(numeroDia).add(comida);
-          }
-
-          if (alimentoReal != null) {
-            ItemComida item = new ItemComida(150.0, alimentoReal);
-            comidaDia.getItems().add(item);
-          }
-
-
-        }
-                }
-                }
- */

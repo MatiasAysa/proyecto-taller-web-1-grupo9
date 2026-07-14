@@ -1,0 +1,106 @@
+:root{
+
+    --verde:#03A62C;
+    --verdeHover:#028323;
+    --amarillo:#F29F05;
+    --gris:#F4F7F5;
+    --texto:#333;
+
+}
+
+body{
+
+    margin:0;
+    padding:0;
+    background:var(--gris);
+    font-family:Arial, Helvetica, sans-serif;
+
+}
+
+.contenedor-error{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+
+}
+
+.card-error{
+
+    width:600px;
+
+    max-width:100%;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:45px;
+
+    text-align:center;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+
+}
+
+.icono-error{
+
+    font-size:70px;
+
+    color:var(--amarillo);
+
+    margin-bottom:20px;
+
+}
+
+.card-error h1{
+
+    color:var(--verde);
+
+    margin-bottom:20px;
+
+}
+
+.card-error p{
+
+    color:#666;
+
+    font-size:18px;
+
+    margin-bottom:35px;
+
+    line-height:1.6;
+
+}
+
+.btn-volver{
+
+    display:inline-block;
+
+    text-decoration:none;
+
+    background:var(--verde);
+
+    color:white;
+
+    padding:15px 35px;
+
+    border-radius:10px;
+
+    font-weight:bold;
+
+    transition:.2s;
+
+}
+
+.btn-volver:hover{
+
+    background:var(--verdeHover);
+
+}

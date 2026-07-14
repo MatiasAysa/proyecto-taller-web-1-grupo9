@@ -6,6 +6,15 @@ public class Supermercado {
   private Cordenandas cordenadas;
   private Double distanciaMetros;
   private Integer minutosCaminando;
+  private String direccionName;
+
+  public String getDireccionName() {
+    return direccionName;
+  }
+
+  public void setDireccionName(String direccionName) {
+    this.direccionName = direccionName;
+  }
 
   public Double getDistanciaMetros() {
     return distanciaMetros;

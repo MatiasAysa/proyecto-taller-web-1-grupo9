@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
 import java.util.List;
 import org.springframework.util.MultiValueMap;
 
@@ -11,4 +12,9 @@ public interface ServicioListaCompras {
   Alimento buscarAlimentoPorId(Long id);
   Comida buscarComidaPorId(Long id);
   List<DiaListaComprasDTO> armarDiasSeleccionados(MultiValueMap<String, String> seleccionados);
+  List<DiaListaComprasDTO> actualizarCantidadesYAlimentos(
+    List<DiaListaComprasDTO> dias,
+    String email
+  ) throws UsuarioInexistenteException;
+  List<String> mostrarDtosTestear(String email) throws UsuarioInexistenteException;
 }
