@@ -4,9 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Taller Web I - Iniciar Sesión</title>
-    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <title>Taller Web I - Registrarse</title>
+    <link rel="stylesheet" th:href="@{/css/registro.css}" />
 </head>
+
 <body>
 <header class="navbar-custom">
     <a class="navbar-brand-custom" href="#">UNLAM</a>
@@ -14,14 +15,14 @@
 <main class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <h2>¡Hola de nuevo!</h2>
-            <p>Ingresá tus credenciales para continuar</p>
+            <h2>Crear Cuenta</h2>
+            <p>Completá los datos para registrarte</p>
         </div>
         <div th:if="${error != null}" class="alert-error-custom">
             <span th:text="'Error: ' + ${error}"></span>
         </div>
 
-        <form th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
+        <form th:action="@{/registrarme}" method="POST" th:object="${usuario}">
             <div class="form-group-custom">
                 <input th:field="*{email}" type="email" id="email" class="form-input-custom" placeholder=" " required />
                 <label for="email" class="form-label-custom">Correo electrónico</label>
@@ -30,18 +31,18 @@
                 <input th:field="*{password}" type="password" id="password" class="form-input-custom" placeholder=" " required />
                 <label for="password" class="form-label-custom">Contraseña</label>
             </div>
-            <button id="btn-login" class="btn-submit-custom" type="submit" disabled>
-                Iniciar Sesión
+            <button id="btn-registrarme" class="btn-submit-custom" type="submit">
+                Registrarme
             </button>
         </form>
 
         <div class="auth-footer">
-            <span>¿No tenés cuenta? </span>
-            <a id="btn-register" href="registro.html" class="auth-link-custom">Registrate acá</a>
+            <span>¿Ya tenés una cuenta? </span>
+            <a href="login" class="auth-link-custom">Iniciá sesión acá</a>
         </div>
     </div>
 </main>
-<script type="module" th:src="@{/js/login.js}"></script>
+
 </body>
 
 </html>

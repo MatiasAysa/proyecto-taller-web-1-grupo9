@@ -2,10 +2,12 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Alimento;
 import com.tallerwebi.dominio.RepositorioAlimento;
-import java.util.List;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository("repositorioAlimento")
 public class RepositorioAlimentoImpl implements RepositorioAlimento {
@@ -28,5 +30,25 @@ public class RepositorioAlimentoImpl implements RepositorioAlimento {
       .getCurrentSession()
       .createQuery("FROM Alimento", Alimento.class)
       .getResultList();
+  }
+
+  @Override
+  public List<Alimento> obtenerTodosLosAlimentos() {
+    return this.sessionFactory.getCurrentSession()
+      .createQuery("FROM Alimento", Alimento.class)
+      .getResultList();
+  }
+
+  @Override
+  public Alimento obtenerPorNombreGenerico(String nombre) {
+    return (Alimento) this.sessionFactory.getCurrentSession()
+      .createCriteria(Alimento.class)
+      .add(Restrictions.eq("nombreGenerico", nombre))
+      .uniqueResult();
+  }
+
+  @Override
+  public void guardar(Alimento alimento) {
+    sessionFactory.getCurrentSession().save(alimento);
   }
 }

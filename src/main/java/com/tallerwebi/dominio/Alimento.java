@@ -23,8 +23,7 @@ public class Alimento {
   @Column(name = "url_supermercado", length = 500)
   private String urlSupermercado;
 
-  @Enumerated(EnumType.STRING)
-  private UnidadMedidaTipo unidadMedidaTipo;
+  private String nombreGenerico;
 
   public String getUrlSupermercado() {
     return urlSupermercado;

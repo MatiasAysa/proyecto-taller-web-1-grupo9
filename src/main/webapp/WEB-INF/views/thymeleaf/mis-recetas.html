@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Recetas - Grupo 9</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" />
+    <link rel="stylesheet" th:href="@{/css/mis-recetas.css}">
+</head>
+<body>
+
+<header th:replace="~{fragments-panel-cliente :: header-panel}"></header>
+
+<aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
+
+<main class="recetas-main-container">
+
+    <div class="recetas-header-flex">
+        <h1 class="recetas-titulo-seccion">Mis Recetas</h1>
+        <a th:href="@{/crear-receta}" class="btn-recetas-principal">
+            <i class="fas fa-plus"></i> Crear receta nueva
+        </a>
+    </div>
+
+    <div th:if="${recetas == null || recetas.isEmpty()}" class="recetas-empty-state">
+        <div class="empty-icon-wrapper">
+            <i class="fas fa-utensils"></i>
+        </div>
+        <h2>Todavía no has creado ninguna receta</h2>
+        <p>¡Empezá a armar tu propio recetario gastronómico ahora mismo!</p>
+        <a th:href="@{/crear-receta}" class="btn-recetas-secundario">
+            <i class="fas fa-magic"></i> Crear una receta nueva
+        </a>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(recetas)}" class="recetas-grid">
+        <div th:each="receta : ${recetas}" class="receta-card">
+
+            <div class="receta-card-actions">
+                <a th:href="@{/modificar-receta/{id}(id=${receta.id})}" class="btn-editar-receta" title="Editar receta">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+                <button type="button" class="btn-eliminar-receta" title="Eliminar receta"
+                        th:onclick="'abrirModal(' + ${receta.id} + ')'">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+            <h5 class="receta-card-title" th:text="${receta.nombre}">Nombre de la Receta</h5>
+
+            <span class="receta-badge-tipo" th:text="${receta.tipo}">DESAYUNO</span>
+
+            <h6 class="receta-sub-ingredientes">Ingredientes:</h6>
+            <ul class="receta-lista-ingredientes">
+                <li th:each="ingrediente : ${receta.getIngredientes()}" class="receta-ingrediente-item">
+                    <span th:text="${ingrediente.nombre}">Papa</span>
+                    <span class="receta-cantidad-badge" th:text="${ingrediente.cantidad} + 'g'">200g</span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <dialog id="modalConfirmacion" class="custom-dialog">
+        <div class="dialog-content">
+            <div class="dialog-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="dialog-title">¿Eliminar receta?</h3>
+            <p class="dialog-text">Esta acción no se puede deshacer. La receta se borrará del sistema de forma permanente.</p>
+
+            <div class="dialog-actions">
+                <button type="button" class="btn-dialog-cancelar" onclick="cerrarModal()">Cancelar</button>
+
+                <form id="formEliminarReceta" method="POST" action="">
+                    <button type="submit" class="btn-dialog-confirmar">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+</main>
+</body>
+<script th:src="@{/js/mis-recetas.js}"></script>
+</html>

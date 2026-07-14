@@ -4,9 +4,18 @@ import java.util.List;
 
 public class DatosReceta {
 
+  private Long id;
   private List<IngredienteDTO> ingredientes;
   private String nombre;
   private String tipo;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public List<IngredienteDTO> getIngredientes() {
     return ingredientes;
