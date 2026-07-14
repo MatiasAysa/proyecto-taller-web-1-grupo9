@@ -213,15 +213,23 @@
             border-right: 1px solid var(--color-grupo-borde);
             font-size: var(--font-size-subtitulo);
             width: 250px;
+
+
+        }
+
+        aside>div {
+            height: 100%;
         }
 
         .aside__enlaces {
             display: flex;
             flex-direction: column;
             gap: 1em;
-            padding: 1.5em 2em 1em 0.7em;
+            padding: 1.5em 2em 4em 0.7em;
             width: 100%;
             margin-left: 0.8em;
+
+            height: 100%;
         }
 
         .aside__enlaces a {
@@ -234,6 +242,10 @@
             font-size: var(--font-size-subtitulo);
         }
 
+        .aside__enlaces .logout {
+            margin-top: auto;
+        }
+
         .aside__enlaces a:hover {
             background-color: var(--white-hover);
             color: var(--color-principal)
@@ -241,13 +253,14 @@
 
         main {
             height: 100vh;
-            overflow-y: scroll;
+            overflow-y: auto;
             flex: 1;
             margin-top: 1em;
             padding-bottom: 10em;
         }
 
 
+        /* ================================== DESPENSA ESTILOS ========== */
         .search-bar {
             display: flex;
             gap: 1em;
@@ -555,13 +568,15 @@
                     </a>
                 </div>
 
-                <img class="imagenAlimento" src="" alt="imagenAlimento" th:data-alimento-id="${itemDespensa.alimento!=null ? itemDespensa.alimento.id : 99999}">
-                
-                <span class="nombreAlimento" th:if="${itemDespensa.alimento!=null}" th:text="${itemDespensa.alimento.nombre}"
+                <img class="imagenAlimento" src="" alt="imagenAlimento"
+                    th:data-alimento-id="${itemDespensa.alimento!=null ? itemDespensa.alimento.id : 99999}">
+
+                <span class="nombreAlimento" th:if="${itemDespensa.alimento!=null}"
+                    th:text="${itemDespensa.alimento.nombre}"
                     style="font-weight: bold;align-self: center;text-align: center; margin-top: 20px;margin-bottom: 25px;">Nombre
                     del
                     alimento</span>
-                    
+
                 <span class="nombreAlimento" th:if="${itemDespensa.alimento==null}" th:text="${itemDespensa.nombre}"
                     style="font-weight: bold;align-self: center;text-align: center;">Nombre del
                     alimento</span>
@@ -685,11 +700,11 @@
             img.src = imagenesAlimentos[id] || imagenesAlimentos.default;
         });
 
-      
+
 
         const searchInput = document.querySelector("#searchInput");
         const searchBtn = document.querySelector("#searchBtn");
-        
+
         // filtra los cards a medida q se escrive
         searchInput.addEventListener("input", () => {
             const searchTerm = searchInput.value.toLowerCase();
@@ -712,7 +727,7 @@
                 card.style.display = "flex";
             });
         });
-        
+
 
 
     </script>

@@ -40,7 +40,7 @@ body {
 .container {
     margin: 1em;
     width: 100%;
-    max-width: 500px;
+     max-width : 1000px
 
 }
 
@@ -199,6 +199,8 @@ select[multiple] {
     cursor: pointer;
     transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
     margin-top: 1em;
+
+    margin-bottom: 2em;
 }
 
 .submit-btn:hover {
