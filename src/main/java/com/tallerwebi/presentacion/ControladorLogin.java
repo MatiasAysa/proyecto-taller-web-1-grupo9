@@ -40,15 +40,10 @@ public class ControladorLogin {
     );
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
-      // Se guarda el email usario logueado
       request.getSession().setAttribute("usuarioLogueadoEmail", usuarioBuscado.getEmail());
 
       return new ModelAndView("redirect:/home");
     } else {
-      /*
-       * Se instancia el ModelMap solo cuando es necesario (en el flujo de error) para
-       * evitar anomalías en el flujo de datos (DU-anomaly de PMD)
-       */
       ModelMap model = new ModelMap();
       model.put("error", "Usuario o clave incorrecta");
       return new ModelAndView("login", model);
@@ -62,19 +57,19 @@ public class ControladorLogin {
       servicioLogin.registrar(usuario);
     } catch (UsuarioExistente e) {
       model.put("error", "El usuario ya existe");
-      return new ModelAndView("nuevo-usuario", model);
+      return new ModelAndView("registro", model);
     } catch (Exception e) {
       model.put("error", "Error al registrar el nuevo usuario");
-      return new ModelAndView("nuevo-usuario", model);
+      return new ModelAndView("registro", model);
     }
     return new ModelAndView("redirect:/login");
   }
 
-  @RequestMapping(path = "/nuevo-usuario", method = RequestMethod.GET)
+  @RequestMapping(path = "/registro", method = RequestMethod.GET)
   public ModelAndView nuevoUsuario() {
     ModelMap model = new ModelMap();
     model.put("usuario", new Usuario());
-    return new ModelAndView("nuevo-usuario", model);
+    return new ModelAndView("registro", model);
   }
 
   @RequestMapping(path = "/", method = RequestMethod.GET)

@@ -138,8 +138,6 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       calObj
     );
   }
-
-  // 🌟 HELPER NUEVO: Filtra y asegura fallback
   private List<Comida> filtrarComidasPorTipo(List<Comida> comidasAptas, String tipo) {
     List<Comida> filtradas = comidasAptas
       .stream()
