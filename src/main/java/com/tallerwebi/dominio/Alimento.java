@@ -120,12 +120,4 @@ public class Alimento {
   public void setGrasas(Double grasas) {
     infoNutricional.setGrasas(grasas);
   }
-
-  public String getNombreGenerico() {
-    return nombreGenerico;
-  }
-
-  public void setNombreGenerico(String nombreGenerico) {
-    this.nombreGenerico = nombreGenerico;
-  }
 }

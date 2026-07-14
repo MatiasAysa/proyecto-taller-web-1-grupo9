@@ -10,4 +10,6 @@ public interface RepositorioAlimento {
   Alimento obtenerPorNombreGenerico(String nombre);
 
   void guardar(Alimento a1);
+
+  List<Alimento> obtenerListaAlimentos();
 }
