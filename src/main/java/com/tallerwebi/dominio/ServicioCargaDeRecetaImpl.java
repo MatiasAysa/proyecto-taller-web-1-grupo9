@@ -6,6 +6,7 @@ import com.tallerwebi.presentacion.DatosReceta;
 import com.tallerwebi.presentacion.IngredienteDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,11 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
   @Override
   public void cargarReceta(DatosReceta datosReceta, String email) {
     Usuario usuario = repositorioUsuario.buscar(email);
-    if (yaExisteRecetaConMismoNombreYUsuario(datosReceta.getNombre(), usuario)) {
+    Comida recetaConMismoNombre = obtenerRecetaPorNombreYUsuario(datosReceta.getNombre(), usuario);
+    if (
+      recetaConMismoNombre != null &&
+      !Objects.equals(datosReceta.getId(), recetaConMismoNombre.getId())
+    ) {
       throw new RecetaConNombreRepetidoException();
     }
     List<Integer> alimentosInexistentes = obtenerAlimentosInexistentes(
@@ -51,6 +56,7 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
     Comida comida = new Comida();
     List<ItemComida> ingredientes = new ArrayList<ItemComida>();
 
+    comida.setId(datosReceta.getId());
     comida.setNombre(datosReceta.getNombre());
     comida.setTipo(TipoDeComida.valueOf(datosReceta.getTipo()));
     for (IngredienteDTO i : datosReceta.getIngredientes()) {
@@ -76,6 +82,19 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
     Comida comida = repositorioReceta.buscarRecetaPorId(id);
     if (comida == null || comida.getAutor() == null || !comida.getAutor().equals(usuario)) return;
     repositorioReceta.eliminarReceta(id);
+  }
+
+  @Override
+  public DatosReceta obtenerRecetaPorId(Long id) {
+    Comida entity = repositorioReceta.buscarRecetaPorId(id);
+    DatosReceta datosReceta = new DatosReceta();
+    datosReceta.setId(entity.getId());
+    datosReceta.setNombre(entity.getNombre());
+    datosReceta.setIngredientes(
+      entity.getItems().stream().map(IngredienteDTO::new).collect(Collectors.toList())
+    );
+    datosReceta.setTipo(entity.getTipo().name());
+    return datosReceta;
   }
 
   @Transactional
@@ -117,7 +136,7 @@ public class ServicioCargaDeRecetaImpl implements ServicioCargaDeReceta {
     return alimentosInexistentes;
   }
 
-  private boolean yaExisteRecetaConMismoNombreYUsuario(String nombre, Usuario usuario) {
-    return repositorioReceta.buscarRecetaPorNombreYUsuario(nombre, usuario) != null;
+  private Comida obtenerRecetaPorNombreYUsuario(String nombre, Usuario usuario) {
+    return repositorioReceta.buscarRecetaPorNombreYUsuario(nombre, usuario);
   }
 }

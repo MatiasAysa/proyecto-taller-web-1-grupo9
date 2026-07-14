@@ -8,20 +8,11 @@ function initCheckboxesPresupuesto() {
     const comidas = document.querySelectorAll(".comida-bloque");
     if (comidas.length === 0) return;
 
-    const contenedorPrincipal = document.querySelector(".contenedor-principal");
     const contenedorCostoBase = document.getElementById("contenedor-costo-base");
-
-    const diasPlan = parseInt(contenedorPrincipal?.getAttribute("data-dias")) || 7;
     const presupuestoTotalBruto = parseFloat(contenedorCostoBase?.getAttribute("data-presupuesto-total")) || 0;
-    const presupuestoPorDiaReal = presupuestoTotalBruto / diasPlan;
-
-    const txtPresupuestoDiarioPuro = document.getElementById("txt-presupuesto-diario-puro");
-    if (txtPresupuestoDiarioPuro && presupuestoPorDiaReal > 0) {
-        txtPresupuestoDiarioPuro.innerText = "$" + presupuestoPorDiaReal.toFixed(2);
-    }
 
     const txtCostoSelection = document.getElementById("txt-costo-seleccion-acumulado");
-    const txtBalanceEstadoDiario = document.getElementById("txt-balance-estado-diario");
+    const txtBalanceEstadoTotal = document.getElementById("txt-balance-estado-total");
 
     const txtCalorias = document.getElementById("txt-calorias-dinamicas");
     const txtProteinas = document.getElementById("txt-proteinas-dinamicas");
@@ -52,23 +43,20 @@ function initCheckboxesPresupuesto() {
             }
         });
 
-        if (txtCostoSelection) txtCostoSelection.innerText = "$" + costoAlimentosSeleccionados.toFixed(2);
-
-        if (txtBalanceEstadoDiario) {
-            if (itemsChecked === 0) {
-                txtBalanceEstadoDiario.innerText = "Sin Alimentos";
-                txtBalanceEstadoDiario.style.backgroundColor = "#7f8c8d";
-                txtBalanceEstadoDiario.style.color = "#ffffff";
-            } else if (costoAlimentosSeleccionados <= presupuestoPorDiaReal) {
-                txtBalanceEstadoDiario.innerText = "Dentro del Presupuesto";
-                txtBalanceEstadoDiario.style.backgroundColor = "#03A62C";
-                txtBalanceEstadoDiario.style.color = "#ffffff";
-            } else {
-                txtBalanceEstadoDiario.innerText = "Presupuesto Excedido";
-                txtBalanceEstadoDiario.style.backgroundColor = "#c0392b";
-                txtBalanceEstadoDiario.style.color = "#ffffff";
-            }
+        if (txtCostoSelection) {
+            txtCostoSelection.innerText = "$" + costoAlimentosSeleccionados.toFixed(2);
         }
+     if (txtBalanceEstadoTotal) {
+                 if (costoAlimentosSeleccionados <= presupuestoTotalBruto) {
+                     txtBalanceEstadoTotal.innerText = "Dentro del Presupuesto";
+                     txtBalanceEstadoTotal.style.backgroundColor = "#03A62C";
+                     txtBalanceEstadoTotal.style.color = "#ffffff";
+                 } else {
+                     txtBalanceEstadoTotal.innerText = "Presupuesto Excedido";
+                     txtBalanceEstadoTotal.style.backgroundColor = "#c0392b";
+                     txtBalanceEstadoTotal.style.color = "#ffffff";
+                 }
+             }
 
         if (txtCalorias) txtCalorias.innerText = caloriasAcumuladas + " kcal";
         if (txtProteinas) txtProteinas.innerText = proteinasAcumuladas.toFixed(1) + "g";

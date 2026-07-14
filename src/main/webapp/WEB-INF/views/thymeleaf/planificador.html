@@ -38,21 +38,18 @@
 
         <div class="resumen-costo" th:data-presupuesto-total="${planGenerado.costoTotalPlan}" id="contenedor-costo-base">
             <h3>Tu Presupuesto Total Configurado: <span th:text="${'$' + #numbers.formatDecimal(planGenerado.costoTotalPlan, 1, 'DEFAULT', 2, 'DEFAULT')}"></span></h3>
-            <h4 class="subtitulo-costo-diario">
-                Tu Presupuesto Disponible por Día: <span id="txt-presupuesto-diario-puro">$0.00</span>
-            </h4>
         </div>
 
         <div class="panel-control-seleccion">
             <h3>&#128722; Resumen de Selección Actual</h3>
             <div class="grilla-seleccion-dinamica">
                 <div class="tarjeta-seleccion-precio">
-                    <span class="macro-etiqueta">Costo diario seleccionado</span>
+                    <span class="macro-etiqueta">Costo del plan seleccionado</span>
                     <strong id="txt-costo-seleccion-acumulado">$0.00</strong>
                 </div>
                 <div class="tarjeta-seleccion-precio">
-                    <span class="macro-etiqueta">Estado del Presupuesto Diario</span>
-                    <span id="txt-balance-estado-diario" class="badge-alerta-js">Sin Alimentos</span>
+                    <span class="macro-etiqueta">Estado del Presupuesto Total</span>
+                    <span id="txt-balance-estado-total" class="badge-alerta-js">Sin Alimentos</span>
                 </div>
             </div>
         </div>

@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>a</title>
+    <title>Panel Cliente - Mi Perfil</title>
     <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" />
 
     <style>
         /* ========== MAIN ========== */
         .sub-container h1 {
             font-size: var(--font-size-titulo);
-            margin-bottom: 0.4em;
+            margin-bottom: 1.4em;
         }
 
         .sub-container p {
@@ -71,6 +71,13 @@
             background-color: var(--color-complementario);
             border-radius: 5px;
             font-size: var(--font-size-texto);
+        }
+        main{
+            padding-top: 1em;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
         }
     </style>
 </head>
@@ -135,6 +142,7 @@
 
         <section class="sub-container">
             <h1 class="titulo">Presupuesto</h1>
+            <p>Estos datos son utilizados para optimizar tu planificación de comidas y gastos asociados a tus compras en el supermercado</p>
             <div class="info-group">
                 <div class="grid-datos">
                     <div class="dato-item">

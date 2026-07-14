@@ -23,7 +23,17 @@ public class RepositorioRecetaImpl implements RepositorioReceta {
 
   @Override
   public void guardarReceta(Comida receta) {
-    sessionFactory.getCurrentSession().save(receta);
+    Comida recetaEncontrada = this.buscarRecetaPorId(receta.getId());
+    if (recetaEncontrada != null) modificarReceta(recetaEncontrada, receta); else sessionFactory
+      .getCurrentSession()
+      .save(receta);
+  }
+
+  private void modificarReceta(Comida recetaEncontrada, Comida receta) {
+    recetaEncontrada.setNombre(receta.getNombre());
+    recetaEncontrada.setTipo(receta.getTipo());
+    recetaEncontrada.setItems(receta.getItems());
+    sessionFactory.getCurrentSession().update(recetaEncontrada);
   }
 
   @Override

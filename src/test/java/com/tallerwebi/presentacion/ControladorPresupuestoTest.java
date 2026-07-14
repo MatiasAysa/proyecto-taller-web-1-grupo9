@@ -227,11 +227,7 @@ public class ControladorPresupuestoTest {
   }
 
   private void thenSeCreaElPresupuesto(ModelAndView mav) {
-    assertThat(mav.getViewName(), equalToIgnoringCase("mi-presupuesto"));
-    assertThat(
-      mav.getModel().get("mensaje").toString(),
-      equalToIgnoringCase(controladorPresupuesto.getMENSAJE_PRESUPUESTO_EXITOSO())
-    );
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/panel-cliente/datos-personales"));
   }
 
   private ModelAndView whenIngresoMontoEIntervalo(DatosPresupuesto datosPresupuesto) {

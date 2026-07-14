@@ -30,6 +30,7 @@
 
             <form action="#" th:action="@{/validar-receta}" method="post" th:object="${datosReceta}" accept-charset="UTF-8">
 
+                <input type="hidden" th:field="*{id}"/>
                 <div class="mb-3">
                     <label for="nombreReceta" class="form-label fw-bold">Nombre de la receta:</label>
                     <input type="text" id="nombreReceta" th:field="*{nombre}" class="form-control form-control-custom" th:classappend="${nombreInvalido != null} ? 'is-invalid' : ''" placeholder="Ej: Pastel de Papa" required />
@@ -89,9 +90,7 @@
                         </div>
                     </div>
 
-                    </div>
                 </div>
-
                 <div class="mb-4">
                     <button type="button" id="btn-agregar-ingrediente" class="btn btn-custom-yellow btn-sm py-2 px-3 shadow-sm">
                         <i class="bi bi-plus-circle me-2"></i>Agregar otro ingrediente

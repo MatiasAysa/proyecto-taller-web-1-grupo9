@@ -38,6 +38,9 @@
         <div th:each="receta : ${recetas}" class="receta-card">
 
             <div class="receta-card-actions">
+                <a th:href="@{/modificar-receta/{id}(id=${receta.id})}" class="btn-editar-receta" title="Editar receta">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
                 <button type="button" class="btn-eliminar-receta" title="Eliminar receta"
                         th:onclick="'abrirModal(' + ${receta.id} + ')'">
                     <i class="fas fa-trash-alt"></i>

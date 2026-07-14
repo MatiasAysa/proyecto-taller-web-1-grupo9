@@ -9,8 +9,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../../../resources/core/css/presupuesto.css" th:href="@{/css/presupuesto.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" />
+    <style>
+        nav{
+            margin: 0 !important;
+        }
+    </style>
 </head>
 <body>
+
+    <header th:replace="~{fragments-panel-cliente :: header-panel}"></header>
+    <aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
 
 <div class="container justify-content-center">
 

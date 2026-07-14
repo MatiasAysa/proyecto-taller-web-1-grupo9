@@ -24,6 +24,14 @@ public class RepositorioAlimentoImpl implements RepositorioAlimento {
   }
 
   @Override
+  public List<Alimento> obtenerListaAlimentos() {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("FROM Alimento", Alimento.class)
+      .getResultList();
+  }
+
+  @Override
   public List<Alimento> obtenerTodosLosAlimentos() {
     return this.sessionFactory.getCurrentSession()
       .createQuery("FROM Alimento", Alimento.class)
