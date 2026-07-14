@@ -138,6 +138,7 @@ public class ServicioPlanificadorImpl implements ServicioPlanificador {
       calObj
     );
   }
+
   private List<Comida> filtrarComidasPorTipo(List<Comida> comidasAptas, String tipo) {
     List<Comida> filtradas = comidasAptas
       .stream()
