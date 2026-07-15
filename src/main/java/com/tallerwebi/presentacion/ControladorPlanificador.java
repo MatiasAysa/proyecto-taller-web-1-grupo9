@@ -51,6 +51,11 @@ public class ControladorPlanificador {
         this.servicioPlanificador.generarPlanParaUsuario(emailLogueado.toString(), null);
       modelo.put("planGenerado", plan);
 
+      // ==========================================
+      // NUEVO:Guardo el plan en la sesion
+      session.setAttribute("planGenerado", plan);
+      // ==========================================
+
       if (plan.getAdvertencias() != null && !plan.getAdvertencias().isEmpty()) {
         modelo.put("advertencias", plan.getAdvertencias());
       }

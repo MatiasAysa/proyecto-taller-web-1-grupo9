@@ -19,13 +19,6 @@ public class DatosClientePanel {
   private int intervalo;
   private double monto;
 
-  //=========DIRECCION================
-  // private String calle;
-  // private String numero;
-  // private String ciudad;
-
-  //=========================
-
   public DatosClientePanel(
     double peso,
     double altura,

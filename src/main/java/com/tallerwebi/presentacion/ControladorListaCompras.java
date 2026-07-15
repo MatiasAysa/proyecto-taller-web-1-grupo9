@@ -61,6 +61,11 @@ public class ControladorListaCompras {
     modelo.put("listaDeCompras", listaDeCompras);
     modelo.put("totalLista", total);
 
+    // ==========================================
+    // NUEVO:guardo el modelo lista de compras en la sesion
+    sesion.setAttribute("modeloLista", modelo);
+    // ==========================================
+
     try {
       List<String> datosNutricional = servicioListaCompras.mostrarDtosTestear(email);
       modelo.put("test", datosNutricional);

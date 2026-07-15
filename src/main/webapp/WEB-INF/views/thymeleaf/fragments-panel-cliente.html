@@ -12,7 +12,7 @@
     <aside th:fragment="aside-panel">
         <div>
             <ul class="aside__enlaces">
-                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/panel-cliente/dashboard}">Dashboard</a></li>
                 <li><a th:href="@{/panel-cliente/datos-personales}">Datos Personales</a></li>
                 <li><a th:href="@{/mis-recetas}">Recetas</a></li>
                 <li><a th:href="@{/planificador}">Plan</a></li>
@@ -33,20 +33,6 @@
 
             <h2 th:if="${tituloSeccion != null}" th:text="${tituloSeccion}" class="titulo-seccion">Titulo sección
             </h2>
-            <!-- <div class="navbar__perfil">
-                <button class="btn-perfil" onclick="abrirMenuPerfil()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/18913/18913767.png" alt="Perfil">
-                    <span>NombreUsuario</span>
-                    <img src="https://cdn-icons-png.flaticon.com/512/44/44571.png" alt="Flecha">
-                </button>
-                
-                <div id="menu-perfil" class="menu-perfil">
-                    <ul>
-                        <li><a th:href="@{/panel-cliente}">Panel Cliente</a></li>
-                        <li><a th:href="@{/login}">Cerrar sesión</a></li>
-                    </ul>
-                </div>
-            </div> -->
         </nav>
     </header>
 

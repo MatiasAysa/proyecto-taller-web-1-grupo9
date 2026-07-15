@@ -53,19 +53,6 @@ public class ControladorPanelcliente {
     return new ModelAndView(RUTA_LOGIN);
   }
 
-  @GetMapping("/panel-cliente/dashboard")
-  public ModelAndView irADashboard(HttpSession session) {
-    // if (session.getAttribute("usuarioLogueadoEmail") != null) {
-    // String email = session.getAttribute("usuarioLogueadoEmail").toString();
-    // DatosPerfilUsuario datos = servicioUsuario.obtenerDatosPerfilUsuario(email);
-    // ModelMap model = new ModelMap();
-    // model.put("datosPerfilUsuario", datos);
-    //
-    // return new ModelAndView("panel-cliente", model);
-    // }
-    return new ModelAndView("panel__dashboard");
-  }
-
   @GetMapping("/panel-cliente/datos-personales")
   public ModelAndView irAPanelDatosPersonales(HttpSession session) {
     String email = obtenerEmail(session);
@@ -173,5 +160,26 @@ public class ControladorPanelcliente {
 
     servicioDespensa.cambiarCantidadDespensa(id, cantidad);
     return new ModelAndView("redirect:/panel-cliente/despensa");
+  }
+
+  // DASHBOARD
+  @GetMapping("/panel-cliente/dashboard")
+  public ModelAndView irADashboard(HttpSession session) {
+    String email = obtenerEmail(session);
+    if (email == null) return new ModelAndView(RUTA_LOGIN);
+
+    boolean tienePerfilAlimentario = servicioUsuario.tienePerfilAlimentario(email);
+    boolean tienePresupuesto = servicioUsuario.tienePresupuesto(email);
+
+    ModelMap modelo = new ModelMap();
+    DatosClientePanel datos = servicioUsuario.obtenerDatosClientePanel(email);
+    modelo.put("datosClientePanel", datos);
+    modelo.put("paso1Completado", tienePerfilAlimentario);
+    modelo.put("paso2Completado", tienePresupuesto);
+    // planGenerado, modeloLista
+    modelo.put("paso3Completado", session.getAttribute("planGenerado") != null);
+    modelo.put("paso4Completado", session.getAttribute("modeloLista") != null);
+
+    return new ModelAndView("panel__dashboard", modelo);
   }
 }

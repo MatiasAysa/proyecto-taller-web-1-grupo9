@@ -49,12 +49,16 @@ public class ServicioUsuarioImp implements ServicioUsuario {
     if (usuario == null) {
       return null;
     }
-    DatosClientePanel datosClientePanel = new DatosClientePanel();
+
     PerfilAlimentarioUsuario perfilAlimentario = usuario.getPerfilAlimentario();
+    if (perfilAlimentario == null) {
+      return null;
+    }
     Set<PerfilRestriccion> restricciones = perfilAlimentario.getPerfilRestricciones();
     if (restricciones != null) {
       restricciones.size();
     }
+    DatosClientePanel datosClientePanel = new DatosClientePanel();
 
     datosClientePanel.setPeso(perfilAlimentario.getPeso());
     datosClientePanel.setAltura(perfilAlimentario.getAltura());

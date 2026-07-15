@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=ç, initial-scale=1.0">
+    <title>Dashboard</title> 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+        :root {
+            --color-principal: #03A62C;
+            --color-principal-hover: #007B37;
+            --color-complementario: #F29F05;
+            --color-complementario-hover: #D88107;
+            --fuente-titulos: 'Montserrat', sans-serif;
+            --fuente-cuerpo: 'Lato', sans-serif;
+            --color-titulo: #000000;
+            --color-subtitulo: #4C4847;
+            --color-error: #db1c65;
+
+            --font-size-titulo: 24px;
+            --font-size-subtitulo: 20px;
+            --font-size-texto: 16px;
+            --font-size-textos-pequenos: 14px;
+
+            --color-grupo: #f5f5f5;
+            --white-hover: #ebebeb;
+            --color-grupo-borde: #d4d4d4;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            list-style: none;
+            border: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        body {
+            font-family: var(--fuente-cuerpo);
+            background-color: #ffffff;
+            color: var(--color-subtitulo);
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            padding: 1em 2em;
+        }
+
+        .sub-container {
+            padding: 1em 3em;
+        }
+
+        .btn-1 {
+            background-color: var(--color-principal);
+            color: white;
+            padding: 0.5em 1em;
+            border-radius: 0.5em;
+        }
+
+        .btn-2 {
+            background-color: var(--color-complementario);
+            font-size: var(--font-size-texto);
+            color: white;
+            padding: 1.1em 2em;
+            border-radius: 1.4em;
+        }
+
+        a {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            color: var(--color-subtitulo);
+        }
+
+        a:hover {
+            transform: scale(1.1);
+        }
+
+        .navbar .logotipo {
+            font-weight: 400;
+            font-size: var(--font-size-titulo);
+            letter-spacing: 2px;
+            color: var(--color-principal);
+            font-family: "Bebas Neue", sans-serif;
+        }
+
+        .navbar .logotipo:active {
+            color: var(--color-complementario);
+        }
+
+        .navbar a:hover {
+            cursor: pointer;
+        }
+
+        .navbar a:hover:not(.logotipo) {
+            color: var(--color-principal);
+        }
+
+        .navbar a:active:not(.logotipo) {
+            color: var(--color-principal-hover);
+        }
+
+        .navbar__enlaces {
+            display: flex;
+            gap: 3em;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ========== PANEL ========== */
+        .header-panel {
+            background-color: var(--color-principal);
+            width: 100%;
+            height: 4em;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .header-panel .navbar {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .titulo-seccion {
+            color: white;
+            margin-left: -25em;
+        }
+
+        .header-panel .navbar a {
+            color: white;
+        }
+
+        .header-panel .navbar a:hover {
+            color: white;
+        }
+
+        .btn-perfil {
+            display: flex;
+            flex-direction: rows;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.3em 1em 0.3em 1em;
+            border-radius: 10px;
+            transition: transform 0.2s ease;
+            border: none;
+        }
+
+        .btn-perfil:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-perfil img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .btn-perfil span {
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 0.5em;
+            margin-right: 0.7em;
+        }
+
+        .btn-perfil img:last-child {
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .menu-perfil {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--color-grupo);
+            border: 1px solid var(--color-grupo-borde);
+            border-radius: 0.5em;
+            display: none;
+        }
+
+        /* ========== ASIDE ========== */
+        aside {
+            height: 100vh;
+            border-right: 1px solid var(--color-grupo-borde);
+            font-size: var(--font-size-subtitulo);
+            width: 250px;
+
+
+        }
+
+        aside>div {
+            height: 100%;
+        }
+
+        .aside__enlaces {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            padding: 1.5em 2em 4em 0.7em;
+            width: 100%;
+            margin-left: 0.8em;
+
+            height: 100%;
+        }
+
+        .aside__enlaces a {
+            display: block;
+            padding: 0.5em;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: var(--font-size-subtitulo);
+        }
+
+        .aside__enlaces .logout {
+            margin-top: auto;
+        }
+
+        .aside__enlaces a:hover {
+            background-color: var(--white-hover);
+            color: var(--color-principal)
+        }
+
+
+        main {
+            height: 100vh;
+            overflow-y: auto;
+            flex: 1;
+            padding-bottom: 3em;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        .generar-plan {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: auto;
+        }
+
+        .generar-plan h1 {
+            font-size: var(--font-size-titulo);
+            font-weight: bold;
+            margin-bottom: 0.3em;
+        }
+
+        .generar-plan p {
+            font-size: var(--font-size-texto);
+            margin-bottom: 2em;
+        }
+
+        .generar-plan__lista-pasos {
+            display: flex;
+            flex-direction: row;
+            gap: 3em;
+            align-items: flex-start;
+            background-color: var(--color-grupo);
+            padding: 2em 2.5em;
+            width: 95%; 
+            padding-top: 3em;
+            border-radius: 1em;
+
+            box-shadow: 0px 20px 20px 2px rgba(201, 201, 201, 0.48);
+        }
+
+        .paso {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .paso>span {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: var(--font-size-subtitulo);
+            margin-bottom: 2em;
+
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+            z-index: 3;
+        }
+        .paso img{
+            width: 35px; 
+            margin-bottom: 10px;
+            margin-top: -10px;
+        }
+
+        .paso>span:hover {
+            transform: scale(1.4);
+            transition: transform 0.2s ease;
+        }
+
+        .paso>a:hover {
+            transform: none;
+        }
+
+        .done {
+            background-color: var(--color-principal);
+            box-shadow: 0px 0px 16px 2px rgba(55, 255, 102, 0.6);
+            color: white; 
+        }
+
+        .undone {
+            background-color: var(--color-grupo);
+            color: var(--color-subtitulo);
+            border: 4px solid rgb(168, 168, 168);
+        }
+
+        .paso:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            width: calc(100% + 3em);
+            height: 4px;
+            background-color: var(--color-principal);
+            z-index: 1;
+        }
+
+        .paso:has(> .done):not(:last-child)::after {
+            background-color: var(--color-principal);
+            box-shadow: 0px 0px 16px 2px rgba(0, 255, 60, 0.6);
+        }
+        .paso:has(> .undone):not(:last-child)::after {
+            background-color:  rgb(175, 175, 175);
+        }
+    </style>
+</head>
+
+<body>
+    <header th:replace="~{fragments-panel-cliente :: header-panel}"></header>
+    <aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
+
+    <main>
+
+        <div th:if="${paso4Completado ==false}" class="generar-plan">
+            <h1>¡Genera tu primer plan alimentario!</h1>
+            <p>Sigue estos pasos para generar tu primer plan alimentario personalizado</p>
+
+            <div class="generar-plan__lista-pasos">
+
+                <div class="paso" id="paso-1">
+                    <span th:classappend="${paso1Completado} ? 'done' : 'undone'">1</span>
+                    <img src="https://cdn-icons-png.flaticon.com/512/18520/18520029.png" alt="">
+                    <a th:href="@{/panel-cliente/datos-personales}">
+                        Completa tu perfil alimentario
+                    </a>
+                </div>
+ 
+
+                <div class="paso" id="paso-2">
+                    <span th:classappend="${paso2Completado} ? 'done' : 'undone'">2</span>
+                    <img src="https://cdn-icons-png.flaticon.com/512/7121/7121772.png" alt="">
+                    <a th:href="@{/panel-cliente/datos-personales}">
+                        Asigna un presupuesto
+                    </a>
+                </div>
+
+
+                <div class="paso" id="paso-3">
+                    <span th:classappend="${paso3Completado} ? 'done' : 'undone'">3</span>
+                    <img src="	https://cdn-icons-png.flaticon.com/512/2871/2871411.png" alt="">
+                    <a th:href="@{/planificador}">
+                        Generá tu plan
+                    </a>
+                </div>
+
+
+                <div class="paso" id="paso-4">
+                    <span th:classappend="${paso4Completado} ? 'done' : 'undone'">4</span>
+                    <img src="	https://cdn-icons-png.flaticon.com/512/9859/9859670.png" alt="">
+                    <a href="">
+                        Guardá tu plan alimentario y lista de compras
+                    </a>
+                </div>
+
+                <div class="dashboard" th:if="${paso4Completado == true}">
+                    <div th:each="dia : ${listaDeCompras}"> 
+                        
+                    </div>
+                </div>
+
+            </div> 
+
+        </div>
+
+    </main>
+    
+</body>
+
+</html>
