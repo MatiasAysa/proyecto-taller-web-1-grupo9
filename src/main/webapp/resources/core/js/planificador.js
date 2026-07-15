@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initCheckboxesPresupuesto();
     initFiltrosMenuAlternativo();
     initTabsSemanas();
+    initValidacionSeleccionCompleta();
 });
 
 function initCheckboxesPresupuesto() {
@@ -46,17 +47,17 @@ function initCheckboxesPresupuesto() {
         if (txtCostoSelection) {
             txtCostoSelection.innerText = "$" + costoAlimentosSeleccionados.toFixed(2);
         }
-     if (txtBalanceEstadoTotal) {
-                 if (costoAlimentosSeleccionados <= presupuestoTotalBruto) {
-                     txtBalanceEstadoTotal.innerText = "Dentro del Presupuesto";
-                     txtBalanceEstadoTotal.style.backgroundColor = "#03A62C";
-                     txtBalanceEstadoTotal.style.color = "#ffffff";
-                 } else {
-                     txtBalanceEstadoTotal.innerText = "Presupuesto Excedido";
-                     txtBalanceEstadoTotal.style.backgroundColor = "#c0392b";
-                     txtBalanceEstadoTotal.style.color = "#ffffff";
-                 }
-             }
+        if (txtBalanceEstadoTotal) {
+            if (costoAlimentosSeleccionados <= presupuestoTotalBruto) {
+                txtBalanceEstadoTotal.innerText = "Dentro del Presupuesto";
+                txtBalanceEstadoTotal.style.backgroundColor = "#03A62C";
+                txtBalanceEstadoTotal.style.color = "#ffffff";
+            } else {
+                txtBalanceEstadoTotal.innerText = "Presupuesto Excedido";
+                txtBalanceEstadoTotal.style.backgroundColor = "#c0392b";
+                txtBalanceEstadoTotal.style.color = "#ffffff";
+            }
+        }
 
         if (txtCalorias) txtCalorias.innerText = caloriasAcumuladas + " kcal";
         if (txtProteinas) txtProteinas.innerText = proteinasAcumuladas.toFixed(1) + "g";
@@ -129,4 +130,61 @@ function initTabsSemanas() {
 function initFiltrosMenuAlternativo() {
     const cabeceras = document.querySelectorAll(".cabecera-tarjeta-dia");
     if(cabeceras.length === 0) return;
+}
+
+function initValidacionSeleccionCompleta() {
+    const formularioPlan = document.querySelector("form.resultado-plan");
+    if (!formularioPlan) return;
+
+    formularioPlan.addEventListener("submit", (evento) => {
+        const tarjetasDias = document.querySelectorAll(".tarjeta-dia-kanban");
+        let planValido = true;
+        let primerDiaIncompleto = null;
+        let numeroPrimerDiaIncompleto = null;
+        const diasIncompletos = [];
+
+        tarjetasDias.forEach(tarjeta => {
+            const numeroDia = tarjeta.getAttribute("data-numero-dia") || tarjeta.getAttribute("th:data-numero-dia");
+            const momentos = tarjeta.querySelectorAll(".grupo-momento-comida");
+            let diaCompleto = true;
+
+            momentos.forEach(momento => {
+                const checkboxesMarcados = momento.querySelectorAll(".check-consumo-js:checked");
+                if (checkboxesMarcados.length === 0) {
+                    diaCompleto = false;
+                }
+            });
+
+            if (!diaCompleto) {
+                planValido = false;
+                diasIncompletos.push(numeroDia);
+                if (!primerDiaIncompleto) {
+                    primerDiaIncompleto = tarjeta;
+                    numeroPrimerDiaIncompleto = parseInt(numeroDia);
+                }
+            }
+        });
+        if (!planValido) {
+            evento.preventDefault();
+
+            alert(`¡Atención! Para continuar debés seleccionar al menos un Desayuno, un Almuerzo y una Cena para todos los días.\n\nDías incompletos: ${diasIncompletos.join(", ")}`);
+
+            if (numeroPrimerDiaIncompleto) {
+                const diasPorSemana = 7;
+                const semanaDelDiaIncompleto = Math.ceil(numeroPrimerDiaIncompleto / diasPorSemana);
+                const botonTabSemana = document.querySelector(`.tab-semana-btn[data-semana="${semanaDelDiaIncompleto}"]`);
+
+                if (botonTabSemana && !botonTabSemana.classList.contains("tab-activa")) {
+                    botonTabSemana.click();
+                }
+            }
+            if (primerDiaIncompleto) {
+                primerDiaIncompleto.scrollIntoView({ behavior: "smooth", block: "center" });
+                primerDiaIncompleto.style.outline = "2px solid #c0392b";
+                setTimeout(() => {
+                    primerDiaIncompleto.style.outline = "none";
+                }, 3000);
+            }
+        }
+    });
 }

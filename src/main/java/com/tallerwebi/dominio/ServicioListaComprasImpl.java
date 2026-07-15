@@ -103,7 +103,7 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
   @Override
   public ItemCompra buscarItemCompra(List<ItemCompra> itemsCompra, ItemComida itemComida) {
     for (ItemCompra itemCompra : itemsCompra) {
-      if (itemCompra.getAlimento().getNombre().equals(itemComida.getAlimento().getNombre())) {
+      if (itemCompra.getAlimento().getId().equals(itemComida.getAlimento().getId())) {
         return itemCompra;
       }
     }
