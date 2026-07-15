@@ -139,10 +139,10 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
     }
     List<DiaListaComprasDTO> nuevaListaCompras = new ArrayList<>();
 
-    ObjetivoNutricional objetivoDiario = CalculadorNutricionalHelper.calcularObjetivoDiario(usuario.getPerfilAlimentario());
-    ObjetivoNutricional objetivoNutricionalDesayuno = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.DESAYUNO);
-    ObjetivoNutricional objetivoNutricionalAlmuerzo = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.ALMUERZO);
-    ObjetivoNutricional objetivoNutricionalCena =CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.CENA);
+    //ObjetivoNutricional objetivoDiario = CalculadorNutricionalHelper.calcularObjetivoDiario(usuario.getPerfilAlimentario());
+    //ObjetivoNutricional objetivoNutricionalDesayuno = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.DESAYUNO);
+    //ObjetivoNutricional objetivoNutricionalAlmuerzo = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.ALMUERZO);
+    //ObjetivoNutricional objetivoNutricionalCena =CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.CENA);
 
     return nuevaListaCompras;
   }
