@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi despensa</title>
+    <link rel="stylesheet" th:href="@{/css/mis-recetas.css}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
@@ -447,6 +448,38 @@
     <aside th:replace="~{fragments-panel-cliente::aside-panel}"></aside>
 
     <main class="container">
+        <dialog id="modalConfirmacion" class="custom-dialog">
+
+            <div class="dialog-content">
+                <div class="dialog-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="dialog-title">¿Eliminar alimento?</h3>
+                <p class="dialog-text">Esta acción no se puede deshacer. El alimento se borrará del sistema de forma
+                    permanente.</p>
+
+                <div class="dialog-actions">
+                    <button type="button" class="btn-dialog-cancelar" onclick="cerrarModal()">Cancelar</button>
+
+                    <form id="formEliminarItemDespensa" method="get" action="">
+                        <button type="submit" class="btn-dialog-confirmar">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                const modal = document.getElementById('modalConfirmacion');
+                const formEliminar = document.getElementById('formEliminarItemDespensa');
+                function abrirModal(idItemDespensa) { 
+                    formEliminar.action = '/spring/panel-cliente/despensa/eliminar/' + idItemDespensa;
+                    modal.showModal();
+                }
+                function cerrarModal() {
+                    modal.close();
+                }
+            </script>
+        </dialog>
+
 
         <!-- FORM CAMBIAR CANTIDAD -->
         <div class="popup-cambiarCantidad" id="popUpCambiarCantidad">
@@ -563,7 +596,7 @@
                     <span th:if="${itemDespensa.fechaVencimiento}==null" class="cuducidad"></span>
                     <span th:if="${itemDespensa.fechaVencimiento}!=null" class="cuducidad"
                         th:text="${itemDespensa.fechaVencimiento} + 'd' ">00d</span>
-                    <a th:href="@{/panel-cliente/despensa/eliminar/{id}(id=${itemDespensa.id})}" class="btn-eliminar">
+                    <a th:onclick="'abrirModal(' + ${itemDespensa.id} + ')'" class="btn-eliminar">
                         <img src="https://cdn-icons-png.flaticon.com/512/1214/1214594.png" alt="imagenEliminar">
                     </a>
                 </div>
@@ -648,9 +681,6 @@
         });
 
 
-
-
-        // Diccionario de imágenes representativas, limpias y de alta calidad (Unsplash / Libres de derechos)
         const imagenesAlimentos = {
             // --- DESAYUNOS ---
             1: "https://carrefourar.vtexassets.com/arquivos/ids/830692/7792180144973_02.jpg", // Avena instantánea Carrefour 400g
