@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.Direccion;
 import com.tallerwebi.dominio.ServicioBuscarSupermercado;
 import com.tallerwebi.dominio.Supermercado;
 import com.tallerwebi.dominio.excepcion.MuchasPeticionesServicioMapas;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,18 +19,19 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorBuscarSupermercado {
 
   private ServicioBuscarSupermercado servicioBuscarSupermercado;
+  private static final String VISTA_BUSQUEDA_SUPERMERCADOS = "busqueda-supermercados";
 
   @Autowired
   public ControladorBuscarSupermercado(ServicioBuscarSupermercado servicioBuscarSupermercado) {
     this.servicioBuscarSupermercado = servicioBuscarSupermercado;
   }
 
-  @RequestMapping(path = { "busqueda-supermercados" }, method = { RequestMethod.GET })
+  @RequestMapping(path = { VISTA_BUSQUEDA_SUPERMERCADOS }, method = { RequestMethod.GET })
   public ModelAndView mostrarFormularioParaDirecciones() {
     ModelMap modelo = new ModelMap();
     modelo.put("direccion", new Direccion());
 
-    return new ModelAndView("busqueda-supermercados", modelo);
+    return new ModelAndView(VISTA_BUSQUEDA_SUPERMERCADOS, modelo);
   }
 
   @RequestMapping(path = { "ingreso-direccion" }, method = { RequestMethod.POST })
@@ -38,12 +40,15 @@ public class ControladorBuscarSupermercado {
 
     try {
       Cordenandas cordenandas = servicioBuscarSupermercado.obtenerCordenadaActual(direccion);
-      if (cordenandas != null) {
-        modelo.put("latitud", cordenandas.getLatitud());
-        modelo.put("longitud", cordenandas.getLongitud());
-      } else {
+      if (cordenandas == null) {
         modelo.put("latitud", 0);
         modelo.put("longitud", 0);
+        modelo.put("supermercados", Collections.emptyList());
+
+        return new ModelAndView(VISTA_BUSQUEDA_SUPERMERCADOS, modelo);
+      } else {
+        modelo.put("latitud", cordenandas.getLatitud());
+        modelo.put("longitud", cordenandas.getLongitud());
       }
 
       List<Supermercado> supermercados = servicioBuscarSupermercado.buscarSupermercadosCercanos(
@@ -53,7 +58,7 @@ public class ControladorBuscarSupermercado {
       servicioBuscarSupermercado.calcularDistancias(supermercados, cordenandas);
       modelo.put("supermercados", supermercados);
 
-      return new ModelAndView("busqueda-supermercados", modelo);
+      return new ModelAndView(VISTA_BUSQUEDA_SUPERMERCADOS, modelo);
     } catch (MuchasPeticionesServicioMapas e) {
       modelo.put(
         "mensaje",
