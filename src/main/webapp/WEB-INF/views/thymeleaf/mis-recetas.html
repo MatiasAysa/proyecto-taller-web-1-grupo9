@@ -54,7 +54,7 @@
             <ul class="receta-lista-ingredientes">
                 <li th:each="ingrediente : ${receta.getIngredientes()}" class="receta-ingrediente-item">
                     <span th:text="${ingrediente.nombre}">Papa</span>
-                    <span class="receta-cantidad-badge" th:text="${ingrediente.cantidad} + 'g'">200g</span>
+                    <span class="receta-cantidad-badge" th:text="${#numbers.formatInteger(ingrediente.cantidad, 1)} + 'g'">200g</span>
                 </li>
             </ul>
 
