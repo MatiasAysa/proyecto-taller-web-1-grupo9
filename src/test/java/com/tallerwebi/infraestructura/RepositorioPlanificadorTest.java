@@ -4,7 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import com.tallerwebi.dominio.Alimento;
+import com.tallerwebi.dominio.Comida;
+import com.tallerwebi.dominio.ItemComida;
 import com.tallerwebi.dominio.RepositorioPlanificador;
+import com.tallerwebi.dominio.TipoDeComida;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import java.util.List;
@@ -140,5 +143,50 @@ public class RepositorioPlanificadorTest {
     assertThat(recuperado.getEsVegetariano(), is(true));
     assertThat(recuperado.getEsCeliaco(), is(true));
     assertThat(recuperado.getContieneLactosa(), is(true));
+  }
+
+  @Test
+  @Rollback
+  public void queSePuedanObtenerTodasLasComidasDisponiblesConSusIngredientesAsociados() {
+    Alimento lentejas = new Alimento();
+    lentejas.setNombre("Lentejas");
+    lentejas.setPrecioEstimado(2200.0);
+    lentejas.setTipoComida("ALMUERZO");
+    sessionFactory.getCurrentSession().save(lentejas);
+
+    Comida platoLentejas = new Comida();
+    platoLentejas.setNombre("Guiso de Lentejas");
+    platoLentejas.setTipo(TipoDeComida.ALMUERZO);
+
+    ItemComida item = new ItemComida();
+    item.setAlimento(lentejas);
+    item.setCantidadGramos(200.0);
+
+    platoLentejas.setItems(List.of(item));
+
+    sessionFactory.getCurrentSession().save(platoLentejas);
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
+
+    List<Comida> comidasObtenidas = repositorioPlanificador.obtenerComidasDisponibles();
+
+    assertThat(comidasObtenidas, notNullValue());
+    assertThat(comidasObtenidas, hasSize(1));
+
+    Comida comidaRecuperada = comidasObtenidas.get(0);
+    assertThat(comidaRecuperada.getNombre(), equalToIgnoringCase("Guiso de Lentejas"));
+
+    assertThat(comidaRecuperada.getItems(), notNullValue());
+    assertThat(comidaRecuperada.getItems(), hasSize(1));
+    assertThat(comidaRecuperada.getItems().get(0).getAlimento().getNombre(), is("Lentejas"));
+  }
+
+  @Test
+  @Rollback
+  public void queAlObtenerComidasDisponiblesNoTraigaRegistrosSiLaTablaEstaVacia() {
+    List<Comida> comidasObtenidas = repositorioPlanificador.obtenerComidasDisponibles();
+
+    assertThat(comidasObtenidas, notNullValue());
+    assertThat(comidasObtenidas, hasSize(0));
   }
 }

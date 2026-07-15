@@ -1,98 +1,148 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lista de compra</title>
-
-    <!-- Boostrap core css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-    <!-- custom style -->
+    <title>Tu Planificador - Lista de Compra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/lista-compras.css}">
-
 </head>
 
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
-</nav>
 
-<main class="container mt-5">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm navbar-personalizado">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/home}">
+            <span class="fs-4">&#127822;</span>
+            <span class="fw-bold">Planificador Inteligente</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <h1 class="titulo-principal">Comidas Generadas</h1>
-
-    <div class="contenedor-comidas">
-        <div class="card-dia" th:each="dia : ${dias}">
-            <h2 class="fecha-dia" th:text="'DÍA ' + ${dia.numeroDia}"></h2>
-
-            <details class="desplegable-comida" th:each="comida : ${dia.comidas}">
-                <summary class="summary-comida">
-                    <span th:text="${comida.tipo}"></span>
-                </summary>
-                <div class="detalle-contenido">
-                    <h4 th:text="${comida.nombre}"></h4>
-                    <ul class="lista-ingredientes">
-                        <li th:each="item : ${comida.items}">
-                            <span class="alimento-nombre" th:text="${item.alimento.nombre}"></span>
-                            <span class="alimento-cantidad" th:text="${item.cantidadGramos + ' g'}"></span>
-                        </li>
-                    </ul>
-                </div>
-            </details>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="ms-auto d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0">
+                <a th:href="@{/home}" class="btn-nav btn-nav-outline-light">
+                    <span>&#127968;</span> Volver al Home
+                </a>
+                <a th:href="@{/busqueda-supermercados}" class="btn-nav btn-nav-secundario">
+                    <span>&#128205;</span> Ver Supermercados
+                </a>
+                <a th:href="@{/planificador}" class="btn-nav btn-nav-primario">
+                    <span>&#9998;</span> Modificar Planificador
+                </a>
+            </div>
         </div>
     </div>
+</nav>
 
-    <h1 class="titulo-principal">Lista de compras generada</h1>
+<main class="container my-5">
 
-    <div class="contenedor-comidas">
-        <div class="card-compras">
-            <ul class="lista-compras">
-                <li th:each="item : ${listaDeCompras}">
-                    <span class="alimento-nombre" th:text="${item.alimento.nombre}"></span>
-                    <div class="precio-cantidad-box">
-                        <span class="alimento-cantidad" th:text="${item.cantidadTotal + ' g'}"></span>
-                        <span class="alimento-precio" th:text="'$ ' + ${item.precoTotal}"></span>
-                    </div>
-                </li>
-            </ul>
-            <div class="total-box">
-                <h3>Total: $<span th:text="${totalLista}"></span></h3>
+    <div th:if="${test != null}" class="contenedor-objetivos-moderno mb-5">
+        <div class="header-seccion-nutricion">
+            <h2>&#127919; Tus Objetivos Nutricionales Diarios</h2>
+            <p>Metas calóricas y de macronutrientes calculadas para tu perfil</p>
+        </div>
+
+        <div class="grilla-objetivos-moderna">
+            <div th:each="dato : ${test}"
+                 th:if="${!dato.isEmpty() && !dato.contains('===')}"
+                 class="tarjeta-macro-objetivo">
+                <div class="macro-linea-superior">
+                    <span class="macro-nombre-test macro-texto" th:text="${dato}"></span>
+                </div>
+                <div class="barra-progreso-decorativa">
+                    <div class="progreso-relleno"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div th:each="dato : ${test}">
-        <p th:text="${dato}"></p>
-    </div>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="sticky-sidebar">
+                <div class="card-compras">
+                    <div class="card-compras-header">
+                        <h2 class="m-0">&#128722; Lista de Compras</h2>
+                        <span class="badge bg-success" th:text="${listaDeCompras.size() + ' artículos'}"></span>
+                    </div>
+                    <p class="texto-ayuda-compras">Hacé clic sobre un alimento para tacharlo mientras estás en el súper.</p>
 
+                    <ul class="lista-compras-interactiva">
+                        <li th:each="item : ${listaDeCompras}"
+                            class="item-compra-clickable"
+                            th:data-precio="${item.precoTotal}"
+                            onclick="toggleComprado(this)">
+                            <div class="check-indicador"></div>
+                            <div class="info-alimento">
+                                <span class="alimento-nombre" th:text="${item.alimento.nombre}"></span>
+                                <span class="alimento-cantidad-indicador">
+                                    &#128306; Comprar:
+                                    <strong class="texto-resaltado-gramos" th:text="${item.cantidadTotal >= 1000 ? (item.cantidadTotal / 1000) + ' kg' : item.cantidadTotal + ' g'}"></strong>
+                                    <span class="subtexto-acumulado">(Total acumulado)</span>
+                                </span>
+                            </div>
+                            <div class="precio-box">
+                                <span class="alimento-precio" th:text="'$' + ${#numbers.formatDecimal(item.precoTotal, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="total-box">
+                        <span class="total-etiqueta">Estimado Total:</span>
+                        <h3 class="total-monto"
+                            id="total-estimado"
+                            th:data-total-inicial="${totalLista}"
+                            th:text="'$' + ${#numbers.formatDecimal(totalLista, 1, 'DEFAULT', 2, 'DEFAULT')}">
+                        </h3>
+                    </div>
+                </div>
+                <div class="card p-4 shadow-sm border-0 bg-white mt-4 text-center container-buscar-supers">
+                    <h5 class="fw-bold mb-2">¿Todo listo para las compras?</h5>
+                    <p class="text-muted small mb-4">Encontrá los supermercados más cercanos optimizados para tu presupuesto.</p>
+                    <div class="d-flex justify-content-center">
+                        <a th:href="@{/busqueda-supermercados}" class="btn-buscar-supers-main">
+                            <span>&#128722;</span> Buscar Supermercados Cercanos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <h2 class="seccion-titulo-comidas mb-3">&#128197; Menú de la Semana</h2>
+            <p class="seccion-subtitulo mb-4">Detalle de platos y porciones que seleccionaste para cada día:</p>
+
+            <div class="contenedor-cronograma-acordeon">
+                <div class="card-dia-nuevo" th:each="dia : ${dias}">
+                    <div class="card-dia-header">
+                        <span class="badge-dia" th:text="'DÍA ' + ${dia.numeroDia}"></span>
+                        <span class="comidas-conteo" th:text="${dia.comidas.size() + ' platos'}"></span>
+                    </div>
+
+                    <div class="comidas-contenedor-interno">
+                        <div class="item-comida-cronograma" th:each="comida : ${dia.comidas}">
+                            <div class="badge-tipo-comida" th:classappend="'tipo-' + ${#strings.toLowerCase(comida.tipo)}" th:text="${comida.tipo}"></div>
+                            <div class="detalles-plato-info">
+                                <h4 class="plato-nombre" th:text="${comida.nombre}"></h4>
+                                <div class="ingredientes-mini-grilla">
+                                    <span th:each="item : ${comida.items}" class="ingrediente-chip">
+                                        <span th:text="${item.alimento.nombre}"></span>
+                                        <span class="porcion-plato-tag" th:text="'(' + ${item.cantidadGramos} + 'g porción)'"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
+<script th:src="@{/js/lista-compras.js}"></script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

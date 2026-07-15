@@ -1,191 +1,433 @@
-/* --- Variables de Color (Inspiradas en la app de tu amigo) --- */
 :root {
-    --color-principal: #198754;
-    --color-principal-hover: #146c43;
-    --color-fondo: #f8f9fa;
-    --color-texto: #333333;
-    --color-gris-borde: #e0e0e0;
-    --color-gris-fondo: #f1f3f5;
+    --primary: #198754;
+    --primary-light: #e8f5e9;
+    --dark: #212529;
+    --gray-bg: #f8f9fa;
+    --gray-card: #ffffff;
+    --border-color: #e9ecef;
+    --text-muted: #6c757d;
+    --text-color: #2b303a;
+
+    --desayuno: #f59e0b;
+    --almuerzo: #3b82f6;
+    --cena: #8b5cf6;
 }
 
 body {
-    background-color: var(--color-fondo);
-    font-family: 'Segoe UI', Arial, sans-serif;
-    color: var(--color-texto);
-    margin: 0;
-    padding: 0;
+    background-color: var(--gray-bg);
+    font-family: 'Lato', 'Segoe UI', Arial, sans-serif;
+    color: var(--text-color);
 }
 
-.titulo-principal {
-    text-align: center;
-    margin: 40px 0 20px 0;
+h1, h2, h3, h4 {
+    font-family: 'Montserrat', sans-serif;
     font-weight: 700;
-    color: var(--color-texto);
-    font-size: 28px;
 }
 
-/* --- Contenedor General --- */
-.contenedor-comidas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    justify-content: center;
-    padding: 10px;
-    align-items: flex-start; /* Evita que las cards se estiren verticalmente a la par */
-}
-
-/* --- Cards de los Días --- */
-.card-dia {
+.contenedor-objetivos-moderno {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    width: 100%;
-    max-width: 360px; /* Ancho fijo para que no se ensanche hacia la derecha */
-    box-sizing: border-box; /* Crucial para que los paddings no sumen ancho */
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    border: 1px solid var(--border-color);
 }
 
-.card-dia:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-.fecha-dia {
-    color: var(--color-principal);
+.header-seccion-nutricion h2 {
     font-size: 22px;
-    margin-top: 0;
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--color-gris-fondo);
-    padding-bottom: 8px;
+    color: var(--dark);
+    margin-bottom: 4px;
 }
 
-/* --- Estilos del Desplegable (Details / Summary) --- */
-.desplegable-comida {
-    margin-top: 12px;
-    border: 1px solid var(--color-gris-borde);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
+.header-seccion-nutricion p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 25px;
 }
 
-.summary-comida {
-    cursor: pointer;
-    padding: 12px 16px;
-    font-weight: 600;
-    background: var(--color-gris-fondo);
-    list-style: none; /* Saca la flecha nativa en algunos navegadores */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.grilla-objetivos-moderna {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
 }
 
-/* Flecha personalizada usando pseudoelemento si querés, o dejamos la nativa */
-.summary-comida::after {
-    content: '▼';
-    font-size: 10px;
-    color: #666;
-    transition: transform 0.2s;
-}
-
-.desplegable-comida[open] .summary-comida::after {
-    transform: rotate(180deg);
-    color: white;
-}
-
-.desplegable-comida[open] .summary-comida {
-    background: var(--color-principal);
-    color: white;
-}
-
-/* Contenedor interno para animar o dar padding cuando se abre */
-.detalle-contenido {
+.tarjeta-macro-objetivo {
+    background: var(--gray-bg);
     padding: 16px;
-    background: #ffffff;
-}
-
-.detalle-contenido h4 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #1f4e79;
-    font-size: 16px;
-}
-
-/* --- Listas Internas de Ingredientes --- */
-.lista-ingredientes {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.lista-ingredientes li {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 14px;
-    border-bottom: 1px dashed var(--color-gris-borde);
-}
-
-.lista-ingredientes li:last-child {
-    border-bottom: none;
-}
-
-/* --- Card de Lista de Compras --- */
-.card-compras {
-    background: white;
     border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    width: 100%;
-    max-width: 450px; /* Un toque más ancha para que entren bien los precios */
-    box-sizing: border-box;
-}
-
-.lista-compras {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.lista-compras li {
+    border-top: 4px solid var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.01);
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--color-gris-fondo);
+}
+
+.macro-linea-superior {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
     font-size: 14px;
+    color: #334155;
+    word-break: break-word;
+    line-height: 1.4;
 }
 
-.precio-cantidad-box {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+.barra-progreso-decorativa {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    margin-top: 15px;
+    overflow: hidden;
 }
 
-.alimento-nombre {
-    font-weight: 500;
-    color: #444;
+.progreso-relleno {
+    width: 65%;
+    height: 100%;
+    background: var(--primary);
+    border-radius: 10px;
 }
 
-.alimento-cantidad {
-    color: #777;
+.alimento-cantidad-indicador {
+    font-size: 13px;
+    color: #475569;
+    margin-top: 2px;
+}
+
+.texto-resaltado-gramos {
+    color: var(--dark);
+    background-color: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
     font-size: 13px;
 }
 
-.alimento-precio {
+.subtexto-acumulado {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: 4px;
+    font-style: italic;
+}
+
+.porcion-plato-tag {
+    font-size: 11px;
+    color: var(--primary);
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.navbar-personalizado {
+    background-color: var(--dark) !important;
+    border-bottom: 3px solid var(--primary);
+    padding: 12px 0;
+}
+
+.navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: -0.5px;
+}
+
+.btn-nav {
+    font-family: 'Montserrat', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
     font-weight: 600;
-    color: var(--color-texto);
+    border-radius: 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.btn-nav-outline-light {
+    color: #f8f9fa;
+    border-color: rgba(248, 249, 250, 0.4);
+    background-color: transparent;
+}
+
+.btn-nav-outline-light:hover {
+    color: var(--dark);
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+}
+
+.btn-nav-secundario {
+    color: var(--primary);
+    border-color: var(--primary);
+    background-color: transparent;
+}
+
+.btn-nav-secundario:hover {
+    color: white;
+    background-color: var(--primary);
+}
+
+.btn-nav-primario {
+    color: white;
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-nav-primario:hover {
+    background-color: #146c43;
+    border-color: #146c43;
+    transform: translateY(-1px);
+}
+.sticky-sidebar {
+    position: sticky;
+    top: 90px;
+}
+
+.card-compras {
+    background: var(--gray-card);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+.card-compras-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.card-compras-header h2 {
+    font-size: 20px;
+}
+
+.texto-ayuda-compras {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.lista-compras-interactiva {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.item-compra-clickable {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--gray-bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    user-select: none;
+}
+
+.item-compra-clickable:hover {
+    background-color: var(--gray-bg);
+}
+
+.check-indicador {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    margin-right: 15px;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.item-compra-clickable.comprado .check-indicador {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.item-compra-clickable.comprado .check-indicador::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.info-alimento {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.alimento-nombre {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 15px;
+}
+
+.precio-box {
+    margin-left: 10px;
+}
+
+.alimento-precio {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--dark);
+}
+
+.item-compra-clickable.comprado {
+    opacity: 0.55;
+}
+
+.item-compra-clickable.comprado .alimento-nombre {
+    text-decoration: line-through;
+    color: var(--text-muted);
 }
 
 .total-box {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 2px solid var(--color-principal);
-    text-align: right;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px dashed var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.total-box h3 {
+.total-etiqueta {
+    font-weight: 700;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.total-monto {
+    color: var(--primary);
+    font-size: 24px;
     margin: 0;
-    color: var(--color-principal);
-    font-size: 20px;
+}
+.container-buscar-supers {
+    border-radius: 18px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.04);
+}
+
+.btn-buscar-supers-main {
+    font-family: 'Montserrat', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: var(--primary) !important;
+    color: white !important;
+    text-decoration: none;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+}
+
+.btn-buscar-supers-main:hover {
+    background-color: #146c43 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.25);
+}
+
+.seccion-titulo-comidas { font-size: 22px; }
+
+.card-dia-nuevo {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.card-dia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid var(--gray-bg);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.badge-dia {
+    background-color: var(--dark);
+    color: white;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.comidas-conteo {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.comidas-contenedor-interno {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-comida-cronograma {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--gray-bg);
+}
+
+.badge-tipo-comida {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: center;
+    color: white;
+}
+
+.badge-tipo-comida.tipo-desayuno { background-color: var(--desayuno); }
+.badge-tipo-comida.tipo-almuerzo { background-color: var(--almuerzo); }
+.badge-tipo-comida.tipo-cena { background-color: var(--cena); }
+
+.detalles-plato-info { flex-grow: 1; }
+.plato-nombre { font-size: 14px; margin: 0 0 8px 0; color: var(--dark); }
+
+.ingredientes-mini-grilla {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ingrediente-chip {
+    font-size: 11px;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    padding: 3px 8px;
+    border-radius: 20px;
+    color: #495057;
+}
+.lista-compras-interactiva::-webkit-scrollbar { width: 6px; }
+.lista-compras-interactiva::-webkit-scrollbar-thumb { background-color: #ced4da; border-radius: 10px; }
+
+@media (max-width: 991.98px) {
+    .btn-nav {
+        width: 100%;
+        padding: 10px;
+    }
 }
