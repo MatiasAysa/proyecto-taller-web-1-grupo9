@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tallerwebi.dominio.excepcion.MuchasPeticionesServicioMapas;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpEntity;
@@ -10,12 +11,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado {
 
-  private static final Integer RADIO_BUSQUEDA = 800;
   private final Double RADIO_TIERRA = 6371000.0;
   private final Double METROS_POR_MINUTO = 83.33; //REGLA GENERAL DE UNA PERSONA PROMEDIO
 
@@ -69,9 +70,90 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
 
   @Override
   public List<Supermercado> buscarSupermercadosCercanos(Double latitud, Double longitud) {
-    //  String url =
-    //   "https://overpass-api.de/api/interpreter?data=" +
-    //   "[out:json];" + "node[shop=supermarket](around:700," + latitud + "," + longitud + ");out;";
+    String respuesta = obtenerRespuestaOverpass(latitud, longitud);
+    return parsearSupermercados(respuesta);
+  }
+
+  private List<Supermercado> parsearSupermercados(String respuesta) {
+    ObjectMapper mapper = new ObjectMapper();
+
+    try {
+      JsonNode root = mapper.readTree(respuesta);
+
+      List<Supermercado> tiendas = new ArrayList<>();
+
+      if (!root.has("elements")) {
+        return tiendas;
+      }
+
+      JsonNode elementos = root.get("elements");
+
+      for (JsonNode supermercado : elementos) {
+        tiendas.add(crearSupermercado(supermercado));
+      }
+
+      return tiendas;
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private Supermercado crearSupermercado(JsonNode supermercado) {
+    JsonNode tags = supermercado.get("tags");
+
+    String nombre = obtenerNombre(tags);
+
+    String direccion = obtenerDireccion(tags);
+
+    Double lat = supermercado.get("lat").asDouble();
+    Double lon = supermercado.get("lon").asDouble();
+
+    Cordenandas coordenadas = new Cordenandas();
+    coordenadas.setLatitud(lat);
+    coordenadas.setLongitud(lon);
+
+    Supermercado tienda = new Supermercado();
+    tienda.setNombre(nombre);
+    tienda.setDireccionName(direccion);
+    tienda.setCordenadas(coordenadas);
+
+    return tienda;
+  }
+
+  private String obtenerNombre(JsonNode tags) {
+    if (tags != null && tags.has("name")) {
+      return tags.get("name").asText();
+    }
+
+    return "Supermercado";
+  }
+
+  private String obtenerDireccion(JsonNode tags) {
+    if (tags == null) {
+      return "Dirección no disponible";
+    }
+
+    StringBuilder direccion = new StringBuilder();
+
+    if (tags.has("addr:street")) {
+      direccion.append(tags.get("addr:street").asText());
+    }
+
+    if (tags.has("addr:housenumber")) {
+      if (direccion.length() > 0) {
+        direccion.append(" ");
+      }
+      direccion.append(tags.get("addr:housenumber").asText());
+    }
+
+    if (direccion.length() == 0) {
+      return "Dirección no disponible";
+    }
+
+    return direccion.toString();
+  }
+
+  private String obtenerRespuestaOverpass(Double latitud, Double longitud) {
     String consulta =
       "[out:json];" +
       "(" +
@@ -95,67 +177,28 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
       "," +
       longitud +
       ");" +
-      ");" +
-      "out;";
+      ");out;";
 
     String url = "https://overpass-api.de/api/interpreter?data=" + consulta;
+
     RestTemplate restTemplate = new RestTemplate();
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("User-Agent", "MiAplicacionTallerWebi/1.0");
+
     HttpEntity<String> entity = new HttpEntity<>(headers);
-    ResponseEntity<String> response = restTemplate.exchange(
-      url,
-      HttpMethod.GET,
-      entity,
-      String.class
-    );
-
-    String respuesta = response.getBody();
-
-    ObjectMapper mapper = new ObjectMapper();
 
     try {
-      JsonNode root = mapper.readTree(respuesta);
-      List<Supermercado> tiendas = new ArrayList<>();
+      ResponseEntity<String> response = restTemplate.exchange(
+        url,
+        HttpMethod.GET,
+        entity,
+        String.class
+      );
 
-      if (root.isEmpty()) {
-        return tiendas;
-      }
-
-      if (!root.has("elements")) {
-        return tiendas;
-      }
-
-      JsonNode elementos = root.get("elements");
-
-      for (JsonNode supermercado : elementos) {
-        /*
-        String nombreSuper;
-        if(supermercado.has("tags")
-                && supermercado.get("tags").has("name")) {
-
-          nombreSuper = supermercado.get("tags").get("name").asText();
-        }
-*/
-        String nombreSuper = (supermercado.has("tags") && supermercado.get("tags").has("name"))
-          ? supermercado.get("tags").get("name").asText()
-          : "Supermercado";
-
-        Double lat = supermercado.get("lat").asDouble();
-        Double lon = supermercado.get("lon").asDouble();
-
-        Supermercado tienda = new Supermercado();
-        tienda.setNombre(nombreSuper);
-        Cordenandas coordenadas = new Cordenandas();
-        coordenadas.setLatitud(lat);
-        coordenadas.setLongitud(lon);
-        tienda.setCordenadas(coordenadas);
-        tiendas.add(tienda);
-      }
-      return tiendas;
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      return response.getBody();
+    } catch (RestClientException e) {
+      throw new MuchasPeticionesServicioMapas("No fue posible consultar Overpass", e);
     }
   }
 

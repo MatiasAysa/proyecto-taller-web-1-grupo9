@@ -58,6 +58,9 @@
         <div th:each="supermercado : ${supermercados}"
              class="supermercado"
              th:data-nombre="${supermercado.nombre}"
+             th:data-direccion="${supermercado.direccionName}"
+             th:data-distancia="${supermercado.distanciaMetros}"
+             th:data-minutos="${supermercado.minutosCaminando}"
              th:data-latitud="${supermercado.cordenadas.latitud}"
              th:data-longitud="${supermercado.cordenadas.longitud}">
         </div>
@@ -76,6 +79,7 @@
 
             <div class="info-super">
                 <h5 th:text="${supermercado.nombre}"></h5>
+                <p class="direccion" th:text="${supermercado.direccionName}"></p>
                 <div class="dato-super">
                     <i class="fas fa-location-dot"></i>
                     <span th:text="${#numbers.formatDecimal(supermercado.distanciaMetros,0,0)} + ' metros'"></span>
