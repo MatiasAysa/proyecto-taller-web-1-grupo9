@@ -8,6 +8,16 @@
 body{
     background:var(--gris);
 }
+.contenido-supermercados{
+    flex: 1;
+    min-width: calc(100% - 250px); /* 1. CLAVE: Le resta los 250px del aside para obligarlo a quedarse al lado y no irse abajo */
+    height: 100vh;
+    padding: 30px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
 .card-busqueda{
     background:white;
     padding:30px;
@@ -64,11 +74,14 @@ body{
     background:#d48300;
 }
 #map{
-    height:550px;
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.18);
-    border:4px solid var(--verde);
-    margin-bottom:35px;
+    height: 500px; /* Mantiene la altura que querías */
+    width: 100%;   /* Ocupa todo el ancho disponible del main */
+    min-height: 500px; /* 2. OBLIGA a que no se colapse a 0px bajo ninguna circunstancia flex */
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.18);
+    border: 4px solid var(--verde);
+    margin-bottom: 35px;
+    display: block !important;
 }
 .lista-supermercados{
     margin-top:35px;

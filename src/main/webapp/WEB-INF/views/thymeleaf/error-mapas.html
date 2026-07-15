@@ -13,13 +13,14 @@
 
     <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" >
     <link rel="stylesheet" th:href="@{/css/error-mapas.css}">
 
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
-</nav>
+<header th:replace="~{fragments-panel-cliente :: header-panel}"></header>
+
+<aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
 
 <main>
 
