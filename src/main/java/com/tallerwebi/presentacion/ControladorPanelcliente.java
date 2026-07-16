@@ -74,33 +74,33 @@ public class ControladorPanelcliente {
     return new ModelAndView(RUTA_LOGIN);
   }
 
-  @GetMapping("/panel-cliente/supermercados")
-  public ModelAndView irASupermercados() {
-    ModelMap modelo = new ModelMap();
-    modelo.put("direccion", new Direccion());
-    return new ModelAndView("panel__busqueda-supermercados", modelo);
-  }
-
-  @PostMapping("/panel-cliente/supermercados")
-  public ModelAndView procesarBusquedaSupermercados(
-    @ModelAttribute("direccion") Direccion direccion
-  ) {
-    ModelMap modelo = new ModelMap();
-    Cordenandas cordenandas = servicioBuscarSupermercado.obtenerCordenadaActual(direccion);
-    if (cordenandas != null) {
-      modelo.put("latitud", cordenandas.getLatitud());
-      modelo.put("longitud", cordenandas.getLongitud());
-
-      List<Supermercado> supermercados = servicioBuscarSupermercado.buscarSupermercadosCercanos(
-        cordenandas.getLatitud(),
-        cordenandas.getLongitud()
-      );
-      modelo.put("supermercados", supermercados);
-    }
-
-    modelo.put("direccion", direccion);
-    return new ModelAndView("panel__busqueda-supermercados", modelo);
-  }
+//  @GetMapping("/panel-cliente/supermercados")
+//  public ModelAndView irASupermercados() {
+//    ModelMap modelo = new ModelMap();
+//    modelo.put("direccion", new Direccion());
+//    return new ModelAndView("panel__busqueda-supermercados", modelo);
+//  }
+//
+//  @PostMapping("/panel-cliente/supermercados")
+//  public ModelAndView procesarBusquedaSupermercados(
+//    @ModelAttribute("direccion") Direccion direccion
+//  ) {
+//    ModelMap modelo = new ModelMap();
+//    Cordenandas cordenandas = servicioBuscarSupermercado.obtenerCordenadaActual(direccion);
+//    if (cordenandas != null) {
+//      modelo.put("latitud", cordenandas.getLatitud());
+//      modelo.put("longitud", cordenandas.getLongitud());
+//
+//      List<Supermercado> supermercados = servicioBuscarSupermercado.buscarSupermercadosCercanos(
+//        cordenandas.getLatitud(),
+//        cordenandas.getLongitud()
+//      );
+//      modelo.put("supermercados", supermercados);
+//    }
+//
+//    modelo.put("direccion", direccion);
+//    return new ModelAndView("panel__busqueda-supermercados", modelo);
+//  }
 
   private String obtenerEmail(HttpSession session) {
     return session.getAttribute("usuarioLogueadoEmail") != null

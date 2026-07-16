@@ -28,22 +28,6 @@ public class PerfilAlimentarioUsuario {
 
   public PerfilAlimentarioUsuario() {}
 
-  public PerfilAlimentarioUsuario(
-    Double peso,
-    Double altura,
-    Integer edad,
-    String sexo,
-    String actividadFisica,
-    String objetivo
-  ) {
-    this.peso = peso;
-    this.altura = altura;
-    this.edad = edad;
-    this.sexo = sexo;
-    this.actividadFisica = actividadFisica;
-    this.objetivo = objetivo;
-  }
-
   public Double getPeso() {
     return peso;
   }

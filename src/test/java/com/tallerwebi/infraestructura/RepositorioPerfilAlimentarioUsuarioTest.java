@@ -1,8 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 import com.tallerwebi.dominio.PerfilAlimentarioUsuario;
 import com.tallerwebi.dominio.RepositorioPerfilAlimentarioUsuario;
@@ -37,22 +36,35 @@ public class RepositorioPerfilAlimentarioUsuarioTest {
   @Transactional
   @Rollback
   public void deberiaGuardarUnNuevoPerfilAlimentario() {
-    // give
     PerfilAlimentarioUsuario perfil = new PerfilAlimentarioUsuario();
+    perfil.setPeso(75.5);
+    perfil.setAltura(1.75);
+    perfil.setEdad(30);
+    perfil.setSexo("M");
+    perfil.setActividadFisica("ACTIVA");
+    perfil.setObjetivo("MANTENER_PESO");
 
-    // when
     this.cuandoGuardoElPerfilAlimentario(perfil);
-
-    // then
-    this.entoncesSeGuardoElPerfilAlimentario(perfil);
+    this.entoncesSeGuardoYSePuedeRecuperarElPerfilAlimentario(perfil);
   }
 
   private void cuandoGuardoElPerfilAlimentario(PerfilAlimentarioUsuario perfil) {
     repositorioPerfil.guardar(perfil);
   }
 
-  private void entoncesSeGuardoElPerfilAlimentario(PerfilAlimentarioUsuario perfil) {
+  private void entoncesSeGuardoYSePuedeRecuperarElPerfilAlimentario(PerfilAlimentarioUsuario perfil) {
     Long id = perfil.getId();
     assertThat(id, is(notNullValue()));
+    PerfilAlimentarioUsuario perfilGuardado = sessionFactory.getCurrentSession()
+            .get(PerfilAlimentarioUsuario.class, id);
+
+    assertThat(perfilGuardado, is(notNullValue()));
+
+    assertThat(perfilGuardado.getPeso(), is(75.5));
+    assertThat(perfilGuardado.getAltura(), is(1.75));
+    assertThat(perfilGuardado.getEdad(), is(30));
+    assertThat(perfilGuardado.getSexo(), equalToIgnoringCase("M"));
+    assertThat(perfilGuardado.getActividadFisica(), equalToIgnoringCase("ACTIVA"));
+    assertThat(perfilGuardado.getObjetivo(), equalToIgnoringCase("MANTENER_PESO"));
   }
 }
