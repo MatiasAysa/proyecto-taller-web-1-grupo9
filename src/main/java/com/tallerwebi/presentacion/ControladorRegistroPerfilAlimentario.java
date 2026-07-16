@@ -46,17 +46,17 @@ public class ControladorRegistroPerfilAlimentario {
     @ModelAttribute("perfilAlimentario") PerfilAlimentarioDTO perfilAlimentarioDTO,
     HttpSession session
   ) {
-    String email = session.getAttribute(ATT_USUARIO_LOGUEADO_EMAIL).toString();
-    if (email == null) {
+    Object emailObj = session.getAttribute(ATT_USUARIO_LOGUEADO_EMAIL);
+    if (emailObj == null) {
       return new ModelAndView(REDIRECT_LOGIN);
     }
+    String email = emailObj.toString();
 
     ModelMap modelo;
     try {
       servicioRegistroPerfilAlimentario.guardarPerfilAlimentario(perfilAlimentarioDTO, email);
-
-      return new ModelAndView("redirect:/panel-cliente/datos-personales");
-    } catch (UsuarioInexistenteException exeption) {
+      return new ModelAndView("redirect:/");
+    } catch (UsuarioInexistenteException exception) {
       modelo = new ModelMap();
       modelo.put(ATT_ERROR, "Error: Usuario inexistente");
       modelo.put(ATT_PERFIL_ALIMENTARIO, perfilAlimentarioDTO);
@@ -70,39 +70,38 @@ public class ControladorRegistroPerfilAlimentario {
   private ModelMap obtenerMensajeDeError(Exception exception) {
     ModelMap modelo = new ModelMap();
     String nombreExcepcion = exception.getClass().getSimpleName();
+    String mensaje;
 
     switch (nombreExcepcion) {
       case "ActividadFisicaInvalidaException":
-        modelo.put(nombreExcepcion, "Actividad fisica invalida, vuelva a intentarlo");
+        mensaje = "Error: Actividad fisica invalida, vuelva a intentarlo";
         break;
       case "AlturaInvalidaException":
-        modelo.put(nombreExcepcion, "La altura ingresada no es valida (Debe ser entre 0 y 272 cm)");
+        mensaje = "Error: La altura ingresada no es valida (Debe ser entre 0 y 272 cm)";
         break;
       case "EdadInvalidaException":
-        modelo.put(nombreExcepcion, "La edad ingresada no es valida (Debe ser entre 0 y 100 años)");
+        mensaje = "Error: La edad ingresada no es valida (Debe ser entre 0 y 100 años)";
         break;
       case "ObjetivoInvalidaException":
-        modelo.put(nombreExcepcion, "Objetivo invalido, vuelva a intentarlo");
+        mensaje = "Error: Objetivo invalido, vuelva a intentarlo";
         break;
       case "PerfilAlimentarioDTONuloException":
-        modelo.put(nombreExcepcion, "Perfil esta vacio, vuelva a intentarlo");
+        mensaje = "Error: Perfil esta vacio, vuelva a intentarlo";
         break;
       case "PesoInvalidoException":
-        modelo.put(nombreExcepcion, "El peso ingresado no es valido (Debe ser entre 0 y 635 kg)");
+        mensaje = "Error: El peso ingresado no es valido (Debe ser entre 0 y 635 kg)";
         break;
       case "RestriccionesAlimentariasInvalidasException":
-        modelo.put(
-          nombreExcepcion,
-          "Una o mas restricciones alimentarias seleccionadas son invlidas"
-        );
+        mensaje = "Error: Una o mas restricciones alimentarias seleccionadas son invlidas";
         break;
       case "SexoInvalidoException":
-        modelo.put(nombreExcepcion, "Sexo invalido, vuelva a intentarlo");
+        mensaje = "Error: Sexo invalido, vuelva a intentarlo";
         break;
       default:
-        modelo.put(nombreExcepcion, "Error inesperado, vuelva a intentarlo");
+        mensaje = "Error inesperado, vuelva a intentarlo";
         break;
     }
+    modelo.put(ATT_ERROR, mensaje);
     return modelo;
   }
 }

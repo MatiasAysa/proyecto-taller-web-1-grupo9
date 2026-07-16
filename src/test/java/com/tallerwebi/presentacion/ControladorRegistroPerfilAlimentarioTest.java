@@ -26,6 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ControladorRegistroPerfilAlimentarioTest {
 
   private static final String ATT_ERROR = "error";
@@ -223,6 +226,10 @@ public class ControladorRegistroPerfilAlimentarioTest {
     // Given
     when(sessionMock.getAttribute(ATT_USUARIO_LOGUEADO)).thenReturn(usuarioLogueadoEmail);
 
+    Set<String> restriccionesInvalidas = new HashSet<>();
+    restriccionesInvalidas.add("RESTRICCION_ERRONEA");
+    perfilAlimentarioDTO.setRestriccionesAlimentarias(restriccionesInvalidas);
+
     doThrow(new RestriccionesAlimentariasInvalidasException())
       .when(servicioRegistroPerfilAlimentarioMock)
       .guardarPerfilAlimentario(any(PerfilAlimentarioDTO.class), eq(usuarioLogueadoEmail));
@@ -277,4 +284,40 @@ public class ControladorRegistroPerfilAlimentarioTest {
       equalToIgnoringCase("Error inesperado, vuelva a intentarlo")
     );
   }
+
+  // 1. Test para cubrir la validación de sesión en el POST
+  @Test
+  public void siElUsuarioNoEstaLogueadoAlIntentarProcesarElFormularioSeRedirigeAlLogin() {
+    // Given
+    when(sessionMock.getAttribute(ATT_USUARIO_LOGUEADO)).thenReturn(null);
+
+    // When
+    ModelAndView modelAndView = controlador.procesarFormulario(perfilAlimentarioDTO, sessionMock);
+
+    // Then
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase(REDIRECT_LOGIN));
+  }
+
+  // 2. Test para cubrir el catch específico de UsuarioInexistenteException
+  @Test
+  public void alIntentarRegistrarPerfilParaUnUsuarioInexistenteVuelveAlRegistroConMensajeDeError()
+          throws Exception {
+    // Given
+    when(sessionMock.getAttribute(ATT_USUARIO_LOGUEADO)).thenReturn(usuarioLogueadoEmail);
+
+    doThrow(new com.tallerwebi.dominio.excepcion.UsuarioInexistenteException("Usuario no encontrado"))
+            .when(servicioRegistroPerfilAlimentarioMock)
+            .guardarPerfilAlimentario(any(PerfilAlimentarioDTO.class), eq(usuarioLogueadoEmail));
+
+    // When
+    ModelAndView modelAndView = controlador.procesarFormulario(perfilAlimentarioDTO, sessionMock);
+
+    // Then
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase(VISTA_REGISTRO));
+    assertThat(
+            modelAndView.getModel().get(ATT_ERROR).toString(),
+            equalToIgnoringCase("Error: Usuario inexistente")
+    );
+  }
+
 }
