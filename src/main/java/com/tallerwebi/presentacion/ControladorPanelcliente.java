@@ -27,7 +27,6 @@ public class ControladorPanelcliente {
 
   private final String ATT_EMAIL_SESION = "usuarioLogueadoEmail";
   private final String RUTA_LOGIN = "redirect:/login";
-  private final String RUTA_PANEL = "redirect:/panel-cliente";
 
   private final ServicioUsuario servicioUsuario;
   private final ServicioBuscarSupermercado servicioBuscarSupermercado;
@@ -47,7 +46,7 @@ public class ControladorPanelcliente {
   @GetMapping("/panel-cliente")
   public ModelAndView irAPanelCliente(HttpSession session) {
     if (session.getAttribute(ATT_EMAIL_SESION) != null) {
-      return new ModelAndView("panel-cliente");
+      return new ModelAndView("panel__dashboard");
     }
 
     return new ModelAndView(RUTA_LOGIN);
@@ -176,9 +175,20 @@ public class ControladorPanelcliente {
     modelo.put("datosClientePanel", datos);
     modelo.put("paso1Completado", tienePerfilAlimentario);
     modelo.put("paso2Completado", tienePresupuesto);
-    // planGenerado, modeloLista
+
+    ModelMap modeloLista = (ModelMap) session.getAttribute("modeloLista");
+
     modelo.put("paso3Completado", session.getAttribute("planGenerado") != null);
-    modelo.put("paso4Completado", session.getAttribute("modeloLista") != null);
+    modelo.put("paso4Completado", modeloLista != null);
+
+    modelo.put("planGenerado", session.getAttribute("planGenerado"));
+
+    //se extrae los datos del modeloLista
+    if (modeloLista != null) {
+      modelo.put("listaDeCompras", modeloLista.get("listaDeCompras"));
+      modelo.put("totalLista", modeloLista.get("totalLista"));
+      modelo.put("dias", modeloLista.get("dias"));
+    }
 
     return new ModelAndView("panel__dashboard", modelo);
   }

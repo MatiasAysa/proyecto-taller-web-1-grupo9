@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=ç, initial-scale=1.0">
-    <title>Dashboard</title> 
+    <title>Dashboard</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
@@ -293,7 +293,7 @@
             align-items: flex-start;
             background-color: var(--color-grupo);
             padding: 2em 2.5em;
-            width: 95%; 
+            width: 95%;
             padding-top: 3em;
             border-radius: 1em;
 
@@ -325,8 +325,9 @@
             position: relative;
             z-index: 3;
         }
-        .paso img{
-            width: 35px; 
+
+        .paso img {
+            width: 35px;
             margin-bottom: 10px;
             margin-top: -10px;
         }
@@ -343,7 +344,7 @@
         .done {
             background-color: var(--color-principal);
             box-shadow: 0px 0px 16px 2px rgba(55, 255, 102, 0.6);
-            color: white; 
+            color: white;
         }
 
         .undone {
@@ -367,8 +368,254 @@
             background-color: var(--color-principal);
             box-shadow: 0px 0px 16px 2px rgba(0, 255, 60, 0.6);
         }
+
         .paso:has(> .undone):not(:last-child)::after {
-            background-color:  rgb(175, 175, 175);
+            background-color: rgb(175, 175, 175);
+        }
+
+
+
+
+
+
+
+
+
+
+        /* --- CONFIGURACIONES GENERALES DEL DASHBOARD --- */
+        .dashboard-activo {
+            font-family: var(--fuente-cuerpo);
+            font-size: var(--font-size-texto);
+            color: var(--color-subtitulo);
+            padding: 24px;
+            ;
+        }
+
+        .dashboard-header {
+            margin-bottom: 24px;
+        }
+
+        .dashboard-titulo {
+            font-family: var(--fuente-titulos);
+            font-size: var(--font-size-titulo);
+            color: var(--color-titulo);
+            margin: 0 0 8px 0;
+        }
+
+        .dashboard-subtitulo {
+            font-size: var(--font-size-textos-pequenos);
+            color: var(--color-subtitulo);
+            margin: 0;
+        }
+
+        /* --- GRID DE TARJETAS --- */
+        /* 2 columas la primera fila y 1 colomna la segunda */
+        /* card-perfil card-presupuesto card-planificacion-resumen */
+        .card-perfil {
+            grid-area: card-perfil;
+        }
+
+        .card-presupuesto {
+            grid-area: card-presupuesto;
+        }
+
+        .card-planificacion-resumen {
+            grid-area: card;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            grid-template-areas:
+                "card-perfil card-presupuesto"
+                "card card";
+            gap: 24px;
+        }
+
+        /* --- TARJETA BASE (CARDS) --- */
+        .dashboard-card {
+            background-color: var(--color-grupo);
+            border: 1px solid var(--color-grupo-borde);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-titulo {
+            font-family: var(--fuente-titulos);
+            font-size: var(--font-size-subtitulo);
+            color: var(--color-titulo);
+            margin: 0 0 16px 0;
+            border-bottom: 2px solid var(--color-grupo-borde);
+            padding-bottom: 8px;
+        }
+
+        /* --- TARJETA 1: ESTADO DE SALUD --- */
+        .perfil-datos .dato-item {
+            margin: 10px 0;
+        }
+
+        .subtitulo-restricciones {
+            font-family: var(--fuente-titulos);
+            font-size: var(--font-size-textos-pequenos);
+            margin: 16px 0 8px 0;
+            color: var(--color-subtitulo);
+        }
+
+        .badges-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge-restriccion {
+            background-color: var(--color-complementario);
+            color: white;
+            font-size: var(--font-size-textos-pequenos);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* --- TARJETA 2: PRESUPUESTO --- */
+        .presupuesto-valores {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .valor-box {
+            background-color: white;
+            border: 1px solid var(--color-grupo-borde);
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .valor-etiqueta {
+            display: block;
+            font-size: var(--font-size-textos-pequenos);
+            color: var(--color-subtitulo);
+            margin-bottom: 4px;
+        }
+
+        .valor-monto {
+            font-family: var(--fuente-titulos);
+            font-size: var(--font-size-subtitulo);
+            color: var(--color-principal);
+            font-weight: bold;
+        }
+
+        .gasto-real {
+            color: var(--color-titulo);
+        }
+
+        /* Alertas de Presupuesto */
+        .alerta-presupuesto {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: var(--font-size-textos-pequenos);
+            margin-bottom: 16px;
+            border-left: 5px solid;
+        }
+
+        .alerta-ok {
+            background-color: #e6f7eb;
+            color: var(--color-principal-hover);
+            border-color: var(--color-principal);
+        }
+
+        .alerta-limite {
+            background-color: #fdf1f5;
+            color: var(--color-error);
+            border-color: var(--color-error);
+        }
+
+        .presupuesto-intervalo {
+            font-size: var(--font-size-textos-pequenos);
+            margin: 0;
+            text-align: right;
+        }
+
+        /* --- TARJETA 3: PLANIFICACIÓN Y LISTA --- */
+        .plan-info {
+            margin-bottom: 20px;
+        }
+
+        .btn-ir-plan {
+            display: inline-block;
+            background-color: var(--color-principal);
+            color: white;
+            font-family: var(--fuente-titulos);
+            font-size: var(--font-size-textos-pequenos);
+            font-weight: bold;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-ir-plan:hover {
+            background-color: var(--color-principal-hover);
+        }
+
+        .subtitulo-lista {
+            font-family: var(--fuente-titulos);
+            font-size: var(--font-size-textos-pequenos);
+            margin: 0 0 10px 0;
+        }
+
+        /* Scroll e Items de la Lista */
+        .scroll-lista {
+            max-height: 140px;
+            overflow-y: auto;
+            border: 1px solid var(--color-grupo-borde);
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        .lista-alimentos {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .alimento-fila {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--color-grupo-borde);
+            font-size: var(--font-size-textos-pequenos);
+        }
+
+        .alimento-fila:last-child {
+            border-bottom: none;
+        }
+
+        .alimento-nombre {
+            font-weight: bold;
+            color: var(--color-titulo);
+        }
+
+        .alimento-detalles {
+            display: flex;
+            gap: 12px;
+        }
+
+        .alimento-cant {
+            color: var(--color-subtitulo);
+        }
+
+        .alimento-precio {
+            font-weight: bold;
+            color: var(--color-principal-hover);
         }
     </style>
 </head>
@@ -379,7 +626,8 @@
 
     <main>
 
-        <div th:if="${paso4Completado ==false}" class="generar-plan">
+        <!------------------ PASOS -------------->
+        <div th:if="${paso4Completado == false}" class="generar-plan">
             <h1>¡Genera tu primer plan alimentario!</h1>
             <p>Sigue estos pasos para generar tu primer plan alimentario personalizado</p>
 
@@ -387,16 +635,16 @@
 
                 <div class="paso" id="paso-1">
                     <span th:classappend="${paso1Completado} ? 'done' : 'undone'">1</span>
-                    <img src="https://cdn-icons-png.flaticon.com/512/18520/18520029.png" alt="">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8455/8455460.png" alt="">
                     <a th:href="@{/panel-cliente/datos-personales}">
                         Completa tu perfil alimentario
                     </a>
                 </div>
- 
+
 
                 <div class="paso" id="paso-2">
                     <span th:classappend="${paso2Completado} ? 'done' : 'undone'">2</span>
-                    <img src="https://cdn-icons-png.flaticon.com/512/7121/7121772.png" alt="">
+                    <img src="	https://cdn-icons-png.flaticon.com/512/2488/2488980.png" alt="">
                     <a th:href="@{/panel-cliente/datos-personales}">
                         Asigna un presupuesto
                     </a>
@@ -405,7 +653,7 @@
 
                 <div class="paso" id="paso-3">
                     <span th:classappend="${paso3Completado} ? 'done' : 'undone'">3</span>
-                    <img src="	https://cdn-icons-png.flaticon.com/512/2871/2871411.png" alt="">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7121/7121772.png" alt="">
                     <a th:href="@{/planificador}">
                         Generá tu plan
                     </a>
@@ -419,19 +667,114 @@
                         Guardá tu plan alimentario y lista de compras
                     </a>
                 </div>
-
-                <div class="dashboard" th:if="${paso4Completado == true}">
-                    <div th:each="dia : ${listaDeCompras}"> 
-                        
-                    </div>
-                </div>
-
-            </div> 
-
+            </div>
         </div>
 
+        <!------------------ DASHBOARD --------------> 
+        <div th:if="${paso4Completado == true}" class="dashboard-activo">
+
+            <header class="dashboard-header">
+                <h2 class="dashboard-titulo">Panel de Control Nutricional</h2>
+                <p class="dashboard-subtitulo">Resumen de tu planificación nutricional y financiera activa.</p>
+            </header>
+
+            <div class="dashboard-grid">
+
+                <!--Tarjeta 1: Mi Perfil & Estado Físico -->
+                <section class="dashboard-card card-perfil">
+                    <h3 class="card-titulo">Mi Estado de Salud</h3>
+
+                    <div class="perfil-datos">
+                        <p class="dato-item"><strong>Objetivo:</strong> <span
+                                th:text="${datosClientePanel.objetivo}">Bajar de peso</span></p>
+                        <p class="dato-item"><strong>Medidas:</strong> <span
+                                th:text="${datosClientePanel.peso}">70.0</span> kg | <span
+                                th:text="${datosClientePanel.altura}">170.0</span> cm</p>
+                        <p class="dato-item"><strong>Edad y Sexo:</strong> <span
+                                th:text="${datosClientePanel.edad}">25</span> años (<span
+                                th:text="${datosClientePanel.sexo}">M</span>)</p>
+                        <p class="dato-item"><strong>Actividad Física:</strong> <span
+                                th:text="${datosClientePanel.actividadFisica}">Moderada</span></p>
+                    </div>
+
+                    <div class="perfil-restricciones"
+                        th:if="${datosClientePanel.perfilRestricciones != null and !datosClientePanel.perfilRestricciones.isEmpty()}">
+                        <h4 class="subtitulo-restricciones">Restricciones Alimentarias:</h4>
+                        <div class="badges-contenedor"> 
+                            <span th:each="itemRestriccion : ${datosClientePanel.perfilRestricciones}"
+                                class="badge-restriccion" th:text="${itemRestriccion.restriccion.nombre}">Celiaco</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tarjeta 2: Balance de Presupuesto -->
+                <section class="dashboard-card card-presupuesto">
+                    <h3 class="card-titulo">Presupuesto vs. Gasto</h3>
+
+                    <div class="presupuesto-valores">
+                        <div class="valor-box">
+                            <span class="valor-etiqueta">Límite Permitido</span>
+                            <span class="valor-monto"
+                                th:text="'$' + ${#numbers.formatDecimal(datosClientePanel.monto, 1, 2)}">$15000.00</span>
+                        </div>
+                        <div class="valor-box">
+                            <span class="valor-etiqueta">Gasto Estimado</span>
+                            <span class="valor-monto gasto-real"
+                                th:text="'$' + ${#numbers.formatDecimal(totalLista, 1, 2)}">$12000.00</span>
+                        </div>
+                    </div>
+
+                    <!--Alertas dinámicas de presupuesto -->
+                    <div class="alerta-presupuesto"
+                        th:classappend="${totalLista <= datosClientePanel.monto} ? 'alerta-ok' : 'alerta-limite'">
+                        <p th:if="${totalLista <= datosClientePanel.monto}">
+                            <strong>¡Buen trabajo!</strong> Estás dentro de tu presupuesto. Te sobran
+                            <span
+                                th:text="'$' + ${#numbers.formatDecimal(datosClientePanel.monto - totalLista, 1, 2)}">$3000.00</span>.
+                        </p>
+                        <p th:if="${totalLista > datosClientePanel.monto}">
+                            <strong>¡Atención!</strong> Has superado tu presupuesto límite por
+                            <span
+                                th:text="'$' + ${#numbers.formatDecimal(totalLista - datosClientePanel.monto, 1, 2)}">$2000.00</span>.
+                        </p>
+                    </div>
+
+                    <p class="presupuesto-intervalo">Ciclo de planificación: <strong
+                            th:text="${datosClientePanel.intervalo}">7</strong> días.</p>
+                </section>
+
+                <!--Tarjeta 3: Resumen del Plan y Lista de Compras -->
+                <section class="dashboard-card card-planificacion-resumen">
+                    <h3 class="card-titulo">Plan Activo y Alimentos</h3>
+
+                    <div class="plan-info">
+                        <p>Tu planificación nutricional semanal se encuentra lista.</p>
+                    </div>
+
+                    <div class="lista-resumen-seccion">
+                        <h4 class="subtitulo-lista">Resumen de Compras (<span
+                                th:text="${listaDeCompras.size()}">5</span> ítems):</h4>
+
+                        <div class="scroll-lista">
+                            <ul class="lista-alimentos">
+                                <li th:each="item : ${listaDeCompras}" class="alimento-fila">
+                                    <span class="alimento-nombre" th:text="${item.alimento.nombre}">Avena</span>
+                                    <span class="alimento-detalles">
+                                        <span class="alimento-cant" th:text="${item.cantidadTotal} + ' un.'">1
+                                            un.</span>
+                                        <span class="alimento-precio"
+                                            th:text="'$' + ${#numbers.formatDecimal(item.precoTotal, 1, 2)}">$150.00</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
     </main>
-    
+
 </body>
 
 </html>
