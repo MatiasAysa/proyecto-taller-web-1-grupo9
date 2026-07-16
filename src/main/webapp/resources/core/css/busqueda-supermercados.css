@@ -74,17 +74,22 @@ body{
     background:#d48300;
 }
 #map{
-    height: 500px; /* Mantiene la altura que querías */
+    height: 700px; /* Mantiene la altura que querías */
     width: 100%;   /* Ocupa todo el ancho disponible del main */
-    min-height: 500px; /* 2. OBLIGA a que no se colapse a 0px bajo ninguna circunstancia flex */
+    min-height: 700px; /* 2. OBLIGA a que no se colapse a 0px bajo ninguna circunstancia flex */
     border-radius: 18px;
     box-shadow: 0 10px 25px rgba(0,0,0,.18);
     border: 4px solid var(--verde);
     margin-bottom: 35px;
     display: block !important;
 }
-.lista-supermercados{
-    margin-top:35px;
+.lista-supermercados {
+    display: grid;
+    /* Forzamos un mínimo más amigable para que entren al menos 2 o 3 columnas al lado del aside */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+    width: 100%;
 }
 .titulo-lista{
     margin:45px 0 25px;
@@ -103,88 +108,57 @@ body{
     gap:22px;
 
 }
-.card-super{
-
-    background:white;
-
-    border-radius:18px;
-
-    padding:22px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:18px;
-
-    border-left:6px solid var(--verde);
-
-    box-shadow:0 8px 20px rgba(0,0,0,.10);
-
-    transition:.25s;
-
+.card-super {
+    background: white;
+    border-radius: 16px;
+    padding: 16px; /* Bajamos un toque el padding para que no ocupe tanto aire */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-left: 5px solid var(--verde);
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #f0f0f0; /* Un borde sutil para darle más estructura */
+    border-left: 5px solid var(--verde);
 }
-.card-super:hover{
-
-    transform:translateY(-5px);
-
-    box-shadow:0 15px 30px rgba(0,0,0,.18);
-
+.card-super:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,.1);
 }
-.icono-super{
 
-    width:72px;
-
-    height:72px;
-
-    border-radius:18px;
-
-    background:#E9F8EC;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    flex-shrink:0;
-
+.icono-super {
+    width: 55px; /* Un tamaño más equilibrado */
+    height: 55px;
+    border-radius: 12px;
+    background: #E9F8EC;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
 }
-.icono-super i{
-
-    color:var(--verde);
-
-    font-size:30px;
-
+.icono-super i {
+    color: var(--verde);
+    font-size: 22px; /* Ícono un poco más sutil */
 }
 .info-super{
 
     flex:1;
 
 }
-.info-super h5{
-
-    font-weight:700;
-
-    margin-bottom:15px;
-
-    color:var(--texto);
-
+.info-super h5 {
+    font-size: 16px; /* Un tamaño de título más estilizado */
+    font-weight: 700;
+    margin-bottom: 6px; /* Menos espacio muerto */
+    color: var(--texto);
 }
-.dato-super{
 
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    margin-bottom:8px;
-
-    color:#555;
-
-    font-size:15px;
-
+.dato-super {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    color: #666;
+    font-size: 13.5px; /* Texto levemente más chico para jerarquía visual */
 }
 .dato-super i{
 

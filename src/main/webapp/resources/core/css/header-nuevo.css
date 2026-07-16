@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ========== HEADER NUTRIWALLET ========== */
+.header-panel-nuevo {
+    background-color: #4CAF50; /* Tu color verde principal */
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar-nueva {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- LOGO (Imagen de la Billetera + Texto NutriWallet) --- */
+.logotipo-nuevo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.logo-img-nav {
+    height: 42px; /* Tamaño destacado para la billetera */
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff; /* Blanco para "Nutri" */
+    letter-spacing: -0.5px;
+}
+
+.brand-subtext {
+    color: #1b3d2f; /* Verde oscuro para "Wallet" */
+}
+
+/* --- SEPARADOR Y ESLOGAN --- */
+.header-divisor {
+    width: 2px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 25px;
+}
+
+.eslogan-nav {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+    flex-grow: 1; /* Empuja el botón de logout al extremo derecho */
+}
+
+/* --- BOTÓN CERRAR SESIÓN --- */
+.header-acciones {
+    display: flex;
+    align-items: center;
+}
+
+.btn-logout-nav {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 8px 18px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13.5px;
+    transition: all 0.2s ease;
+}
+
+.btn-logout-nav:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.btn-logout-nav i {
+    font-size: 14px;
+}
