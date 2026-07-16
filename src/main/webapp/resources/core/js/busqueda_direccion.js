@@ -1,7 +1,8 @@
+/* global L, latUsuario, lonUsuario */
 let map = null;
 const iconoUsuario = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -13,9 +14,6 @@ window.addEventListener("load",() => {
     //EN UN FUTURO CAMBIAR LOS <P> POR IMPUT,PORQUE LA ALTITUD Y LONGITUD NO SE DEBE MOSTRAR,SON DATOS POCO IMPORTANTES PARA EL USUARIO
     const latitud = document.getElementById("latitud").textContent;
     const longitud = document.getElementById("longitud").textContent;
-
-    console.log("lati:",latitud);
-    console.log("log : ",longitud)
 
     if(latitud && longitud){
 
