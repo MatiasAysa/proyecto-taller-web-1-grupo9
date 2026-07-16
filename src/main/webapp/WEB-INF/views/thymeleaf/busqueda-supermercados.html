@@ -14,26 +14,36 @@
 
     <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" >
     <link rel="stylesheet" th:href="@{/css/busqueda-supermercados.css}">
+    <link rel="stylesheet" th:href="@{/css/header-nuevo.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
-</nav>
+<header class="header-panel-nuevo">
+    <nav class="navbar-nueva">
+        <a th:href="@{/home}" class="logotipo-nuevo">
+            <img th:src="@{/img/logo.png}" alt="Wallet Logo" class="logo-img-nav" />
+            <span class="brand-text">Nutri<span class="brand-subtext">Wallet</span></span>
+        </a>
 
-<main class="container mt-5">
+        <div class="header-divisor"></div>
+        <h2 class="eslogan-nav">TU SALUD Y TU BOLSILLO, EN ARMONÍA</h2>
+
+        <div class="header-acciones">
+            <a th:href="@{/login}" class="btn-logout-nav">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
+
+<main class="contenido-supermercados">
     <div class="card-busqueda">
 
         <h2>Buscar supermercados cercanos</h2>
@@ -46,7 +56,6 @@
             <button class="btn-buscar" type="submit">Buscar supermercados</button>
         </form>
 
-        <button id="btnUbicacion" class="btn-ubicacion"> Usar mi ubicación</button>
     </div>
 
     <p id="latitud" hidden th:text="${latitud}"></p>
@@ -97,6 +106,7 @@
 <script type="module" th:src="@{js/busqueda_direccion.js}"></script>
 <!-- LINK PARA LA LIBRERIA LEAFLET-->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 </body>
 
 </html>

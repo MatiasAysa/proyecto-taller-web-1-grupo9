@@ -3,48 +3,29 @@ package com.tallerwebi.dominio;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tallerwebi.dominio.excepcion.MuchasPeticionesServicioMapas;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado {
 
   private final Double RADIO_TIERRA = 6371000.0;
   private final Double METROS_POR_MINUTO = 83.33; //REGLA GENERAL DE UNA PERSONA PROMEDIO
+  private final ServicioMapa servicioMapa;
+  private final ObjectMapper mapper = new ObjectMapper();
+
+  @Autowired
+  public ServicioBuscarSupermercadoImp(ServicioMapa servicioMapa) {
+    this.servicioMapa = servicioMapa;
+  }
 
   @Override
   public Cordenandas obtenerCordenadaActual(Direccion direccion) {
     String direccionCompleta = direccion.getUbicacion() + " " + direccion.getNumero();
-    direccionCompleta = direccionCompleta.replace(" ", "+");
+    String respuesta = servicioMapa.obtenerCoordenadas(direccionCompleta);
 
-    String url =
-      "https://nominatim.openstreetmap.org/search?q=" + direccionCompleta + "&format=jsonv2";
-
-    RestTemplate restTemplate = new RestTemplate();
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("User-Agent", "MiAplicacionTallerWebi/1.0");
-
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-
-    ResponseEntity<String> response = restTemplate.exchange(
-      url,
-      HttpMethod.GET,
-      entity,
-      String.class
-    );
-
-    String respuesta = response.getBody();
-
-    ObjectMapper mapper = new ObjectMapper();
     try {
       JsonNode root = mapper.readTree(respuesta);
 
@@ -64,19 +45,20 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
 
       return coordenadas;
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException(
+        "No fue posible interpretar la respuesta del servicio de mapas.",
+        e
+      );
     }
   }
 
   @Override
   public List<Supermercado> buscarSupermercadosCercanos(Double latitud, Double longitud) {
-    String respuesta = obtenerRespuestaOverpass(latitud, longitud);
+    String respuesta = servicioMapa.obtenerSupermercados(latitud, longitud);
     return parsearSupermercados(respuesta);
   }
 
   private List<Supermercado> parsearSupermercados(String respuesta) {
-    ObjectMapper mapper = new ObjectMapper();
-
     try {
       JsonNode root = mapper.readTree(respuesta);
 
@@ -94,7 +76,10 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
 
       return tiendas;
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException(
+        "No fue posible interpretar la respuesta del servicio de mapas.",
+        e
+      );
     }
   }
 
@@ -151,55 +136,6 @@ public class ServicioBuscarSupermercadoImp implements ServicioBuscarSupermercado
     }
 
     return direccion.toString();
-  }
-
-  private String obtenerRespuestaOverpass(Double latitud, Double longitud) {
-    String consulta =
-      "[out:json];" +
-      "(" +
-      "node[shop=supermarket](around:2000," +
-      latitud +
-      "," +
-      longitud +
-      ");" +
-      "node[shop=convenience](around:2000," +
-      latitud +
-      "," +
-      longitud +
-      ");" +
-      "node[shop=grocery](around:2000," +
-      latitud +
-      "," +
-      longitud +
-      ");" +
-      "node[shop=greengrocer](around:2000," +
-      latitud +
-      "," +
-      longitud +
-      ");" +
-      ");out;";
-
-    String url = "https://overpass-api.de/api/interpreter?data=" + consulta;
-
-    RestTemplate restTemplate = new RestTemplate();
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("User-Agent", "MiAplicacionTallerWebi/1.0");
-
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-
-    try {
-      ResponseEntity<String> response = restTemplate.exchange(
-        url,
-        HttpMethod.GET,
-        entity,
-        String.class
-      );
-
-      return response.getBody();
-    } catch (RestClientException e) {
-      throw new MuchasPeticionesServicioMapas("No fue posible consultar Overpass", e);
-    }
   }
 
   @Override

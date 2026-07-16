@@ -7,11 +7,31 @@
     <title>Registro de perfil alimentario</title>
     <link rel="stylesheet" th:href="@{/css/estilos-generales-panel-cliente.css}" />
     <link rel="stylesheet" th:href="@{/css/registroPerfilAlimentario.css}">
+    <link rel="stylesheet" th:href="@{/css/header-nuevo.css}">
+
 </head>
 
 <body>
-    <header th:replace="~{fragments-panel-cliente::header-panel}"></header>
-    <aside th:replace="~{fragments-panel-cliente::aside-panel}"></aside>
+
+<header class="header-panel-nuevo">
+    <nav class="navbar-nueva">
+        <a th:href="@{/home}" class="logotipo-nuevo">
+            <img th:src="@{/img/logo.png}" alt="Wallet Logo" class="logo-img-nav" />
+            <span class="brand-text">Nutri<span class="brand-subtext">Wallet</span></span>
+        </a>
+
+        <div class="header-divisor"></div>
+        <h2 class="eslogan-nav">TU SALUD Y TU BOLSILLO, EN ARMONÍA</h2>
+
+        <div class="header-acciones">
+            <a th:href="@{/login}" class="btn-logout-nav">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </div>
+    </nav>
+</header>
+<aside th:replace="~{fragments-panel-cliente::aside-panel}"></aside>
 
 
     <main>
