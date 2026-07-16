@@ -52,11 +52,14 @@ public class RepositorioPerfilAlimentarioUsuarioTest {
     repositorioPerfil.guardar(perfil);
   }
 
-  private void entoncesSeGuardoYSePuedeRecuperarElPerfilAlimentario(PerfilAlimentarioUsuario perfil) {
+  private void entoncesSeGuardoYSePuedeRecuperarElPerfilAlimentario(
+    PerfilAlimentarioUsuario perfil
+  ) {
     Long id = perfil.getId();
     assertThat(id, is(notNullValue()));
-    PerfilAlimentarioUsuario perfilGuardado = sessionFactory.getCurrentSession()
-            .get(PerfilAlimentarioUsuario.class, id);
+    PerfilAlimentarioUsuario perfilGuardado = sessionFactory
+      .getCurrentSession()
+      .get(PerfilAlimentarioUsuario.class, id);
 
     assertThat(perfilGuardado, is(notNullValue()));
 
