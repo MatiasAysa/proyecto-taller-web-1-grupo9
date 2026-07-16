@@ -129,25 +129,6 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
   }
 
   @Override
-  public List<DiaListaComprasDTO> actualizarCantidadesYAlimentos(
-    List<DiaListaComprasDTO> dias,
-    String email
-  ) throws UsuarioInexistenteException {
-    Usuario usuario = repositorioUsuario.buscar(email);
-    if (usuario == null) {
-      throw new UsuarioInexistenteException("No existe un usuario con email " + email);
-    }
-    List<DiaListaComprasDTO> nuevaListaCompras = new ArrayList<>();
-
-    //ObjetivoNutricional objetivoDiario = CalculadorNutricionalHelper.calcularObjetivoDiario(usuario.getPerfilAlimentario());
-    //ObjetivoNutricional objetivoNutricionalDesayuno = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.DESAYUNO);
-    //ObjetivoNutricional objetivoNutricionalAlmuerzo = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.ALMUERZO);
-    //ObjetivoNutricional objetivoNutricionalCena =CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.CENA);
-
-    return nuevaListaCompras;
-  }
-
-  @Override
   public List<String> mostrarDtosTestear(String email) throws UsuarioInexistenteException {
     Usuario usuario = repositorioUsuario.buscar(email);
 
@@ -193,3 +174,23 @@ public class ServicioListaComprasImpl implements ServicioListaCompras {
     return datos;
   }
 }
+/*
+  @Override
+  public List<DiaListaComprasDTO> actualizarCantidadesYAlimentos(
+    List<DiaListaComprasDTO> dias,
+    String email
+  ) throws UsuarioInexistenteException {
+    Usuario usuario = repositorioUsuario.buscar(email);
+    if (usuario == null) {
+      throw new UsuarioInexistenteException("No existe un usuario con email " + email);
+    }
+    List<DiaListaComprasDTO> nuevaListaCompras = new ArrayList<>();
+
+    //ObjetivoNutricional objetivoDiario = CalculadorNutricionalHelper.calcularObjetivoDiario(usuario.getPerfilAlimentario());
+    //ObjetivoNutricional objetivoNutricionalDesayuno = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.DESAYUNO);
+    //ObjetivoNutricional objetivoNutricionalAlmuerzo = CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.ALMUERZO);
+    //ObjetivoNutricional objetivoNutricionalCena =CalculadorNutricionalHelper.calcularObjetivoComida(objetivoDiario,TipoDeComida.CENA);
+
+    return nuevaListaCompras;
+  }
+*/

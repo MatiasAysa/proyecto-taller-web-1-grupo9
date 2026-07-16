@@ -1,21 +1,5 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Comida;
-import com.tallerwebi.dominio.DiaListaComprasDTO;
-import com.tallerwebi.dominio.ItemCompra;
-import com.tallerwebi.dominio.ServicioListaCompras;
-import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpSession;
-
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,169 +11,158 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.tallerwebi.dominio.Comida;
+import com.tallerwebi.dominio.DiaListaComprasDTO;
+import com.tallerwebi.dominio.ItemCompra;
+import com.tallerwebi.dominio.ServicioListaCompras;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistenteException;
+import java.util.List;
+import javax.servlet.http.HttpSession;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.servlet.ModelAndView;
+
 public class ControladorListaComprasTest {
-    private ServicioListaCompras servicioListaComprasMock;
-    private ControladorListaCompras controladorListaCompras;
-    private HttpSession sesionMock;
 
-    @BeforeEach
-    public void inicializarObjetos() {
-        servicioListaComprasMock = mock(ServicioListaCompras.class);
-        sesionMock = mock(HttpSession.class);
-        controladorListaCompras = new ControladorListaCompras(servicioListaComprasMock);
-    }
+  private ServicioListaCompras servicioListaComprasMock;
+  private ControladorListaCompras controladorListaCompras;
+  private HttpSession sesionMock;
 
-    @Test
-    public void debeRedirigirAlLoginSiNoHayUsuarioLogueado() {
-        // GIVEN
-        when(sesionMock.getAttribute("usuarioLogueadoEmail"))
-                .thenReturn(null);
+  @BeforeEach
+  public void inicializarObjetos() {
+    servicioListaComprasMock = mock(ServicioListaCompras.class);
+    sesionMock = mock(HttpSession.class);
+    controladorListaCompras = new ControladorListaCompras(servicioListaComprasMock);
+  }
 
-        // WHEN
-        ModelAndView vista = controladorListaCompras.mostrarListaCompras(null, sesionMock);
+  @Test
+  public void debeRedirigirAlLoginSiNoHayUsuarioLogueado() {
+    // GIVEN
+    when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn(null);
 
-        // THEN
-        assertThat(vista.getViewName(), equalTo("redirect:/login"));
-    }
+    // WHEN
+    ModelAndView vista = controladorListaCompras.mostrarListaCompras(null, sesionMock);
 
-    @Test
-    public void debeRedirigirAlPlanificadorSiNoSeleccionoComidas() {
-        // GIVEN
-        when(sesionMock.getAttribute("usuarioLogueadoEmail"))
-                .thenReturn("matias@gmail.com");
+    // THEN
+    assertThat(vista.getViewName(), equalTo("redirect:/login"));
+  }
 
-        // WHEN
-        ModelAndView vista = controladorListaCompras.mostrarListaCompras(null, sesionMock);
+  @Test
+  public void debeRedirigirAlPlanificadorSiNoSeleccionoComidas() {
+    // GIVEN
+    when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
 
-        // THEN
-        assertThat(vista.getViewName(), equalTo("redirect:/planificador"));
-    }
+    // WHEN
+    ModelAndView vista = controladorListaCompras.mostrarListaCompras(null, sesionMock);
 
-    @Test
-    public void debeRedirigirAlPlanificadorSiLasSeleccionesEstanVacias() {
-        // GIVEN
-        MultiValueMap<String,String> selecciones = new LinkedMultiValueMap<>();
+    // THEN
+    assertThat(vista.getViewName(), equalTo("redirect:/planificador"));
+  }
 
-        when(sesionMock.getAttribute("usuarioLogueadoEmail"))
-                .thenReturn("matias@gmail.com");
+  @Test
+  public void debeRedirigirAlPlanificadorSiLasSeleccionesEstanVacias() {
+    // GIVEN
+    MultiValueMap<String, String> selecciones = new LinkedMultiValueMap<>();
 
-        // WHEN
-        ModelAndView vista =
-                controladorListaCompras.mostrarListaCompras(selecciones, sesionMock);
+    when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
 
-        // THEN
-        assertThat(vista.getViewName(), equalTo("redirect:/planificador"));
-    }
+    // WHEN
+    ModelAndView vista = controladorListaCompras.mostrarListaCompras(selecciones, sesionMock);
 
-    @Test
-    public void debeMostrarCorrectamenteLaListaDeCompras() throws UsuarioInexistenteException {
-        // GIVEN
-        when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
-        MultiValueMap<String,String> selecciones = crearSelecciones();
-        DiaListaComprasDTO dia = crearDia();
-        List<DiaListaComprasDTO> dias = List.of(dia);
-        List<ItemCompra> items = crearItems();
+    // THEN
+    assertThat(vista.getViewName(), equalTo("redirect:/planificador"));
+  }
 
-        when(servicioListaComprasMock.armarDiasSeleccionados(selecciones)).thenReturn(dias);
-        when(servicioListaComprasMock.generarListaCompras(anyList())).thenReturn(items);
-        when(servicioListaComprasMock.calcularTotalListaCompras(items)).thenReturn(25000.0);
-        when(servicioListaComprasMock.mostrarDtosTestear(anyString())).thenReturn(List.of("Dato"));
+  @Test
+  public void debeMostrarCorrectamenteLaListaDeCompras() throws UsuarioInexistenteException {
+    // GIVEN
+    when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
+    MultiValueMap<String, String> selecciones = crearSelecciones();
+    DiaListaComprasDTO dia = crearDia();
+    List<DiaListaComprasDTO> dias = List.of(dia);
+    List<ItemCompra> items = crearItems();
 
-        // WHEN
-        ModelAndView vista = controladorListaCompras.mostrarListaCompras(selecciones,sesionMock);
+    when(servicioListaComprasMock.armarDiasSeleccionados(selecciones)).thenReturn(dias);
+    when(servicioListaComprasMock.generarListaCompras(anyList())).thenReturn(items);
+    when(servicioListaComprasMock.calcularTotalListaCompras(items)).thenReturn(25000.0);
+    when(servicioListaComprasMock.mostrarDtosTestear(anyString())).thenReturn(List.of("Dato"));
 
-        // THEN
-        assertThat(vista.getViewName(), equalTo("lista-compras"));
-        verify(servicioListaComprasMock).calcularPrecios(items);
-        verify(sesionMock).setAttribute(eq("modeloLista"), any(ModelMap.class));
-    }
+    // WHEN
+    ModelAndView vista = controladorListaCompras.mostrarListaCompras(selecciones, sesionMock);
 
-    @Test
-    public void debeRedirigirAlLoginSiElUsuarioNoExiste() throws UsuarioInexistenteException {
-        // GIVEN
-        when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
-        MultiValueMap<String,String> selecciones = crearSelecciones();
-        DiaListaComprasDTO dia = crearDia();
-        List<ItemCompra> items = crearItems();
-        when(servicioListaComprasMock.armarDiasSeleccionados(any())).thenReturn(List.of(dia));
-        when(servicioListaComprasMock.generarListaCompras(anyList())).thenReturn(items);
-        when(servicioListaComprasMock.calcularTotalListaCompras(anyList())).thenReturn(1000.0);
-        doNothing().when(servicioListaComprasMock).calcularPrecios(anyList());
+    // THEN
+    assertThat(vista.getViewName(), equalTo("lista-compras"));
+    verify(servicioListaComprasMock).calcularPrecios(items);
+    verify(sesionMock).setAttribute(eq("modeloLista"), any(ModelMap.class));
+  }
 
-        when(servicioListaComprasMock.mostrarDtosTestear(anyString())).thenThrow(new UsuarioInexistenteException("Usuario Inexistente"));
+  @Test
+  public void debeRedirigirAlLoginSiElUsuarioNoExiste() throws UsuarioInexistenteException {
+    // GIVEN
+    when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
+    MultiValueMap<String, String> selecciones = crearSelecciones();
+    DiaListaComprasDTO dia = crearDia();
+    List<ItemCompra> items = crearItems();
+    when(servicioListaComprasMock.armarDiasSeleccionados(any())).thenReturn(List.of(dia));
+    when(servicioListaComprasMock.generarListaCompras(anyList())).thenReturn(items);
+    when(servicioListaComprasMock.calcularTotalListaCompras(anyList())).thenReturn(1000.0);
+    doNothing().when(servicioListaComprasMock).calcularPrecios(anyList());
 
-        // WHEN
-        ModelAndView vista = controladorListaCompras.mostrarListaCompras(selecciones,sesionMock);
+    when(servicioListaComprasMock.mostrarDtosTestear(anyString()))
+      .thenThrow(new UsuarioInexistenteException("Usuario Inexistente"));
 
-        // THEN
-        assertThat(vista.getViewName(), equalTo("redirect:/login"));
-    }
+    // WHEN
+    ModelAndView vista = controladorListaCompras.mostrarListaCompras(selecciones, sesionMock);
 
-    @Test
-    public void debeInvocarTodosLosMetodosDelServicio() throws UsuarioInexistenteException {
-        // GIVEN
-        when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
-        MultiValueMap<String,String> selecciones = crearSelecciones();
-        DiaListaComprasDTO dia = crearDia();
-        List<ItemCompra> items = crearItems();
+    // THEN
+    assertThat(vista.getViewName(), equalTo("redirect:/login"));
+  }
 
-        when(servicioListaComprasMock.armarDiasSeleccionados(any())).thenReturn(List.of(dia));
-        when(servicioListaComprasMock.generarListaCompras(anyList())).thenReturn(items);
-        when(servicioListaComprasMock.calcularTotalListaCompras(anyList())).thenReturn(1000.0);
-        when(servicioListaComprasMock.mostrarDtosTestear(anyString())).thenReturn(List.of("dato"));
+  @Test
+  public void debeInvocarTodosLosMetodosDelServicio() throws UsuarioInexistenteException {
+    // GIVEN
+    when(sesionMock.getAttribute("usuarioLogueadoEmail")).thenReturn("matias@gmail.com");
+    MultiValueMap<String, String> selecciones = crearSelecciones();
+    DiaListaComprasDTO dia = crearDia();
+    List<ItemCompra> items = crearItems();
 
+    when(servicioListaComprasMock.armarDiasSeleccionados(any())).thenReturn(List.of(dia));
+    when(servicioListaComprasMock.generarListaCompras(anyList())).thenReturn(items);
+    when(servicioListaComprasMock.calcularTotalListaCompras(anyList())).thenReturn(1000.0);
+    when(servicioListaComprasMock.mostrarDtosTestear(anyString())).thenReturn(List.of("dato"));
 
-        // WHEN
-        controladorListaCompras.mostrarListaCompras(selecciones,sesionMock);
+    // WHEN
+    controladorListaCompras.mostrarListaCompras(selecciones, sesionMock);
 
-        // THEN
-        verify(servicioListaComprasMock).armarDiasSeleccionados(any());
-        verify(servicioListaComprasMock).generarListaCompras(anyList());
-        verify(servicioListaComprasMock).calcularPrecios(anyList());
-        verify(servicioListaComprasMock).calcularTotalListaCompras(anyList());
-        verify(servicioListaComprasMock).mostrarDtosTestear(anyString());
+    // THEN
+    verify(servicioListaComprasMock).armarDiasSeleccionados(any());
+    verify(servicioListaComprasMock).generarListaCompras(anyList());
+    verify(servicioListaComprasMock).calcularPrecios(anyList());
+    verify(servicioListaComprasMock).calcularTotalListaCompras(anyList());
+    verify(servicioListaComprasMock).mostrarDtosTestear(anyString());
+  }
 
-    }
+  private DiaListaComprasDTO crearDia() {
+    Comida comida = new Comida();
 
-    private DiaListaComprasDTO crearDia() {
+    DiaListaComprasDTO dia = new DiaListaComprasDTO();
+    dia.setComidas(List.of(comida));
 
-        Comida comida = new Comida();
+    return dia;
+  }
 
-        DiaListaComprasDTO dia = new DiaListaComprasDTO();
-        dia.setComidas(List.of(comida));
+  private MultiValueMap<String, String> crearSelecciones() {
+    MultiValueMap<String, String> selecciones = new LinkedMultiValueMap<>();
 
-        return dia;
-    }
+    selecciones.add("Lunes", "Pollo");
 
-    private MultiValueMap<String,String> crearSelecciones() {
+    return selecciones;
+  }
 
-        MultiValueMap<String,String> selecciones =
-                new LinkedMultiValueMap<>();
-
-        selecciones.add("Lunes","Pollo");
-
-        return selecciones;
-    }
-
-    private List<ItemCompra> crearItems() {
-        return List.of(new ItemCompra());
-    }
-
-
+  private List<ItemCompra> crearItems() {
+    return List.of(new ItemCompra());
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -46,7 +46,7 @@ public class ControladorPanelcliente {
   @GetMapping("/panel-cliente")
   public ModelAndView irAPanelCliente(HttpSession session) {
     if (session.getAttribute(ATT_EMAIL_SESION) != null) {
-      return new ModelAndView("panel__dashboard");
+      return new ModelAndView("redirect:/panel-cliente/dashboard");
     }
 
     return new ModelAndView(RUTA_LOGIN);
