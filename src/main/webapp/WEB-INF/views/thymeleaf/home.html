@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>Home</title>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" th:href="@{/css/estilos-generales.css}" />
 </head>
 
@@ -16,13 +18,26 @@
   <!-- ================== MAIN ================== -->
   <main class="container">
 
-    <section th:if="${usuarioLogueadoEmail == null}" class="call-to-action sub-container">
-      <div class="call-to-action__text">
-        <h1 class="call-to-action__titulo"> ¿Presupuesto ajustado para tu alimentación?</h1>
-        <p class="call-to-action__parrafo">Diseñamos un planificador inteligente...</p>
-        <a th:href="@{/planificar}" class="btn-2">Empezar a planificar gratis</a>
+    <section th:if="${usuarioLogueadoEmail == null}" class="hero sub-container">
+      <div class="hero-text">
+        <span class="hero-badge">Planificación inteligente</span>
+
+        <h1>Alimentate mejor <br>sin gastar de más.</h1>
+        <p>NutriWallet genera planes alimentarios personalizados según tus objetivos nutricionales y tu presupuesto.</p>
+
+        <div class="hero-beneficios">
+          <div>Planes personalizados</div>
+          <div>Presupuesto inteligente</div>
+          <div>Lista de compras automática</div>
+          <div>Supermercados cercanos</div>
+        </div>
+        <a th:href="@{/planificar}" class="btn-hero">Empezar gratis</a>
       </div>
-      <img th:src="@{/img/canasta.png}" class="call-to-action-img" alt="Canasta de alimentos">
+
+      <div class="hero-img">
+        <img th:src="@{/img/canasta.png}" alt="Canasta">
+      </div>
+
     </section>
 
     <th:block th:if="${usuarioLogueadoEmail != null}">
@@ -30,86 +45,117 @@
     </th:block>
 
     <section class="features-section sub-container">
+
       <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
+
         <h3>Planificador Inteligente</h3>
-        <p>Distribuye tus calorías diarias en 4 comidas (Desayuno, Almuerzo, Merienda y Cena) respetando tu objetivo de
-          peso.</p>
+
+        <p>
+          Generá un plan nutricional personalizado con desayuno,
+          almuerzo y cena según tus objetivos y necesidades.
+        </p>
       </div>
+
       <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-wallet"></i>
+        </div>
+
         <h3>Presupuesto Bajo Control</h3>
-        <p>Calculamos el gasto por día. Si el presupuesto es ajustado, el sistema prioriza alimentos económicos y te
-          avisa qué nutrientes debés cuidar.</p>
+        <p>Elegí los alimentos que prefieras mientras el sistema mantiene tu planificación dentro del presupuesto disponible.</p>
       </div>
+
       <div class="feature-card">
-        <h3>Desperdicio Cero</h3>
-        <p>¿Te sobró arroz el lunes? El sistema lo detecta y lo reutiliza en una receta diferente para el miércoles.
-          Cuidamos tu plata.</p>
+        <div class="feature-icon">
+          <i class="fas fa-cart-shopping"></i>
+        </div>
+        <h3>Comprá sólo lo necesario</h3>
+        <p>Obtené una lista de compras con las cantidades exactas para preparar las comidas de tu plan semanal.</p>
       </div>
     </section>
 
 
     <section id="como-funciona" class="como-funciona sub-container">
 
-      <h2 class="como-funciona__titulo">¿Cómo funciona?</h2>
+      <h2 class="como-funciona__titulo">
+        ¿Cómo funciona?
+      </h2>
 
-      <div class="como-funciona__item">
-        <h3>Paso 1: Completar el Perfil Alimentario</h3>
-        <p>Al iniciar en la plataforma, ingresarás tus datos básicos esenciales como edad, peso,
-          altura, sexo y nivel de actividad física (sedentario, moderado o activo). Además,
-          en esta instancia configurarás tus objetivos de peso y tus restricciones alimenticias no negociables
-          (como celiaquía, diabetes, veganismo o vegetarianismo) para que el sistema aprenda a filtrar automáticamente
-          cualquier receta incompatible con tu salud.
-        </p>
-      </div>
+      <div class="pasos-grid">
+        <div class="paso">
+          <span>1</span>
+          <h3>Completá tu perfil</h3>
+          <p>Edad, peso, actividad física y restricciones alimentarias.</p>
+        </div>
+        <div class="paso">
+          <span>2</span>
+          <h3>Definí tu presupuesto</h3>
+          <p>
+            Ingresá cuánto querés gastar por semana o por mes.
+          </p>
+        </div>
 
-      <div class="como-funciona__item">
-        <h3>Paso 2: Definir el Presupuesto</h3>
-        <p>En esta etapa deberás indicar el monto total de dinero disponible que querés destinar a tu alimentación y el
-          período correspondiente,
-          por ejemplo, $70.000 pesos semanales. Para simplificar el cálculo y permitir un control de gastos más
-          transparente,
-          el algoritmo fraccionará automáticamente este dinero para obtener un presupuesto exacto por día.
-        </p>
-      </div>
+        <div class="paso">
+          <span>3</span>
+          <h3>Generá tu plan</h3>
+          <p>La aplicación calcula automáticamente las comidas.</p>
+        </div>
 
-      <div class="como-funciona__item">
-        <h3>Paso 3: Presionar el botón "Generar Plan"</h3>
-        <p>Al hacer clic en el botón de generación, el núcleo del sistema se activa y realiza un cálculo calórico
-          aproximado
-          adaptado
-          a tu metabolismo basal. Inmediatamente después, el algoritmo cruza tus necesidades con nuestro catálogo de
-          comidas
-          predefinidas,
-          seleccionando opciones viables y distribuyendo la energía recomendada en cuatro comidas diarias: desayuno,
-          almuerzo, merienda y cena.
-        </p>
-      </div>
-
-      <div class="como-funciona__item">
-        <h3>Paso 4: Seleccionar alimentos y ajustar al presupuesto</h3>
-        <p>Una vez procesada la información, el sistema te mostrará la propuesta de menú donde tendrás el control final.
-          En esta pantalla podrás revisar el catálogo de ingredientes asignados y elegir específicamente qué alimentos
-          de los seleccionados por la app vas a agregar a tu presupuesto definitivo, permitiendo que el sistema reajuste
-          dinámicamente las cantidades en gramos para no pasarte de tu límite económico.
-        </p>
+        <div class="paso">
+          <span>4</span>
+          <h3>Obtené la lista</h3>
+          <p>
+            Recibís la lista de compras y supermercados cercanos.
+          </p>
+        </div>
       </div>
     </section>
 
 
     <section class="testimonials-section sub-container">
+
       <h2>Lo que dicen nuestros usuarios</h2>
       <div class="testimonials-section__container">
         <div class="testimonial-card">
-          <p class="comment">"Como entreno, necesitaba cubrir mis proteínas pero los suplementos y la carne están
-            carísimos. La app me armó un plan con legumbres y huevo que se ajusta exacto a lo que puedo gastar por
-            semana."</p>
-          <p class="user-info"><strong>Martín, 24 años</strong> <br> <span>Activo</span></p>
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="comment">
+            "Como entreno, necesitaba cubrir mis proteínas pero los suplementos y la carne están carísimos. La app me armó un plan con legumbres y huevo que se ajusta exacto a lo que puedo gastar por semana."
+          </p>
+          <div class="user-info">
+            <div class="avatar">M</div>
+            <div>
+              <strong>Martín, 24 años</strong>
+              <span>Usuario activo</span>
+            </div>
+          </div>
         </div>
         <div class="testimonial-card">
-          <p class="comment">"Comer sin TACC siempre es más caro. Con la función de replanificación, si me paso del
-            presupuesto a mitad de semana, la app me recalcula los días restantes para que no termine gastando de más."
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="comment">
+            "Comer sin TACC siempre es más caro. La aplicación reorganiza mis comidas para que no termine gastando de más."
           </p>
-          <p class="user-info"><strong>Laura, 31 años</strong> <br> <span>Activa (Celíaca)</span></p>
+          <div class="user-info">
+            <div class="avatar">L</div>
+            <div>
+              <strong>Laura, 31 años</strong>
+              <span>Celíaca</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

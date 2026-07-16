@@ -9,25 +9,47 @@
 
 <body>
     <!-- ================== HEADER ================== -->
-    <header th:fragment="header">
-        <!-- ================== NAV ============== -->
-        <nav class="navbar">
-            <a th:href="@{/home}" class="logotipo">GRUPO 9</a>
-            <div class="navbar__enlaces">
-                <a href="#como-funciona" class="link-como-funciona">Cómo funciona</a>
+    <header th:fragment="header" class="header-home">
+        <nav class="navbar-home">
+
+            <a th:href="@{/home}" class="logotipo-home">
+                <img th:src="@{/img/logo.png}" alt="NutriWallet" class="logo-img-home"/>
+                <span class="brand-text-home">
+                Nutri<span class="brand-subtext-home">Wallet</span>
+            </span>
+            </a>
+
+            <div class="header-divisor-home"></div>
+
+            <div class="navbar-enlaces-home">
+                <a href="#como-funciona">Cómo funciona</a>
             </div>
-            <!-- si no existe datosPerfilUsuario mostrar registro y login -->
-            <div th:if="${usuarioLogueadoEmail == null}" class="navbar__perfil">
-                <a th:href="@{/nuevo-usuario}" class="btn-1">Registrarse</a>
-                <a th:href="@{/login}" class="btn-1">Iniciar sesión</a>
+            <!-- Usuario NO logueado -->
+            <div th:if="${usuarioLogueadoEmail == null}" class="navbar-acciones-home">
+
+                <a th:href="@{/nuevo-usuario}" class="btn-nav-home btn-registro">
+                    Registrarse
+                </a>
+
+                <a th:href="@{/login}" class="btn-nav-home btn-login">
+                    Iniciar sesión
+                </a>
+
             </div>
-            
-            <div th:if="${usuarioLogueadoEmail != null}" class="navbar__perfil">
-                <a th:href="@{/logout}" class="btn-1">Cerrar sesión</a>
+            <!-- Usuario logueado -->
+            <div th:if="${usuarioLogueadoEmail != null}" class="navbar-acciones-home">
+
+                <a th:href="@{/panel}" class="btn-nav-home btn-panel">
+                    Ir al panel
+                </a>
+
+                <a th:href="@{/logout}" class="btn-nav-home btn-logout-home">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar sesión
+                </a>
+
             </div>
         </nav>
-
-
     </header>
 
     <!-- ============= FOOTER ================ -->

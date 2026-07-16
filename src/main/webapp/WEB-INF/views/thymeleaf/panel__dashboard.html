@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=ç, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/header-nuevo.css}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
@@ -621,7 +622,24 @@
 </head>
 
 <body>
-    <header th:replace="~{fragments-panel-cliente :: header-panel}"></header>
+<header class="header-panel-nuevo">
+    <nav class="navbar-nueva">
+        <a th:href="@{/home}" class="logotipo-nuevo">
+            <img th:src="@{/img/logo.png}" alt="Wallet Logo" class="logo-img-nav" />
+            <span class="brand-text">Nutri<span class="brand-subtext">Wallet</span></span>
+        </a>
+
+        <div class="header-divisor"></div>
+        <h2 class="eslogan-nav">TU SALUD Y TU BOLSILLO, EN ARMONÍA</h2>
+
+        <div class="header-acciones">
+            <a th:href="@{/logout}" class="btn-logout-nav">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </div>
+    </nav>
+</header>
     <aside th:replace="~{fragments-panel-cliente :: aside-panel}"></aside>
 
     <main>

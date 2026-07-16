@@ -6,11 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Taller Web I - Registrarse</title>
     <link rel="stylesheet" th:href="@{/css/registro.css}" />
+    <link rel="stylesheet" th:href="@{/css/header-nuevo.css}">
 </head>
 
 <body>
-<header class="navbar-custom">
-    <a class="navbar-brand-custom" href="#">UNLAM</a>
+<header class="header-panel-nuevo">
+    <nav class="navbar-nueva">
+        <a th:href="@{/home}" class="logotipo-nuevo">
+            <img th:src="@{/img/logo.png}" alt="Wallet Logo" class="logo-img-nav" />
+            <span class="brand-text">Nutri<span class="brand-subtext">Wallet</span></span>
+        </a>
+
+        <div class="header-divisor"></div>
+        <h2 class="eslogan-nav">TU SALUD Y TU BOLSILLO, EN ARMONÍA</h2>
+    </nav>
 </header>
 <main class="auth-container">
     <div class="auth-card">
