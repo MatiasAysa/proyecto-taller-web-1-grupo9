@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorLoginTest {
 
   private ControladorLogin controladorLogin;
-  private ControladorHome controladorHome;
   private Usuario usuarioMock;
   private DatosLogin datosLoginMock;
   private HttpServletRequest requestMock;
@@ -57,6 +56,7 @@ public class ControladorLoginTest {
     // preparacion
     Usuario usuarioEncontradoMock = mock(Usuario.class);
     when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
+    when(usuarioEncontradoMock.getEmail()).thenReturn("dami@unlam.com");
 
     when(requestMock.getSession()).thenReturn(sessionMock);
     when(servicioLoginMock.consultarUsuario(anyString(), anyString()))
@@ -68,6 +68,7 @@ public class ControladorLoginTest {
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
     verify(sessionMock, times(1)).setAttribute("ROL", usuarioEncontradoMock.getRol());
+    verify(sessionMock).setAttribute("usuarioLogueadoEmail", "dami@unlam.com");
   }
 
   @Test
@@ -91,8 +92,7 @@ public class ControladorLoginTest {
     ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
 
     // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-    assertThat(
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("registro"));    assertThat(
       modelAndView.getModel().get("error").toString(),
       equalToIgnoringCase("El usuario ya existe")
     );
@@ -107,8 +107,7 @@ public class ControladorLoginTest {
     ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
 
     // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-    assertThat(
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("registro"));    assertThat(
       modelAndView.getModel().get("error").toString(),
       equalToIgnoringCase("Error al registrar el nuevo usuario")
     );
@@ -130,17 +129,8 @@ public class ControladorLoginTest {
     ModelAndView modelAndView = controladorLogin.nuevoUsuario();
 
     // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("registro"));
     assertThat(modelAndView.getModel().get("usuario"), instanceOf(Usuario.class));
-  }
-
-  @Test
-  public void irAHomeDeberiaRetornarVistaHome() {
-    // ejecucion
-    ModelAndView modelAndView = controladorHome.irAHome(sessionMock);
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
   }
 
   @Test
@@ -151,4 +141,5 @@ public class ControladorLoginTest {
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
   }
+
 }
