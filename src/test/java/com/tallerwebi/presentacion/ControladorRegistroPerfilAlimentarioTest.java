@@ -34,7 +34,6 @@ public class ControladorRegistroPerfilAlimentarioTest {
   private static final String ATT_USUARIO_LOGUEADO = "usuarioLogueadoEmail";
   private static final String VISTA_REGISTRO = "registroPerfilAlimentario";
   private static final String REDIRECT_LOGIN = "redirect:/login";
-  private static final String HOME = "redirect:/";
 
   private ServicioRegistroPerfilAlimentario servicioRegistroPerfilAlimentarioMock;
   private ControladorRegistroPerfilAlimentario controlador;
@@ -94,7 +93,10 @@ public class ControladorRegistroPerfilAlimentarioTest {
     ModelAndView modelAndView = controlador.procesarFormulario(perfilValido, sessionMock);
 
     // Then
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase(HOME));
+    assertThat(
+      modelAndView.getViewName(),
+      equalToIgnoringCase("redirect:/panel-cliente/datos-personales")
+    );
   }
 
   // mensajes de error

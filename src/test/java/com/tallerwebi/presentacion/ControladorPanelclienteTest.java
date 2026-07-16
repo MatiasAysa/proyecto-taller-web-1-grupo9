@@ -59,7 +59,11 @@ public class ControladorPanelclienteTest {
     ModelAndView modelAndView = controlador.irAPanelCliente(sessionMock);
 
     // Then
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/panel-cliente/dashboard"));  }
+    assertThat(
+      modelAndView.getViewName(),
+      equalToIgnoringCase("redirect:/panel-cliente/dashboard")
+    );
+  }
 
   @Test
   public void irAPanelClienteSinUsuarioLogueadoRedirigeALogin() {

@@ -1,8 +1,9 @@
 package com.tallerwebi.infraestructura;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import com.tallerwebi.dominio.RepositorioRestriccionAlimentaria;
 import com.tallerwebi.dominio.RestriccionAlimentaria;
@@ -20,39 +21,72 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
+@Transactional
 @ContextConfiguration(classes = { HibernateInfraestructuraTestConfig.class })
 public class RepositorioRestriccionAlimentariaTest {
 
   @Autowired
   private SessionFactory sessionFactory;
 
-  private RepositorioRestriccionAlimentaria repositorioRestriccion;
+  private RepositorioRestriccionAlimentaria repositorio;
 
   @BeforeEach
-  public void init() {
-    repositorioRestriccion = new RepositorioRestriccionAlimentariaImpl(sessionFactory);
+  public void inicializarObjetos() {
+    repositorio = new RepositorioRestriccionAlimentariaImpl(sessionFactory);
   }
 
   @Test
-  @Transactional
   @Rollback
-  public void deberiaGuardarUnaNuevaRestriccionAlimentaria() {
-    // give
+  public void debeGuardarUnaRestriccionAlimentaria() {
+    // GIVEN
+    RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
+    restriccion.setNombre("Sin gluten");
+
+    // WHEN
+    repositorio.guardar(restriccion);
+
+    // THEN
+    assertThat(restriccion.getId(), notNullValue());
+
+    RestriccionAlimentaria guardada = sessionFactory
+      .getCurrentSession()
+      .get(RestriccionAlimentaria.class, restriccion.getId());
+
+    assertThat(guardada.getNombre(), equalTo("Sin gluten"));
+  }
+
+  @Test
+  @Rollback
+  public void debeBuscarRestriccionPorNombre() {
+    // GIVEN
+    RestriccionAlimentaria restriccion = givenExisteUnaRestriccion();
+
+    // WHEN
+    RestriccionAlimentaria encontrada = repositorio.buscarPorNombre("Vegetariana");
+
+    // THEN
+    assertThat(encontrada, notNullValue());
+    assertThat(encontrada.getId(), equalTo(restriccion.getId()));
+    assertThat(encontrada.getNombre(), equalTo("Vegetariana"));
+  }
+
+  @Test
+  @Rollback
+  public void debeRetornarNullSiNoExisteLaRestriccion() {
+    // WHEN
+    RestriccionAlimentaria restriccion = repositorio.buscarPorNombre("No existe");
+
+    // THEN
+    assertThat(restriccion, nullValue());
+  }
+
+  private RestriccionAlimentaria givenExisteUnaRestriccion() {
     RestriccionAlimentaria restriccion = new RestriccionAlimentaria();
 
-    // when
-    this.cuandoGuardoLaRestriccionAlimentaria(restriccion);
+    restriccion.setNombre("Vegetariana");
 
-    // then
-    this.entoncesSeGuardoLaRestriccionAlimentaria(restriccion);
-  }
+    sessionFactory.getCurrentSession().save(restriccion);
 
-  private void cuandoGuardoLaRestriccionAlimentaria(RestriccionAlimentaria restriccion) {
-    repositorioRestriccion.guardar(restriccion);
-  }
-
-  private void entoncesSeGuardoLaRestriccionAlimentaria(RestriccionAlimentaria restriccion) {
-    Long id = restriccion.getId();
-    assertThat(id, is(notNullValue()));
+    return restriccion;
   }
 }
