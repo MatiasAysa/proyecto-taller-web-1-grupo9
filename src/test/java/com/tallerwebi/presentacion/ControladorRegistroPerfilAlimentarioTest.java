@@ -21,13 +21,12 @@ import com.tallerwebi.dominio.excepcion.perfilException.PerfilAlimentarioDTONulo
 import com.tallerwebi.dominio.excepcion.perfilException.PesoInvalidoException;
 import com.tallerwebi.dominio.excepcion.perfilException.RestriccionesAlimentariasInvalidasException;
 import com.tallerwebi.dominio.excepcion.perfilException.SexoInvalidoException;
+import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ControladorRegistroPerfilAlimentarioTest {
 
@@ -301,13 +300,15 @@ public class ControladorRegistroPerfilAlimentarioTest {
   // 2. Test para cubrir el catch específico de UsuarioInexistenteException
   @Test
   public void alIntentarRegistrarPerfilParaUnUsuarioInexistenteVuelveAlRegistroConMensajeDeError()
-          throws Exception {
+    throws Exception {
     // Given
     when(sessionMock.getAttribute(ATT_USUARIO_LOGUEADO)).thenReturn(usuarioLogueadoEmail);
 
-    doThrow(new com.tallerwebi.dominio.excepcion.UsuarioInexistenteException("Usuario no encontrado"))
-            .when(servicioRegistroPerfilAlimentarioMock)
-            .guardarPerfilAlimentario(any(PerfilAlimentarioDTO.class), eq(usuarioLogueadoEmail));
+    doThrow(
+      new com.tallerwebi.dominio.excepcion.UsuarioInexistenteException("Usuario no encontrado")
+    )
+      .when(servicioRegistroPerfilAlimentarioMock)
+      .guardarPerfilAlimentario(any(PerfilAlimentarioDTO.class), eq(usuarioLogueadoEmail));
 
     // When
     ModelAndView modelAndView = controlador.procesarFormulario(perfilAlimentarioDTO, sessionMock);
@@ -315,9 +316,8 @@ public class ControladorRegistroPerfilAlimentarioTest {
     // Then
     assertThat(modelAndView.getViewName(), equalToIgnoringCase(VISTA_REGISTRO));
     assertThat(
-            modelAndView.getModel().get(ATT_ERROR).toString(),
-            equalToIgnoringCase("Error: Usuario inexistente")
+      modelAndView.getModel().get(ATT_ERROR).toString(),
+      equalToIgnoringCase("Error: Usuario inexistente")
     );
   }
-
 }
